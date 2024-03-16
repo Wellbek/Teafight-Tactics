@@ -1,0 +1,12 @@
+[gd_scene load_steps=3 format=3 uid="uid://bt2m4imv0wxd3"]
+
+[ext_resource type="ArrayMesh" uid="uid://w2ulu6ga7fvi" path="res://assets/hex/hex.obj" id="1_5jns3"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_flfnt"]
+albedo_color = Color(0.12549, 1, 1, 1)
+
+[node name="Hex" type="Node3D"]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = ExtResource("1_5jns3")
+surface_material_override/0 = SubResource("StandardMaterial3D_flfnt")

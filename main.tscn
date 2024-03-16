@@ -1,0 +1,33 @@
+[gd_scene load_steps=4 format=3 uid="uid://0va6tspfr42p"]
+
+[ext_resource type="Script" path="res://scripts/gridmap/gridmap.gd" id="1_rsxh7"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_44fhn"]
+size = Vector3(20, 1, 20)
+
+[sub_resource type="BoxMesh" id="BoxMesh_vclnc"]
+size = Vector3(20, 1, 20)
+
+[node name="Main" type="Node"]
+
+[node name="World" type="Node3D" parent="."]
+
+[node name="Camera3D" type="Camera3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 0.427184, 0.904165, 0, -0.904165, 0.427184, 0, 10.0776, 8.36047)
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 0.418279, 0.908319, 0, -0.908319, 0.418279, 0, 0, 0)
+shadow_enabled = true
+
+[node name="Ground" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Ground"]
+shape = SubResource("BoxShape3D_44fhn")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Ground"]
+mesh = SubResource("BoxMesh_vclnc")
+
+[node name="Gridmap" type="Node3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 0, 0)
+script = ExtResource("1_rsxh7")
