@@ -1,6 +1,7 @@
-[gd_scene load_steps=4 format=3 uid="uid://bt2m4imv0wxd3"]
+[gd_scene load_steps=5 format=3 uid="uid://bt2m4imv0wxd3"]
 
 [ext_resource type="ArrayMesh" uid="uid://w2ulu6ga7fvi" path="res://assets/hex/hex.obj" id="1_8f2s5"]
+[ext_resource type="Script" path="res://scripts/gridmap/gridtile.gd" id="1_goci8"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_flfnt"]
 albedo_color = Color(0.12549, 1, 1, 1)
@@ -12,6 +13,7 @@ radius = 0.85401
 [node name="Hex" type="StaticBody3D"]
 collision_layer = 2
 collision_mask = 0
+script = ExtResource("1_goci8")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 mesh = ExtResource("1_8f2s5")

@@ -4,22 +4,35 @@ var dragging: bool = false
 var initialPos: Vector3
 
 var coll
+var tile
+
+func setTile(newTile):
+	tile = newTile
 
 func _input_event(camera, event, position, normal, shape_idx):
-	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and !dragging:
+	if event is InputEventMouseButton and event.is_pressed() and event.button_index == MOUSE_BUTTON_LEFT and !dragging:
 		dragging = true
 		initialPos = global_transform.origin
 		transform.origin.y += 1
 
 func _input(event):
 	if dragging:
-		if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
+		if event is InputEventMouseButton and event.is_released() and event.button_index == MOUSE_BUTTON_LEFT:
 			dragging = false
 			if coll != null and coll.get_collision_layer() == 2:
-				global_transform.origin = Vector3(coll.global_transform.origin.x, global_transform.origin.y, coll.global_transform.origin.z)
 				transform.origin.y -= 1
 				changeColor(coll.find_children("MeshInstance3D")[0], Color.CYAN)
-				coll = null
+				
+				if tile == coll: 
+					global_transform.origin = Vector3(tile.global_transform.origin.x, global_transform.origin.y, tile.global_transform.origin.z)
+					return
+				elif tile != null: 
+					if coll.hasUnit(): 
+						tile.swapUnit(coll)
+						return
+					tile.unregisterUnit()
+				tile = coll
+				tile.registerUnit(self)
 			else: global_transform.origin = initialPos
 		elif event is InputEventMouseMotion:
 			var viewport := get_viewport()

@@ -1,6 +1,7 @@
-[gd_scene load_steps=4 format=3 uid="uid://c88djd8or7yuk"]
+[gd_scene load_steps=5 format=3 uid="uid://c88djd8or7yuk"]
 
 [ext_resource type="ArrayMesh" uid="uid://68rrsyovasmv" path="res://assets/square/square.obj" id="1_8cdec"]
+[ext_resource type="Script" path="res://scripts/gridmap/gridtile.gd" id="1_tf4eb"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_flfnt"]
 albedo_color = Color(0.12549, 1, 1, 1)
@@ -8,10 +9,11 @@ albedo_color = Color(0.12549, 1, 1, 1)
 [sub_resource type="BoxShape3D" id="BoxShape3D_aupdh"]
 size = Vector3(2, 0.1, 2)
 
-[node name="Hex" type="StaticBody3D"]
+[node name="square" type="StaticBody3D"]
 transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, 0, 0, 0)
 collision_layer = 2
 collision_mask = 0
+script = ExtResource("1_tf4eb")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 mesh = ExtResource("1_8cdec")
