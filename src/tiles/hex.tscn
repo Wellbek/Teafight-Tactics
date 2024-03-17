@@ -1,0 +1,22 @@
+[gd_scene load_steps=4 format=3 uid="uid://bt2m4imv0wxd3"]
+
+[ext_resource type="ArrayMesh" uid="uid://w2ulu6ga7fvi" path="res://assets/hex/hex.obj" id="1_8f2s5"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_flfnt"]
+albedo_color = Color(0.12549, 1, 1, 1)
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_pgfbk"]
+height = 0.1
+radius = 0.85401
+
+[node name="Hex" type="StaticBody3D"]
+collision_layer = 2
+collision_mask = 0
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = ExtResource("1_8f2s5")
+surface_material_override/0 = SubResource("StandardMaterial3D_flfnt")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.00494635, 0)
+shape = SubResource("CylinderShape3D_pgfbk")
