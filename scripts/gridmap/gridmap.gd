@@ -20,7 +20,7 @@ const wCorrection = 1.1
 func _ready():
 	if type == Type.SQUARE: generateGrid(x,z)
 	elif type == Type.HEX: generateHexGrid(x,z)
-	else: push_error("Unknown grid type")
+	else: printerr("Unknown grid type")
 
 func generateHexGrid(_x: int, _z:int):
 	for xi in _x:
