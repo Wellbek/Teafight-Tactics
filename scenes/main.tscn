@@ -1,26 +1,54 @@
-[gd_scene load_steps=3 format=3 uid="uid://cqs5r3b42amb7"]
+[gd_scene load_steps=6 format=3 uid="uid://cqs5r3b42amb7"]
+
+[ext_resource type="Script" path="res://scripts/gridmap/gridmap.gd" id="1_bwssu"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_44fhn"]
-size = Vector3(20, 1, 20)
+size = Vector3(18, 1, 16)
 
 [sub_resource type="BoxMesh" id="BoxMesh_vclnc"]
-size = Vector3(20, 1, 20)
+size = Vector3(18, 1, 16)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_jlr6y"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_amsno"]
+size = Vector3(18, 1, 2)
 
 [node name="Main" type="Node"]
 
 [node name="World" type="Node3D" parent="."]
 
 [node name="Camera3D" type="Camera3D" parent="World"]
-transform = Transform3D(1, 0, 0, 0, 0.427184, 0.904165, 0, -0.904165, 0.427184, 0, 11.8463, 8.71276)
-
-[node name="Ground" type="StaticBody3D" parent="World"]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Ground"]
-shape = SubResource("BoxShape3D_44fhn")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Ground"]
-mesh = SubResource("BoxMesh_vclnc")
+transform = Transform3D(1, 0, 0, 0, 0.547358, 0.836898, 0, -0.836898, 0.547358, 0, 9.66365, 10.7009)
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="World"]
 transform = Transform3D(1, 0, 0, 0, 0.418279, 0.908318, 0, -0.908318, 0.418279, 0, 0, 0)
 shadow_enabled = true
+
+[node name="Board" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Board"]
+shape = SubResource("BoxShape3D_44fhn")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Board"]
+mesh = SubResource("BoxMesh_vclnc")
+
+[node name="BoardGrid" type="Node3D" parent="World/Board"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.2, 0.5, 1.8)
+script = ExtResource("1_bwssu")
+type = 1
+
+[node name="Units" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.3, 9)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Units"]
+shape = SubResource("BoxShape3D_jlr6y")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Units"]
+mesh = SubResource("BoxMesh_amsno")
+
+[node name="UnitGrid" type="Node3D" parent="World/Units"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.9, 0.5, 0)
+script = ExtResource("1_bwssu")
+x = 9
+z = 1
