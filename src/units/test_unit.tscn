@@ -1,0 +1,23 @@
+[gd_scene load_steps=5 format=3 uid="uid://c1r5t4e8vxrye"]
+
+[ext_resource type="Script" path="res://scripts/unitpick.gd" id="1_urhs2"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_tcrfm"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_51m0c"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_oobci"]
+albedo_color = Color(0.988235, 0.14902, 0.423529, 1)
+
+[node name="TestUnit" type="CharacterBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.47611, 1.02062, 8.99649)
+collision_layer = 8
+collision_mask = 9
+script = ExtResource("1_urhs2")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("CapsuleShape3D_tcrfm")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("CapsuleMesh_51m0c")
+surface_material_override/0 = SubResource("StandardMaterial3D_oobci")

@@ -15,7 +15,9 @@ const offset = .55*w
 
 # gaps between tiles
 const hCorrection = .8 
-const wCorrection = 1.1
+const wCorrection = 1.10
+
+var tiles = []
 
 func _ready():
 	if type == Type.SQUARE: generateGrid(x,z)
@@ -32,6 +34,7 @@ func generateHexGrid(_x: int, _z:int):
 			if zi % 2 != 0:
 				hexX += offset
 			hex.transform.origin = Vector3(hexX, 0, hexZ)
+			tiles.append(hex)
 			
 func generateGrid(_x: int, _z:int):
 	for xi in _x:
@@ -41,3 +44,13 @@ func generateGrid(_x: int, _z:int):
 			var squareX = w*xi
 			var squareZ = h*zi
 			square.transform.origin = Vector3(squareX, 0, squareZ)
+			tiles.append(square)
+
+func getTiles():
+	return tiles
+	
+func getFirstFreeTile():
+	for tile in tiles:
+		if not tile.hasUnit():
+			return tile
+	return null
