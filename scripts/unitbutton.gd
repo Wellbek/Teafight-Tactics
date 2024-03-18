@@ -6,6 +6,8 @@ func _ready():
 	unitGrid = get_tree().root.get_child(0).getUnitGrid()
 
 func _on_pressed():
+	disabled = true
+	
 	var tile = unitGrid.getFirstFreeTile()
 	
 	if tile != null:

@@ -1,0 +1,29 @@
+[gd_scene load_steps=7 format=3 uid="uid://beet8rjehupwb"]
+
+[ext_resource type="Script" path="res://scripts/unitbutton.gd" id="1_3cbhy"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_j2nea"]
+bg_color = Color(0.988235, 0.14902, 0.423529, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_y4gs6"]
+bg_color = Color(0.996078, 0.372549, 0.517647, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_25oo2"]
+bg_color = Color(0.341176, 0.00392157, 0.121569, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4icwa"]
+bg_color = Color(0.415686, 0.00784314, 0.152941, 0.698039)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_v122f"]
+
+[node name="Button1" type="Button"]
+custom_minimum_size = Vector2(150, 80)
+size_flags_horizontal = 3
+theme_override_styles/normal = SubResource("StyleBoxFlat_j2nea")
+theme_override_styles/hover = SubResource("StyleBoxFlat_y4gs6")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_25oo2")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_4icwa")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_v122f")
+script = ExtResource("1_3cbhy")
+
+[connection signal="pressed" from="." to="." method="_on_pressed"]

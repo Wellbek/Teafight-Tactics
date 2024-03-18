@@ -1,8 +1,9 @@
-[gd_scene load_steps=8 format=3 uid="uid://cqs5r3b42amb7"]
+[gd_scene load_steps=9 format=3 uid="uid://cqs5r3b42amb7"]
 
 [ext_resource type="Script" path="res://scripts/main.gd" id="1_35go2"]
 [ext_resource type="Script" path="res://scripts/gridmap/gridmap.gd" id="1_bwssu"]
-[ext_resource type="Script" path="res://scripts/unitbutton.gd" id="2_fbx4t"]
+[ext_resource type="PackedScene" uid="uid://beet8rjehupwb" path="res://src/UI/unit_purchase_button.tscn" id="3_wawr5"]
+[ext_resource type="PackedScene" uid="uid://wekyyj6d6wba" path="res://src/ui/unit_purchase_button.tscn" id="4_2wa6j"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_44fhn"]
 size = Vector3(18, 1, 16)
@@ -60,27 +61,62 @@ z = 1
 
 [node name="GUI" type="Control" parent="."]
 layout_mode = 3
-anchor_top = 0.877
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = -0.296021
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+
+[node name="Control" type="Control" parent="GUI"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -400.0
+offset_top = -108.0
+offset_right = 400.0
+offset_bottom = 2.0
 grow_horizontal = 2
 grow_vertical = 0
 
-[node name="HBoxContainer" type="HBoxContainer" parent="GUI"]
+[node name="ColorRect" type="ColorRect" parent="GUI/Control"]
 layout_mode = 1
-anchors_preset = 12
-anchor_top = 1.0
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = -8.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.415686, 0.415686, 0.415686, 0.709804)
+
+[node name="HBoxContainer" type="HBoxContainer" parent="GUI"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -383.0
+offset_top = -90.0001
+offset_right = 383.0
+offset_bottom = -10.0001
 grow_horizontal = 2
 grow_vertical = 0
 alignment = 1
 
-[node name="Button" type="Button" parent="GUI/HBoxContainer"]
-custom_minimum_size = Vector2(150, 80)
+[node name="Button1" parent="GUI/HBoxContainer" instance=ExtResource("3_wawr5")]
 layout_mode = 2
-script = ExtResource("2_fbx4t")
 
-[connection signal="pressed" from="GUI/HBoxContainer/Button" to="GUI/HBoxContainer/Button" method="_on_pressed"]
+[node name="Button2" parent="GUI/HBoxContainer" instance=ExtResource("4_2wa6j")]
+layout_mode = 2
+
+[node name="Button3" parent="GUI/HBoxContainer" instance=ExtResource("4_2wa6j")]
+layout_mode = 2
+
+[node name="Button4" parent="GUI/HBoxContainer" instance=ExtResource("4_2wa6j")]
+layout_mode = 2
+
+[node name="Button5" parent="GUI/HBoxContainer" instance=ExtResource("4_2wa6j")]
+layout_mode = 2
