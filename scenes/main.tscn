@@ -1,9 +1,9 @@
-[gd_scene load_steps=9 format=3 uid="uid://cqs5r3b42amb7"]
+[gd_scene load_steps=10 format=3 uid="uid://cqs5r3b42amb7"]
 
 [ext_resource type="Script" path="res://scripts/main.gd" id="1_35go2"]
 [ext_resource type="Script" path="res://scripts/gridmap/gridmap.gd" id="1_bwssu"]
-[ext_resource type="PackedScene" uid="uid://beet8rjehupwb" path="res://src/UI/unit_purchase_button.tscn" id="3_wawr5"]
-[ext_resource type="PackedScene" uid="uid://wekyyj6d6wba" path="res://src/ui/unit_purchase_button.tscn" id="4_2wa6j"]
+[ext_resource type="Script" path="res://scripts/roundtimer.gd" id="2_8mgga"]
+[ext_resource type="PackedScene" uid="uid://beet8rjehupwb" path="res://src/ui/unit_purchase_button.tscn" id="4_2wa6j"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_44fhn"]
 size = Vector3(18, 1, 16)
@@ -17,9 +17,17 @@ size = Vector3(18, 1, 2)
 [sub_resource type="BoxMesh" id="BoxMesh_amsno"]
 size = Vector3(18, 1, 2)
 
-[node name="Main" type="Node" node_paths=PackedStringArray("UnitGrid")]
+[sub_resource type="LabelSettings" id="LabelSettings_gtjgx"]
+font_size = 50
+
+[node name="Main" type="Node" node_paths=PackedStringArray("unitGrid", "timer", "gui")]
 script = ExtResource("1_35go2")
-UnitGrid = NodePath("World/Units/UnitGrid")
+unitGrid = NodePath("World/Units/UnitGrid")
+timer = NodePath("RoundTimer")
+gui = NodePath("GUI")
+
+[node name="RoundTimer" type="Timer" parent="."]
+script = ExtResource("2_8mgga")
 
 [node name="World" type="Node3D" parent="."]
 
@@ -68,7 +76,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 1
 
-[node name="Control" type="Control" parent="GUI"]
+[node name="UnitShop" type="Control" parent="GUI"]
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
@@ -82,7 +90,7 @@ offset_bottom = 2.0
 grow_horizontal = 2
 grow_vertical = 0
 
-[node name="ColorRect" type="ColorRect" parent="GUI/Control"]
+[node name="ColorRect" type="ColorRect" parent="GUI/UnitShop"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -91,32 +99,46 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.415686, 0.415686, 0.415686, 0.709804)
 
-[node name="HBoxContainer" type="HBoxContainer" parent="GUI"]
+[node name="HBoxContainer" type="HBoxContainer" parent="GUI/UnitShop"]
 layout_mode = 1
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
+anchors_preset = -1
+anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -383.0
-offset_top = -90.0001
-offset_right = 383.0
-offset_bottom = -10.0001
+offset_left = 17.0
+offset_top = 17.9999
+offset_right = -17.0
+offset_bottom = -12.0001
 grow_horizontal = 2
 grow_vertical = 0
 alignment = 1
 
-[node name="Button1" parent="GUI/HBoxContainer" instance=ExtResource("3_wawr5")]
+[node name="Button1" parent="GUI/UnitShop/HBoxContainer" instance=ExtResource("4_2wa6j")]
 layout_mode = 2
 
-[node name="Button2" parent="GUI/HBoxContainer" instance=ExtResource("4_2wa6j")]
+[node name="Button2" parent="GUI/UnitShop/HBoxContainer" instance=ExtResource("4_2wa6j")]
 layout_mode = 2
 
-[node name="Button3" parent="GUI/HBoxContainer" instance=ExtResource("4_2wa6j")]
+[node name="Button3" parent="GUI/UnitShop/HBoxContainer" instance=ExtResource("4_2wa6j")]
 layout_mode = 2
 
-[node name="Button4" parent="GUI/HBoxContainer" instance=ExtResource("4_2wa6j")]
+[node name="Button4" parent="GUI/UnitShop/HBoxContainer" instance=ExtResource("4_2wa6j")]
 layout_mode = 2
 
-[node name="Button5" parent="GUI/HBoxContainer" instance=ExtResource("4_2wa6j")]
+[node name="Button5" parent="GUI/UnitShop/HBoxContainer" instance=ExtResource("4_2wa6j")]
 layout_mode = 2
+
+[node name="TimerLabel" type="Label" parent="GUI"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -20.0
+offset_right = 20.0
+offset_bottom = 23.0
+grow_horizontal = 2
+text = "000"
+label_settings = SubResource("LabelSettings_gtjgx")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[connection signal="timeout" from="RoundTimer" to="RoundTimer" method="_on_Timer_timeout"]

@@ -13,5 +13,6 @@ func _on_pressed():
 	if tile != null:
 		var unit = preload("res://src/units/test_unit.tscn").instantiate()
 		unit.tile = tile
+		get_tree().root.get_child(0).playerUnits.append(unit)
 		unitGrid.add_child(unit)
 		tile.registerUnit(unit)

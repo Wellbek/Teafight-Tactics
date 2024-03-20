@@ -1,6 +1,16 @@
 extends Node
 
-@export var UnitGrid: Node3D
+@export var unitGrid: Node3D
+@export var timer: Timer
+@export var gui: Control
+
+var playerUnits = []
 
 func getUnitGrid():
-	return UnitGrid
+	return unitGrid
+	
+func getTimer():
+	return timer
+	
+func getUI():
+	return gui

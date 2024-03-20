@@ -6,34 +6,28 @@ var initialPos: Vector3
 var coll
 var tile
 
+var timer: Timer
+
+func _ready():
+	timer = get_tree().root.get_child(0).getTimer()
+
 func setTile(newTile):
 	tile = newTile
 
 func _input_event(camera, event, position, normal, shape_idx):
+	if not timer.isPreparing(): return
+	
 	if event is InputEventMouseButton and event.is_pressed() and event.button_index == MOUSE_BUTTON_LEFT and !dragging:
 		dragging = true
 		initialPos = global_transform.origin
 		transform.origin.y += 1
 
 func _input(event):
+	if not timer.isPreparing(): return
+	
 	if dragging:
 		if event is InputEventMouseButton and event.is_released() and event.button_index == MOUSE_BUTTON_LEFT:
-			dragging = false
-			if coll != null and coll.get_collision_layer() == 2:
-				transform.origin.y -= 1
-				changeColor(coll.find_children("MeshInstance3D")[0], Color.CYAN)
-				
-				if tile == coll: 
-					global_transform.origin = Vector3(tile.global_transform.origin.x, global_transform.origin.y, tile.global_transform.origin.z)
-					return
-				elif tile != null: 
-					if coll.hasUnit(): 
-						tile.swapUnit(coll)
-						return
-					tile.unregisterUnit()
-				tile = coll
-				tile.registerUnit(self)
-			else: global_transform.origin = initialPos
+			placeUnit()
 		elif event is InputEventMouseMotion:
 			var viewport := get_viewport()
 			var mouse_position := viewport.get_mouse_position()
@@ -64,6 +58,26 @@ func changeColor(mesh, color):
 	var newMaterial = StandardMaterial3D.new()
 	newMaterial.albedo_color = color
 	mesh.set_surface_override_material(0, newMaterial)
+
+func placeUnit():
+	if not dragging: return
+	
+	dragging = false
+	if coll != null and coll.get_collision_layer() == 2:
+		transform.origin.y -= 1
+		changeColor(coll.find_children("MeshInstance3D")[0], Color.CYAN)
+		
+		if tile == coll: 
+			global_transform.origin = Vector3(tile.global_transform.origin.x, global_transform.origin.y, tile.global_transform.origin.z)
+			return
+		elif tile != null: 
+			if coll.hasUnit(): 
+				tile.swapUnit(coll)
+				return
+			tile.unregisterUnit()
+		tile = coll
+		tile.registerUnit(self)
+	else: global_transform.origin = initialPos
 
 '
 extends CharacterBody3D
