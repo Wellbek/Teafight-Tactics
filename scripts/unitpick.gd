@@ -10,7 +10,7 @@ var timer: Timer
 
 @export_file("*.png", "*.jpg") var image
 @export var unitName: String
-@export_enum("1", "2", "3") var star: int
+@export_enum("NONE","1", "2", "3") var star: int = 1
 
 func _ready():
 	timer = get_tree().root.get_child(0).getTimer()
