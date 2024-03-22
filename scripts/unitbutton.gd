@@ -57,13 +57,13 @@ func upgrade(_unit):
 					sameUnits[0].tile.unregisterUnit()
 					main.playerUnits.erase(sameUnits[0])
 					sameUnits[0].queue_free()
-					sameUnits[1].star += 1
+					sameUnits[1].levelUp()
 					return sameUnits[1]
 				else: 
 					sameUnits[1].tile.unregisterUnit()
 					main.playerUnits.erase(sameUnits[1])
 					sameUnits[1].queue_free()
-					sameUnits[0].star += 1
+					sameUnits[0].levelUp()
 					return sameUnits[0]
 	return null
 

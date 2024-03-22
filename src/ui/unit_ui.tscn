@@ -1,0 +1,86 @@
+[gd_scene load_steps=6 format=3 uid="uid://cmyaotov37g7y"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_m6qmh"]
+bg_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sre60"]
+bg_color = Color(0.0980392, 0.0980392, 0.0980392, 0.956863)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 1
+border_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8h2v2"]
+bg_color = Color(0.317647, 0.698039, 0.313726, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 1
+border_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2x6q6"]
+bg_color = Color(0.0980392, 0.0980392, 0.0980392, 0.956863)
+border_width_left = 2
+border_width_top = 1
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mnfbq"]
+bg_color = Color(0, 0.47451, 0.670588, 1)
+border_width_left = 2
+border_width_top = 1
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0, 0, 0, 1)
+
+[node name="UnitUI" type="Control"]
+visible = false
+layout_mode = 3
+anchors_preset = 0
+offset_right = 150.0
+offset_bottom = 25.0
+
+[node name="Star" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 0.1
+anchor_bottom = 1.0
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 0, 1)
+theme_override_colors/font_outline_color = Color(1, 1, 0, 1)
+theme_override_constants/outline_size = 1
+theme_override_font_sizes/font_size = 18
+theme_override_styles/normal = SubResource("StyleBoxFlat_m6qmh")
+text = "1"
+horizontal_alignment = 1
+
+[node name="HPBar" type="ProgressBar" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.1
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_bottom = 2.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/background = SubResource("StyleBoxFlat_sre60")
+theme_override_styles/fill = SubResource("StyleBoxFlat_8h2v2")
+value = 78.09
+show_percentage = false
+
+[node name="MPBar" type="ProgressBar" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.1
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = 15.0
+offset_bottom = 12.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/background = SubResource("StyleBoxFlat_2x6q6")
+theme_override_styles/fill = SubResource("StyleBoxFlat_mnfbq")
+value = 50.0
+show_percentage = false

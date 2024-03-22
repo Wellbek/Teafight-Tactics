@@ -11,6 +11,7 @@ var timer: Timer
 @export_file("*.png", "*.jpg") var image
 @export var unitName: String
 @export_enum("NONE","1", "2", "3") var star: int = 1
+@export var ui: Control
 
 func _ready():
 	timer = get_tree().root.get_child(0).getTimer()
@@ -23,6 +24,7 @@ func _input_event(camera, event, position, normal, shape_idx):
 	
 	if event is InputEventMouseButton and event.is_pressed() and event.button_index == MOUSE_BUTTON_LEFT and !dragging:
 		dragging = true
+		toggleUI(false)
 		initialPos = global_transform.origin
 		transform.origin.y += 1
 
@@ -73,15 +75,26 @@ func placeUnit():
 		
 		if tile == coll: 
 			global_transform.origin = Vector3(tile.global_transform.origin.x, global_transform.origin.y, tile.global_transform.origin.z)
-			return
 		elif tile != null: 
 			if coll.hasUnit(): 
 				tile.swapUnit(coll)
-				return
-			tile.unregisterUnit()
-		tile = coll
-		tile.registerUnit(self)
+			else:
+				tile.unregisterUnit()
+				tile = coll
+				tile.registerUnit(self)
 	else: global_transform.origin = initialPos
+	
+	if tile.get_parent().type == tile.get_parent().Type.HEX: 
+		toggleUI(true)
+
+func levelUp():
+	if star < 3:
+		star += 1
+		ui.find_child("Star").text = str(star)
+		scale += Vector3(.1,.1,.1)
+		
+func toggleUI(value):
+	ui.visible = value
 
 '
 extends CharacterBody3D
