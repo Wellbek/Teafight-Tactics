@@ -23,6 +23,7 @@ func _input_event(camera, event, position, normal, shape_idx):
 	if not timer.isPreparing(): return
 	
 	if event is InputEventMouseButton and event.is_pressed() and event.button_index == MOUSE_BUTTON_LEFT and !dragging:
+		changeColor(tile.find_children("MeshInstance3D")[0], Color.WHITE)
 		dragging = true
 		toggleUI(false)
 		initialPos = global_transform.origin
@@ -69,23 +70,20 @@ func placeUnit():
 	if not dragging: return
 	
 	dragging = false
-	if coll != null and coll.get_collision_layer() == 2:
-		transform.origin.y -= 1
-		changeColor(coll.find_children("MeshInstance3D")[0], Color.CYAN)
-		
-		if tile == coll: 
-			global_transform.origin = Vector3(tile.global_transform.origin.x, global_transform.origin.y, tile.global_transform.origin.z)
-		elif tile != null: 
-			if coll.hasUnit(): 
-				tile.swapUnit(coll)
-			else:
-				tile.unregisterUnit()
-				tile = coll
-				tile.registerUnit(self)
-	else: global_transform.origin = initialPos
+	transform.origin.y -= 1
+	changeColor(coll.find_children("MeshInstance3D")[0], Color.CYAN)
 	
-	if tile.get_parent().type == tile.get_parent().Type.HEX: 
-		toggleUI(true)
+	if tile == coll: 
+		global_transform.origin = Vector3(tile.global_transform.origin.x, global_transform.origin.y, tile.global_transform.origin.z)
+		if tile.get_parent().type == tile.get_parent().Type.HEX: 
+			toggleUI(true)
+	elif tile != null: 
+		if coll.hasUnit(): 
+			tile.swapUnit(coll)
+		else:
+			tile.unregisterUnit()
+			tile = coll
+			tile.registerUnit(self)
 
 func levelUp():
 	if star < 3:
