@@ -1,0 +1,57 @@
+[gd_scene load_steps=8 format=3 uid="uid://g18y6a837usc"]
+
+[ext_resource type="Script" path="res://scripts/player.gd" id="1_mrq3l"]
+[ext_resource type="Script" path="res://scripts/gridmap/gridmap.gd" id="1_ust0k"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_44fhn"]
+size = Vector3(18, 1, 16)
+
+[sub_resource type="BoxMesh" id="BoxMesh_vclnc"]
+size = Vector3(18, 1, 16)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_jlr6y"]
+size = Vector3(18, 1, 2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_amsno"]
+size = Vector3(18, 1, 2)
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_4k2ky"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+
+[node name="Player" type="Node3D" node_paths=PackedStringArray("unitGrid")]
+script = ExtResource("1_mrq3l")
+unitGrid = NodePath("Units/UnitGrid")
+
+[node name="Board" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Board"]
+shape = SubResource("BoxShape3D_44fhn")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Board"]
+mesh = SubResource("BoxMesh_vclnc")
+
+[node name="BoardGrid" type="Node3D" parent="Board"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.2, 0.5, 1.8)
+script = ExtResource("1_ust0k")
+type = 1
+
+[node name="Units" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.3, 9)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Units"]
+shape = SubResource("BoxShape3D_jlr6y")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Units"]
+mesh = SubResource("BoxMesh_amsno")
+
+[node name="UnitGrid" type="Node3D" parent="Units"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.9, 0.5, 0)
+script = ExtResource("1_ust0k")
+x = 9
+z = 1
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_4k2ky")

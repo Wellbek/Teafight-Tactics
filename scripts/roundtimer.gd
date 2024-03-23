@@ -3,13 +3,18 @@ extends Timer
 var preparing: bool
 
 var currentRound = 1
-var preparationDuration = 5 #30
+var preparationDuration = 60000 #30
 var combatDuration = 1 #??
 
 var unitShop: Control
 var label: Label
 
 var main
+
+var host = false
+
+func _enter_tree():
+	set_multiplayer_authority(1) #only host controls time
 
 func _process(delta):
 	label.text = str(time_left).get_slice(".", 0)
@@ -25,18 +30,20 @@ func startPreparationPhase():
 	preparing = true
 	print("Preparation Phase Started for Round:", currentRound)
 
-	wait_time = preparationDuration
-	start()
+	if multiplayer.is_server():
+		wait_time = preparationDuration
+		start()
 
 func startCombatPhase():
-	for unit in main.playerUnits:
+	for unit in main.getPlayer().getUnits():
 		unit.placeUnit()
 	unitShop.visible = false
 	preparing = false
 	print("Combat Phase Started for Round:", currentRound)
-
-	wait_time = combatDuration
-	start()
+	
+	if multiplayer.is_server():
+		wait_time = combatDuration
+		start()
 
 func _on_Timer_timeout():
 	if preparing:

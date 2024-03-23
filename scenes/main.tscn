@@ -1,71 +1,31 @@
-[gd_scene load_steps=10 format=3 uid="uid://cqs5r3b42amb7"]
+[gd_scene load_steps=7 format=3 uid="uid://cqs5r3b42amb7"]
 
 [ext_resource type="Script" path="res://scripts/main.gd" id="1_35go2"]
-[ext_resource type="Script" path="res://scripts/gridmap/gridmap.gd" id="1_bwssu"]
 [ext_resource type="Script" path="res://scripts/roundtimer.gd" id="2_8mgga"]
 [ext_resource type="PackedScene" uid="uid://beet8rjehupwb" path="res://src/ui/unit_purchase_button.tscn" id="4_2wa6j"]
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_44fhn"]
-size = Vector3(18, 1, 16)
-
-[sub_resource type="BoxMesh" id="BoxMesh_vclnc"]
-size = Vector3(18, 1, 16)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_jlr6y"]
-size = Vector3(18, 1, 2)
-
-[sub_resource type="BoxMesh" id="BoxMesh_amsno"]
-size = Vector3(18, 1, 2)
+[ext_resource type="PackedScene" uid="uid://g18y6a837usc" path="res://src/player.tscn" id="4_bh7tl"]
+[ext_resource type="Script" path="res://scenes/multiplayer_test.gd" id="4_d7qmq"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_gtjgx"]
 font_size = 50
 
-[node name="Main" type="Node" node_paths=PackedStringArray("unitGrid", "timer", "gui")]
+[node name="Main" type="Node" node_paths=PackedStringArray("timer", "gui")]
 script = ExtResource("1_35go2")
-unitGrid = NodePath("World/Units/UnitGrid")
 timer = NodePath("RoundTimer")
 gui = NodePath("GUI")
 
 [node name="RoundTimer" type="Timer" parent="."]
+wait_time = 5.0
 script = ExtResource("2_8mgga")
 
 [node name="World" type="Node3D" parent="."]
-
-[node name="Camera3D" type="Camera3D" parent="World"]
-transform = Transform3D(1, 0, 0, 0, 0.547358, 0.836898, 0, -0.836898, 0.547358, 0, 9.66365, 10.7009)
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="World"]
 transform = Transform3D(1, 0, 0, 0, 0.418279, 0.908318, 0, -0.908318, 0.418279, 0, 0, 0)
 shadow_enabled = true
 
-[node name="Board" type="StaticBody3D" parent="World"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Board"]
-shape = SubResource("BoxShape3D_44fhn")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Board"]
-mesh = SubResource("BoxMesh_vclnc")
-
-[node name="BoardGrid" type="Node3D" parent="World/Board"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.2, 0.5, 1.8)
-script = ExtResource("1_bwssu")
-type = 1
-
-[node name="Units" type="StaticBody3D" parent="World"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.3, 9)
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Units"]
-shape = SubResource("BoxShape3D_jlr6y")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Units"]
-mesh = SubResource("BoxMesh_amsno")
-
-[node name="UnitGrid" type="Node3D" parent="World/Units"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.9, 0.5, 0)
-script = ExtResource("1_bwssu")
-x = 9
-z = 1
+[node name="Camera" type="Camera3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 0.547358, 0.836898, 0, -0.836898, 0.547358, 0, 9.66365, 10.7009)
 
 [node name="GUI" type="Control" parent="."]
 layout_mode = 3
@@ -75,6 +35,8 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 1
+script = ExtResource("4_d7qmq")
+player_scene = ExtResource("4_bh7tl")
 
 [node name="UnitShop" type="Control" parent="GUI"]
 layout_mode = 1
@@ -141,4 +103,37 @@ label_settings = SubResource("LabelSettings_gtjgx")
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[node name="TmpHost" type="Button" parent="GUI"]
+layout_mode = 0
+offset_left = 32.0
+offset_top = 96.0
+offset_right = 280.0
+offset_bottom = 144.0
+text = "Host"
+
+[node name="TmpJoin" type="Button" parent="GUI"]
+layout_mode = 0
+offset_left = 32.0
+offset_top = 184.0
+offset_right = 280.0
+offset_bottom = 232.0
+text = "Join"
+
+[node name="TmpTest" type="Button" parent="GUI"]
+layout_mode = 0
+offset_left = 32.0
+offset_top = 264.0
+offset_right = 280.0
+offset_bottom = 312.0
+text = "test"
+
+[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="GUI"]
+_spawnable_scenes = PackedStringArray("res://src/player.tscn")
+spawn_path = NodePath("../../World")
+spawn_limit = 8
+
 [connection signal="timeout" from="RoundTimer" to="RoundTimer" method="_on_Timer_timeout"]
+[connection signal="pressed" from="GUI/TmpHost" to="GUI" method="_on_tmp_host_pressed"]
+[connection signal="pressed" from="GUI/TmpJoin" to="GUI" method="_on_tmp_join_pressed"]
+[connection signal="pressed" from="GUI/TmpTest" to="GUI" method="_on_tmp_test_pressed"]
+[connection signal="spawned" from="GUI/MultiplayerSpawner" to="GUI" method="_on_multiplayer_spawner_spawned"]
