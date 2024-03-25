@@ -20,9 +20,13 @@ properties/0/path = NodePath(".:position")
 properties/0/spawn = true
 properties/0/replication_mode = 1
 
-[node name="Player" type="Node3D" node_paths=PackedStringArray("unitGrid")]
+[node name="Player" type="Node3D" node_paths=PackedStringArray("unitGrid", "camera")]
 script = ExtResource("1_mrq3l")
 unitGrid = NodePath("Units/UnitGrid")
+camera = NodePath("Camera")
+
+[node name="Camera" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.547358, 0.836898, 0, -0.836898, 0.547358, 0, 9.66365, 10.7009)
 
 [node name="Board" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
