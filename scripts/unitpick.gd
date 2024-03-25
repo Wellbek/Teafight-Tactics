@@ -6,6 +6,8 @@ var initialPos: Vector3
 var coll
 var tile
 
+var main
+var player
 var timer: Timer
 
 @export_file("*.png", "*.jpg") var image
@@ -14,7 +16,9 @@ var timer: Timer
 @export var ui: Control
 
 func _ready():
-	timer = get_tree().root.get_child(0).getTimer()
+	main = get_tree().root.get_child(0)
+	timer = main.getTimer()
+	player = main.getPlayer()
 
 func setTile(newTile):
 	tile = newTile
@@ -23,9 +27,10 @@ func _input_event(camera, event, position, normal, shape_idx):
 	if not timer.isPreparing(): return
 	
 	if event is InputEventMouseButton and event.is_pressed() and event.button_index == MOUSE_BUTTON_LEFT and !dragging:
-		changeColor(tile.find_children("MeshInstance3D")[0], Color.WHITE)
 		dragging = true
 		toggleUI(false)
+		toggleGrid(true)
+		changeColor(tile.find_children("MeshInstance3D")[0], Color.WHITE)
 		initialPos = global_transform.origin
 		transform.origin.y += 1
 
@@ -71,6 +76,7 @@ func placeUnit():
 	
 	dragging = false
 	transform.origin.y -= 1
+	toggleGrid(false)
 	changeColor(coll.find_children("MeshInstance3D")[0], Color.CYAN)
 	
 	if tile == coll: 
@@ -93,6 +99,10 @@ func levelUp():
 		
 func toggleUI(value):
 	ui.visible = value
+	
+func toggleGrid(value):
+	player.getBoardGrid().visible = value
+	player.getBenchGrid().visible = value
 
 '
 extends CharacterBody3D

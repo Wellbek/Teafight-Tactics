@@ -27,12 +27,12 @@ func _on_pressed():
 		while(upgradedUnit):
 			upgradedUnit = upgrade(upgradedUnit)
 	else:
-		var tile = main.getPlayer().getUnitGrid().getFirstFreeTile()
+		var tile = main.getPlayer().getBenchGrid().getFirstFreeTile()
 	
 		if tile != null:
 			instance.tile = tile
 			main.getPlayer().appendUnit(instance)
-			main.getPlayer().getUnitGrid().add_child(instance)
+			main.getPlayer().find_child("Units").add_child(instance)
 			tile.registerUnit(instance)
 			disabled = true
 		else: 

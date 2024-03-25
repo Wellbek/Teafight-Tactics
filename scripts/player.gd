@@ -2,7 +2,8 @@ extends Node3D
 
 var main
 
-@export var unitGrid: Node3D
+@export var benchGrid: Node3D
+@export var boardGrid: Node3D
 @export var camera: Camera3D
 
 var units = []
@@ -39,5 +40,8 @@ func removeUnit(index):
 func getUnits():
 	return units
 
-func getUnitGrid():
-	return unitGrid
+func getBenchGrid():
+	return benchGrid
+
+func getBoardGrid():
+	return boardGrid
