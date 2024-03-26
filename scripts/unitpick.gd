@@ -10,16 +10,21 @@ var main
 var player
 var timer: Timer
 
+var myid
+
 @export_file("*.png", "*.jpg") var image
 @export var unitName: String
 @export_enum("NONE","1", "2", "3") var star: int = 1
 @export var ui: Control
 
-func _ready():
+func _enter_tree():
+	myid = name.get_slice("#", 0).to_int()
+	set_multiplayer_authority(myid)
+	#print(str(multiplayer.get_unique_id()) + ": " + str(get_multiplayer_authority()))
+	
 	main = get_tree().root.get_child(0)
 	timer = main.getTimer()
 	player = main.getPlayer()
-	set_multiplayer_authority(player.name.to_int())
 
 func setTile(newTile):
 	tile = newTile

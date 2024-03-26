@@ -6,24 +6,28 @@ var main
 @export var boardGrid: Node3D
 @export var camera: Camera3D
 
+@export var multiplayerSpawner: MultiplayerSpawner
+
 var units = []
 
 var myid
 
 func _enter_tree():
 	main = get_tree().root.get_child(0)
-	main.setPlayer(self)
-	
-func _ready():
 	myid = name.to_int()
 	set_multiplayer_authority(myid)
+	#print(str(multiplayer.get_unique_id()) + ": " + str(get_multiplayer_authority()))
+	multiplayerSpawner.set_multiplayer_authority(1)
 	
-	var ids = multiplayer.get_peers()
-	ids.append(myid)
-	ids.sort()
-	var i = ids.find(myid)
+func _ready():
+	if (is_multiplayer_authority()):
+		main.setPlayer(self)
 	
-	if is_multiplayer_authority():
+		var ids = multiplayer.get_peers()
+		ids.append(myid)
+		ids.sort()
+		var i = ids.find(myid)
+
 		global_transform.origin.x += 19 * i
 		camera.current = true
 

@@ -19,7 +19,26 @@ func _ready():
 	generateButton()
 
 func _on_pressed():	
-	var instance = load(unitFolder + "//" + unitFileName + ".tscn").instantiate()
+	spawnUnit.rpc_id(1, multiplayer.get_unique_id(), main.getPlayer().get_path(), unitFileName) # tell server to spawn unit
+	# Note the called rpc sends feedback back to the client (see handleSpawn func)
+			
+@rpc("any_peer", "call_local", "unreliable") # change call_local if server dedicated
+func spawnUnit(_feedbackid, _player_path, _unit_file_name):
+	var player = get_tree().root.get_node(_player_path)
+	
+	var instance = load(unitFolder + "//" + _unit_file_name + ".tscn").instantiate()
+	instance.name = str(_feedbackid) + "#" + instance.name
+
+	player.find_child("Units").call("add_child", instance, true)
+	
+	if _feedbackid != multiplayer.get_unique_id():
+		handleSpawn.rpc_id(_feedbackid, instance.get_path())
+	else: handleSpawn(instance.get_path())
+	
+@rpc("authority", "call_local", "unreliable")
+func handleSpawn(_unit_path):
+	var instance = get_tree().root.get_node(_unit_path)
+	
 	var upgradedUnit = upgrade(instance)
 
 	if upgradedUnit:
@@ -30,17 +49,17 @@ func _on_pressed():
 		var tile = main.getPlayer().getBenchGrid().getFirstFreeTile()
 	
 		if tile != null:
-			spawnUnit.rpc_id(1,instance, main.getPlayer(), tile) # tell server to spawn units
+			instance.tile = tile
+			main.getPlayer().appendUnit(instance)
+			tile.registerUnit(instance)
 			disabled = true
 		else: 
-			instance.queue_free()
+			freeObject.rpc(instance.get_path())
 			
-@rpc("any_peer", "call_local", "unreliable") # change call_local if server dedicated
-func spawnUnit(instance, player, tile):
-	instance.tile = tile
-	player.appendUnit(instance)
-	player.find_child("Units").add_child(instance, true)
-	tile.registerUnit(instance)
+@rpc("any_peer", "call_local", "unreliable")
+func freeObject(_path):
+	var instance = get_tree().root.get_node(_path)
+	instance.queue_free()
 
 func upgrade(_unit):
 	if _unit.star >= 3: return null
@@ -52,18 +71,18 @@ func upgrade(_unit):
 			sameUnits.append(u)
 			if sameUnits.size() >= 2:
 				main.getPlayer().eraseUnit(_unit) # this has to be done for the recursive upgrade. If _unit not in playerUnits nothing happens
-				_unit.queue_free() #unload
+				freeObject.rpc(_unit.get_path()) #unload
 				# prioritze units on board, remove in bank
 				if sameUnits[0].tile.get_parent().type == sameUnits[0].tile.get_parent().Type.SQUARE:
 					sameUnits[0].tile.unregisterUnit()
 					main.getPlayer().eraseUnit(sameUnits[0])
-					sameUnits[0].queue_free()
+					freeObject.rpc(sameUnits[0].get_path())
 					sameUnits[1].levelUp()
 					return sameUnits[1]
 				else: 
 					sameUnits[1].tile.unregisterUnit()
 					main.getPlayer().eraseUnit(sameUnits[1])
-					sameUnits[1].queue_free()
+					freeObject.rpc(sameUnits[1].get_path())
 					sameUnits[0].levelUp()
 					return sameUnits[0]
 	return null
