@@ -15,7 +15,6 @@ func _enter_tree():
 	main.setPlayer(self)
 	
 func _ready():
-	print(name)
 	myid = name.to_int()
 	set_multiplayer_authority(myid)
 	

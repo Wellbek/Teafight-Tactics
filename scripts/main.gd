@@ -8,7 +8,7 @@ func setPlayer(_player):
 	player = _player
 
 func getPlayer():
-	return player if player != null else null
+	return player
 	
 func getTimer():
 	return timer

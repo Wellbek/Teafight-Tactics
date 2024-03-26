@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://c1r5t4e8vxrye"]
+[gd_scene load_steps=8 format=3 uid="uid://c1r5t4e8vxrye"]
 
 [ext_resource type="Script" path="res://scripts/unitpick.gd" id="1_urhs2"]
 [ext_resource type="PackedScene" uid="uid://cmyaotov37g7y" path="res://src/ui/unit_ui.tscn" id="2_xw0wm"]
@@ -12,6 +12,14 @@ albedo_color = Color(0.988235, 0.14902, 0.423529, 1)
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_5tw7b"]
 viewport_path = NodePath("SubViewport")
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_8oqv2"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 2
+properties/1/path = NodePath(".:scale")
+properties/1/spawn = true
+properties/1/replication_mode = 2
 
 [node name="TestUnit" type="CharacterBody3D" node_paths=PackedStringArray("ui")]
 transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, 0, 1, 0)
@@ -40,3 +48,6 @@ transparent_bg = true
 size = Vector2i(150, 30)
 
 [node name="UnitUI" parent="SubViewport" instance=ExtResource("2_xw0wm")]
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_8oqv2")

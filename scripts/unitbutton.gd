@@ -30,13 +30,17 @@ func _on_pressed():
 		var tile = main.getPlayer().getBenchGrid().getFirstFreeTile()
 	
 		if tile != null:
-			instance.tile = tile
-			main.getPlayer().appendUnit(instance)
-			main.getPlayer().find_child("Units").add_child(instance)
-			tile.registerUnit(instance)
+			spawnUnit.rpc_id(1,instance, main.getPlayer(), tile) # tell server to spawn units
 			disabled = true
 		else: 
 			instance.queue_free()
+			
+@rpc("any_peer", "call_local", "unreliable") # change call_local if server dedicated
+func spawnUnit(instance, player, tile):
+	instance.tile = tile
+	player.appendUnit(instance)
+	player.find_child("Units").add_child(instance, true)
+	tile.registerUnit(instance)
 
 func upgrade(_unit):
 	if _unit.star >= 3: return null

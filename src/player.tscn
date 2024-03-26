@@ -62,5 +62,10 @@ z = 1
 
 [node name="Units" type="Node" parent="."]
 
+[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
+_spawnable_scenes = PackedStringArray("res://src/units/prep_cook.tscn", "res://src/units/test_unit.tscn")
+spawn_path = NodePath("../Units")
+spawn_limit = 9999
+
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_4k2ky")

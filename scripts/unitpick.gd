@@ -19,22 +19,28 @@ func _ready():
 	main = get_tree().root.get_child(0)
 	timer = main.getTimer()
 	player = main.getPlayer()
+	set_multiplayer_authority(player.name.to_int())
 
 func setTile(newTile):
 	tile = newTile
 
 func _input_event(camera, event, position, normal, shape_idx):
+	if not is_multiplayer_authority(): return
+	
 	if not timer.isPreparing(): return
 	
 	if event is InputEventMouseButton and event.is_pressed() and event.button_index == MOUSE_BUTTON_LEFT and !dragging:
 		dragging = true
 		toggleUI(false)
 		toggleGrid(true)
-		changeColor(tile.find_children("MeshInstance3D")[0], Color.WHITE)
+		changeColor(tile.find_children("MeshInstance3D")[0], Color.WHITE)	
 		initialPos = global_transform.origin
+
 		transform.origin.y += 1
 
 func _input(event):
+	if not is_multiplayer_authority(): return
+	
 	if not timer.isPreparing(): return
 	
 	if dragging:
@@ -54,17 +60,18 @@ func _input(event):
 			var space_state := get_world_3d().direct_space_state
 			var query := PhysicsRayQueryParameters3D.create(origin, end, 0b00000000_00000000_00000000_00000111)
 			var result := space_state.intersect_ray(query)
-			if not result.is_empty() and result.collider != null and result.collider.get_collision_layer() == 2 and result.collider != coll:
-				if coll:
-					# reset highlight of last tile
-					changeColor(coll.find_children("MeshInstance3D")[0], Color.CYAN)
-				# highlight current tile
-				coll = result.collider
-				changeColor(coll.find_children("MeshInstance3D")[0], Color.WHITE)
-			
-			var mouse_position_3D:Vector3 = result.get("position", initialPos if coll == null else coll.global_transform.origin)
+			if not result.is_empty() and result.collider != null and result.collider.is_multiplayer_authority(): # can only move and place on own board
+				if result.collider.get_collision_layer() == 2 and result.collider != coll:
+					if coll:
+						# reset highlight of last tile
+						changeColor(coll.find_children("MeshInstance3D")[0], Color.CYAN)
+					# highlight current tile
+					coll = result.collider
+					changeColor(coll.find_children("MeshInstance3D")[0], Color.WHITE)
 
-			global_transform.origin = Vector3(mouse_position_3D.x, global_transform.origin.y, mouse_position_3D.z)
+				var mouse_position_3D:Vector3 = result.get("position", initialPos if coll == null else coll.global_transform.origin)
+
+				global_transform.origin = Vector3(mouse_position_3D.x, global_transform.origin.y, mouse_position_3D.z)
 
 func changeColor(mesh, color):
 	var newMaterial = StandardMaterial3D.new()
