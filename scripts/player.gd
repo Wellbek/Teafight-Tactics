@@ -48,3 +48,6 @@ func getBenchGrid():
 
 func getBoardGrid():
 	return boardGrid
+	
+func getCamera():
+	return camera

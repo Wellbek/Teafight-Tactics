@@ -24,9 +24,6 @@ script = ExtResource("2_8mgga")
 transform = Transform3D(1, 0, 0, 0, 0.418279, 0.908318, 0, -0.908318, 0.418279, 0, 0, 0)
 shadow_enabled = true
 
-[node name="Camera" type="Camera3D" parent="World"]
-transform = Transform3D(1, 0, 0, 0, 0.547358, 0.836898, 0, -0.836898, 0.547358, 0, 9.66365, 10.7009)
-
 [node name="GUI" type="Control" parent="." node_paths=PackedStringArray("startButton", "enable_on_start", "disable_on_start")]
 layout_mode = 3
 anchors_preset = 15
