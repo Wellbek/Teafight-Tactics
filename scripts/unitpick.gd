@@ -12,6 +12,8 @@ var timer: Timer
 
 var myid
 
+var multisync
+
 @export_file("*.png", "*.jpg") var image
 @export var unitName: String
 @export_enum("NONE","1", "2", "3") var star: int = 1
@@ -25,6 +27,7 @@ func _enter_tree():
 	main = get_tree().root.get_child(0)
 	timer = main.getTimer()
 	player = main.getPlayer()
+	multisync = find_child("MultiplayerSynchronizer", false)
 
 func setTile(newTile):
 	tile = newTile
@@ -34,8 +37,8 @@ func _input_event(camera, event, position, normal, shape_idx):
 	
 	if not timer.isPreparing(): return
 	
-	if event is InputEventMouseButton and event.is_pressed() and event.button_index == MOUSE_BUTTON_LEFT and !dragging:
-		dragging = true
+	if event is InputEventMouseButton and event.is_pressed() and event.button_index == MOUSE_BUTTON_LEFT and !isDragging():
+		setDragging(true)
 		toggleUI(false)
 		toggleGrid(true)
 		changeColor(tile.find_children("MeshInstance3D")[0], Color.WHITE)	
@@ -48,7 +51,7 @@ func _input(event):
 	
 	if not timer.isPreparing(): return
 	
-	if dragging:
+	if isDragging():
 		if event is InputEventMouseButton and event.is_released() and event.button_index == MOUSE_BUTTON_LEFT:
 			placeUnit()
 		elif event is InputEventMouseMotion:
@@ -84,10 +87,11 @@ func changeColor(mesh, color):
 	mesh.set_surface_override_material(0, newMaterial)
 
 func placeUnit():
-	if not dragging: return
+	if not isDragging(): return
 	
-	dragging = false
 	transform.origin.y -= 1
+	setDragging(false)
+
 	toggleGrid(false)
 	changeColor(coll.find_children("MeshInstance3D")[0], Color.CYAN)
 	
@@ -115,6 +119,20 @@ func toggleUI(value):
 func toggleGrid(value):
 	player.getBoardGrid().visible = value
 	player.getBenchGrid().visible = value
+
+func setDragging(value):
+	dragging = value
+	toggleSync(!value)
+	
+func isDragging():
+	return dragging
+
+func toggleSync(value):
+	if not is_multiplayer_authority(): return
+	
+	for prop in multisync.replication_config.get_properties():
+		print(prop)
+		multisync.replication_config.property_set_watch(prop, value)
 
 '
 extends CharacterBody3D

@@ -11,13 +11,6 @@ func _input(event):
 			changeCamera(i)
 		elif event.is_action_released("spectate" + str(i)):
 			changeCamera(-1)
-		
-	#if str("spectate").is_subsequence_of(event.as_text()):
-		#if event.is_action_pressed(event.as_text()):
-			#var id = event.as_text().trim_prefix("spectate")
-			#changeCamera(id+1)
-		#elif event.is_action_released(event.as_text()):
-			#changeCamera(0)
 
 func setPlayer(_player):
 	player = _player
