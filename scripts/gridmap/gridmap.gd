@@ -34,6 +34,7 @@ func generateHexGrid(_x: int, _z:int):
 			if zi % 2 != 0:
 				hexX += offset
 			hex.transform.origin = Vector3(hexX, 0, hexZ)
+			hex.set_multiplayer_authority(get_multiplayer_authority())
 			tiles.append(hex)
 			
 func generateGrid(_x: int, _z:int):
@@ -44,6 +45,7 @@ func generateGrid(_x: int, _z:int):
 			var squareX = w*xi
 			var squareZ = h*zi
 			square.transform.origin = Vector3(squareX, 0, squareZ)
+			square.set_multiplayer_authority(get_multiplayer_authority())
 			tiles.append(square)
 
 func getTiles():
