@@ -131,7 +131,7 @@ func toggleSync(value):
 	if not is_multiplayer_authority(): return
 	
 	for prop in multisync.replication_config.get_properties():
-		print(prop)
+		#print(prop)
 		multisync.replication_config.property_set_watch(prop, value)
 
 '

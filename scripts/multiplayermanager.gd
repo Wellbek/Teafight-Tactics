@@ -1,7 +1,10 @@
-extends Control
+extends Node
 
 var peer = ENetMultiplayerPeer.new()
 @export var player_scene: PackedScene
+var port = 6005
+
+@export var timer: Timer
 
 @export_subgroup("Temporary GUI Stuff")
 @export var startButton: Button
@@ -14,12 +17,12 @@ func _ready():
 	startButton.visible = false
 
 func _on_tmp_host_pressed():
-	peer.create_server(135, 8)
+	peer.create_server(port, 8)
 	multiplayer.multiplayer_peer = peer
 	disable_enable()
 
 func _on_tmp_join_pressed():
-	peer.create_client("127.0.0.1", 135)
+	peer.create_client("127.0.0.1", port)
 	multiplayer.multiplayer_peer = peer
 	disable_enable()
 
@@ -32,6 +35,7 @@ func start_game():
 	if not multiplayer.is_server(): return
 	
 	startButton.visible = false
+	timer.initialize()
 	
 	for id in multiplayer.get_peers():
 		add_player(id)

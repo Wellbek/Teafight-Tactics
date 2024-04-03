@@ -2,9 +2,9 @@ extends Timer
 
 var preparing: bool
 
-var currentRound = 1
-var preparationDuration = 60000 #30
-var combatDuration = 1 #??
+var current_round = 1
+var preparationDuration = 1 #30
+var combatDuration = 2 #??
 
 var unitShop: Control
 var label: Label
@@ -12,6 +12,8 @@ var label: Label
 var main
 
 var host = false
+
+var game_schedule = []
 
 func _enter_tree():
 	set_multiplayer_authority(1) #only host controls time
@@ -23,34 +25,72 @@ func _ready():
 	main = get_tree().root.get_child(0)
 	unitShop = main.getUI().get_node("UnitShop")
 	label = main.getUI().get_node("TimerLabel")
-	startPreparationPhase()
+	
+func initialize():
+	var peer_ids = multiplayer.get_peers()
+	var player_ids = [multiplayer.get_unique_id()]
+	player_ids.append_array(peer_ids)
+	
+	game_schedule = round_robin_pairs(player_ids)
+	
+	startPreparationPhase.rpc()
 
+@rpc("authority", "call_local", "reliable")
 func startPreparationPhase():
 	unitShop.visible = true
 	preparing = true
-	print("Preparation Phase Started for Round:", currentRound)
+	#print("Preparation Phase Started for Round: ", current_round)
 
-	if multiplayer.is_server():
-		wait_time = preparationDuration
-		start()
+	wait_time = preparationDuration
+	start()
 
+@rpc("authority", "call_local", "reliable")
 func startCombatPhase():
 	for unit in main.getPlayer().getUnits():
 		unit.placeUnit()
 	unitShop.visible = false
 	preparing = false
-	print("Combat Phase Started for Round:", currentRound)
+	#print("Combat Phase Started for Round: ", current_round)
 	
+	# determine matchups 
 	if multiplayer.is_server():
-		wait_time = combatDuration
-		start()
+		matchmake()
+	
+	wait_time = combatDuration	
+	start()
 
+func matchmake():
+	var round_schedule = game_schedule[current_round % len(game_schedule)]
+	print(round_schedule)
+		
+# round-robin tournament algorithm
+func round_robin_pairs(list):
+	if len(list) % 2 != 0: 
+		list.append(-1)  # Add a dummy player if the number of elements is odd
+	var num_players = len(list)
+	var num_rounds = num_players - 1
+	var schedule = []
+
+	for round in range(num_rounds):
+		var round_schedule = []
+		for i in range(num_players / 2):
+			if list[i] != -1 and list[num_players - 1 - i] != -1:
+				round_schedule.append([list[i], list[num_players - 1 - i]])
+		schedule.append(round_schedule)
+
+		# Rotate the list clockwise, except for the first element
+		list = [list[0]] + [list[-1]] + list.slice(1,num_players-1)
+
+	return schedule
+	
 func _on_Timer_timeout():
+	if not multiplayer.is_server(): return
+	
 	if preparing:
-		startCombatPhase()
+		startCombatPhase.rpc()
 	else:
-		currentRound += 1
-		startPreparationPhase()
+		current_round += 1
+		startPreparationPhase.rpc()
 		
 func isPreparing():
 	return preparing

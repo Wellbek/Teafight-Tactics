@@ -1,10 +1,15 @@
-[gd_scene load_steps=7 format=3 uid="uid://cqs5r3b42amb7"]
+[gd_scene load_steps=8 format=3 uid="uid://cqs5r3b42amb7"]
 
 [ext_resource type="Script" path="res://scripts/main.gd" id="1_35go2"]
 [ext_resource type="Script" path="res://scripts/roundtimer.gd" id="2_8mgga"]
 [ext_resource type="PackedScene" uid="uid://beet8rjehupwb" path="res://src/ui/unit_purchase_button.tscn" id="4_2wa6j"]
 [ext_resource type="PackedScene" uid="uid://g18y6a837usc" path="res://src/player.tscn" id="4_bh7tl"]
-[ext_resource type="Script" path="res://scenes/multiplayer_test.gd" id="4_d7qmq"]
+[ext_resource type="Script" path="res://scripts/multiplayermanager.gd" id="4_d7qmq"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_qt5p0"]
+properties/0/path = NodePath(".:wait_time")
+properties/0/spawn = true
+properties/0/replication_mode = 1
 
 [sub_resource type="LabelSettings" id="LabelSettings_gtjgx"]
 font_size = 50
@@ -14,9 +19,20 @@ script = ExtResource("1_35go2")
 timer = NodePath("RoundTimer")
 gui = NodePath("GUI")
 
+[node name="MultiplayerManager" type="Node" parent="." node_paths=PackedStringArray("timer", "startButton", "enable_on_start", "disable_on_start")]
+script = ExtResource("4_d7qmq")
+player_scene = ExtResource("4_bh7tl")
+timer = NodePath("../RoundTimer")
+startButton = NodePath("../GUI/TmpStartGame")
+enable_on_start = [NodePath("../GUI/UnitShop"), NodePath("../GUI/TimerLabel")]
+disable_on_start = [NodePath("../GUI/TmpHost"), NodePath("../GUI/TmpJoin"), NodePath("../GUI/TmpStartGame")]
+
 [node name="RoundTimer" type="Timer" parent="."]
-wait_time = 5.0
+one_shot = true
 script = ExtResource("2_8mgga")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="RoundTimer"]
+replication_config = SubResource("SceneReplicationConfig_qt5p0")
 
 [node name="World" type="Node3D" parent="."]
 
@@ -24,7 +40,7 @@ script = ExtResource("2_8mgga")
 transform = Transform3D(1, 0, 0, 0, 0.418279, 0.908318, 0, -0.908318, 0.418279, 0, 0, 0)
 shadow_enabled = true
 
-[node name="GUI" type="Control" parent="." node_paths=PackedStringArray("startButton", "enable_on_start", "disable_on_start")]
+[node name="GUI" type="Control" parent="."]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -32,11 +48,6 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 1
-script = ExtResource("4_d7qmq")
-player_scene = ExtResource("4_bh7tl")
-startButton = NodePath("TmpStartGame")
-enable_on_start = [NodePath("UnitShop"), NodePath("TimerLabel")]
-disable_on_start = [NodePath("TmpHost"), NodePath("TmpJoin")]
 
 [node name="UnitShop" type="Control" parent="GUI"]
 layout_mode = 1
@@ -133,6 +144,6 @@ spawn_path = NodePath("../World")
 spawn_limit = 8
 
 [connection signal="timeout" from="RoundTimer" to="RoundTimer" method="_on_Timer_timeout"]
-[connection signal="pressed" from="GUI/TmpHost" to="GUI" method="_on_tmp_host_pressed"]
-[connection signal="pressed" from="GUI/TmpJoin" to="GUI" method="_on_tmp_join_pressed"]
-[connection signal="pressed" from="GUI/TmpStartGame" to="GUI" method="_on_tmp_start_game_pressed"]
+[connection signal="pressed" from="GUI/TmpHost" to="MultiplayerManager" method="_on_tmp_host_pressed"]
+[connection signal="pressed" from="GUI/TmpJoin" to="MultiplayerManager" method="_on_tmp_join_pressed"]
+[connection signal="pressed" from="GUI/TmpStartGame" to="MultiplayerManager" method="_on_tmp_start_game_pressed"]
