@@ -5,6 +5,7 @@ var main
 @export var benchGrid: Node3D
 @export var boardGrid: Node3D
 @export var camera: Camera3D
+@export var enemyCam: Camera3D
 
 @export var multiplayerSpawner: MultiplayerSpawner
 
@@ -42,6 +43,7 @@ func combatphase_setup(enemy_path, host:bool):
 	if not host:	
 		combatunit_parent.global_transform.origin = enemy.find_child("CombatUnits").global_transform.origin
 		combatunit_parent.rotate_y(deg_to_rad(180))
+		main.changeCameraByID(enemy.name.to_int())
 				
 	for unit in unit_parent.get_children():
 		copyUnit.rpc(unit.get_path(), combatunit_parent.get_path())
@@ -75,6 +77,9 @@ func getBoardGrid():
 	
 func getCamera():
 	return camera
+	
+func getEnemyCam():
+	return enemyCam
 	
 func getID():
 	return myid

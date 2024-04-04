@@ -7,11 +7,9 @@ var local_player
 var players = []
 
 func _input(event):
-	for i in range(multiplayer.get_peers().size()):
+	for i in range(len(multiplayer.get_peers())+1):
 		if event.is_action_pressed("spectate" + str(i)):
 			changeCamera(i)
-		elif event.is_action_released("spectate" + str(i)):
-			changeCamera(-1)
 
 func setPlayer(_player):
 	local_player = _player
@@ -26,13 +24,21 @@ func getUI():
 	return gui
 	
 func changeCamera(_index):		
-	if _index == -1: 
+	if _index == 0: 
 		local_player.getCamera().current = true
 	else:	
 		var ids = multiplayer.get_peers()
-		if _index >= ids.size(): return
+		if _index-1 >= ids.size(): return
 		ids.sort()
-		var peername = str(ids[_index])
+		var peername = str(ids[_index-1])
 		var peer = get_tree().root.get_child(0).find_child("World").get_node(peername)
-		peer.getCamera().current = true
+		peer.getEnemyCam().current = true
+		
+func changeCameraByID(_id):		
+	if _id == multiplayer.get_unique_id(): 
+		local_player.getCamera().current = true
+	else:	
+		var peer = get_tree().root.get_child(0).find_child("World").get_node(str(_id))
+		if peer:
+			peer.getEnemyCam().current = true
 
