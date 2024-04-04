@@ -73,7 +73,7 @@ func upgrade(_unit):
 				main.getPlayer().eraseUnit(_unit) # this has to be done for the recursive upgrade. If _unit not in playerUnits nothing happens
 				freeObject.rpc(_unit.get_path()) #unload
 				# prioritze units on board, remove in bank
-				if sameUnits[0].tile.get_parent().type == sameUnits[0].tile.get_parent().Type.SQUARE:
+				if sameUnits[0].tile.get_parent().type == sameUnits[0].tile.get_parent().SQUARE:
 					sameUnits[0].tile.unregisterUnit()
 					main.getPlayer().eraseUnit(sameUnits[0])
 					freeObject.rpc(sameUnits[0].get_path())

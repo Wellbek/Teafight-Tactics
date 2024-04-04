@@ -19,6 +19,14 @@ var multisync
 @export_enum("NONE","1", "2", "3") var star: int = 1
 @export var ui: Control
 
+enum {SQUARE, HEX}
+enum {PREP, BATTLE}
+
+var mode = PREP
+
+var target = null
+var targetable = false
+
 func _enter_tree():
 	myid = name.get_slice("#", 0).to_int()
 	set_multiplayer_authority(myid)
@@ -28,15 +36,31 @@ func _enter_tree():
 	timer = main.getTimer()
 	player = main.getPlayer()
 	multisync = find_child("MultiplayerSynchronizer", false)
+	
+func _process(delta):
+	if mode == BATTLE and target == null and is_multiplayer_authority():
+		find_target()
 
 func setTile(newTile):
 	tile = newTile
+	change_target_status.rpc(true if tile.get_parent().getType() == HEX else false)
+	
+@rpc("any_peer", "call_local", "unreliable")
+func change_target_status(value):
+	targetable = value
+	
+func is_targetable():
+	return targetable
+	
+func getTile():
+	return tile
+	
+func getTileType():
+	return tile.get_parent().getType()
 
 func _input_event(camera, event, position, normal, shape_idx):
-	if not is_multiplayer_authority(): return
-	
-	if not timer.isPreparing(): return
-	
+	if not is_multiplayer_authority() or not timer.isPreparing() or not mode == PREP: return
+
 	if event is InputEventMouseButton and event.is_pressed() and event.button_index == MOUSE_BUTTON_LEFT and !isDragging():
 		setDragging(true)
 		toggleUI(false)
@@ -47,9 +71,7 @@ func _input_event(camera, event, position, normal, shape_idx):
 		transform.origin.y += 1
 
 func _input(event):
-	if not is_multiplayer_authority(): return
-	
-	if not timer.isPreparing(): return
+	if not is_multiplayer_authority() or not timer.isPreparing() or not mode == PREP: return
 	
 	if isDragging():
 		if event is InputEventMouseButton and event.is_released() and event.button_index == MOUSE_BUTTON_LEFT:
@@ -81,6 +103,35 @@ func _input(event):
 
 				global_transform.origin = Vector3(mouse_position_3D.x, global_transform.origin.y, mouse_position_3D.z)
 
+func change_mode(_mode: int):
+	match _mode:
+		PREP:
+			mode = _mode
+		BATTLE:
+			toggleSync(true)
+			mode = _mode
+		_: 
+			return
+			
+func get_mode():
+	return mode
+			
+func find_target():
+	if not player.getCurrentEnemy() or mode != BATTLE or not is_multiplayer_authority(): return
+	
+	var enemy_units = player.getCurrentEnemy().find_child("CombatUnits").get_children()
+	
+	for unit in enemy_units:	
+		if not unit.is_targetable(): continue
+		
+		#if multiplayer.is_server(): print(unit.name, ": ", global_transform.origin.distance_to(unit.global_transform.origin))
+		
+		if not target or global_transform.origin.distance_to(unit.global_transform.origin) < global_transform.origin.distance_to(target.global_transform.origin):
+			target = unit
+			
+	#if multiplayer.is_server():
+	#	if target != null: print(self, " targets ", target)
+
 func changeColor(mesh, color):
 	var newMaterial = StandardMaterial3D.new()
 	newMaterial.albedo_color = color
@@ -100,7 +151,7 @@ func placeUnit():
 	
 	if tile == coll: 
 		global_transform.origin = Vector3(tile.global_transform.origin.x, global_transform.origin.y, tile.global_transform.origin.z)
-		if tile.get_parent().type == tile.get_parent().Type.HEX: 
+		if tile.get_parent().type == tile.get_parent().HEX: 
 			toggleUI(true)
 	elif tile != null: 
 		if coll.hasUnit(): 

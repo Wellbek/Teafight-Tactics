@@ -9,9 +9,13 @@ var main
 
 @export var multiplayerSpawner: MultiplayerSpawner
 
+enum {SQUARE, HEX}
+
 var units = []
 
 var myid
+
+var current_enemy = null
 
 func _enter_tree():
 	main = get_tree().root.get_child(0)
@@ -34,19 +38,19 @@ func _ready():
 
 @rpc("any_peer", "call_local", "reliable")
 func combatphase_setup(enemy_path, host:bool):
-	var enemy = get_tree().root.get_node(enemy_path)
+	current_enemy = get_tree().root.get_node(enemy_path)
 	
 	var unit_parent = find_child("Units")
 	unit_parent.visible = false
 	var combatunit_parent = find_child("CombatUnits")	
 	
 	if not host:	
-		combatunit_parent.global_transform.origin = enemy.find_child("CombatUnits").global_transform.origin
+		combatunit_parent.global_transform.origin = current_enemy.find_child("CombatUnits").global_transform.origin
 		combatunit_parent.rotate_y(deg_to_rad(180))
-		main.changeCameraByID(enemy.name.to_int())
+		main.changeCameraByID(current_enemy.name.to_int())
 				
 	for unit in unit_parent.get_children():
-		copyUnit.rpc(unit.get_path(), combatunit_parent.get_path())
+			copyUnit.rpc(unit.get_path(), combatunit_parent.get_path())
 
 	combatunit_parent.visible = true
 
@@ -63,6 +67,8 @@ func reset_combatphase():
 	combatunit_parent.global_transform.origin = unit_parent.global_transform.origin
 	combatunit_parent.rotation = Vector3.ZERO
 	
+	current_enemy = null
+	
 	unit_parent.visible = true
 	main.changeCamera(0)
 
@@ -71,6 +77,9 @@ func copyUnit(unit_path, parent_path):
 	var unit = get_tree().root.get_node(unit_path)
 	var parent = get_tree().root.get_node(parent_path)
 	var copy = unit.duplicate()
+	if unit.is_targetable():
+		copy.change_mode(copy.BATTLE)
+		copy.change_target_status(true)
 	parent.call("add_child", copy, true)
 
 @rpc("any_peer", "call_local", "reliable")
@@ -104,3 +113,6 @@ func getEnemyCam():
 	
 func getID():
 	return myid
+	
+func getCurrentEnemy():
+	return current_enemy

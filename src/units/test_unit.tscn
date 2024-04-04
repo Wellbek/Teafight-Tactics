@@ -1,6 +1,6 @@
 [gd_scene load_steps=8 format=3 uid="uid://c1r5t4e8vxrye"]
 
-[ext_resource type="Script" path="res://scripts/unitpick.gd" id="1_urhs2"]
+[ext_resource type="Script" path="res://scripts/unit.gd" id="1_urhs2"]
 [ext_resource type="PackedScene" uid="uid://cmyaotov37g7y" path="res://src/ui/unit_ui.tscn" id="2_xw0wm"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_tcrfm"]

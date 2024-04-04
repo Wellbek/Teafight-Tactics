@@ -1,11 +1,11 @@
 extends Node3D
 
+enum {SQUARE, HEX}
+
 @export var x: int = 7
 @export var z: int = 4
 
-@export var type: Type = Type.SQUARE
-
-enum Type {SQUARE, HEX}
+@export_enum("SQUARE", "HEX") var type:int = 0
 
 #https://www.redblobgames.com/grids/hexagons/
 const size = 1
@@ -20,8 +20,8 @@ const wCorrection = 1.10
 var tiles = []
 
 func _ready():
-	if type == Type.SQUARE: generateGrid(x,z)
-	elif type == Type.HEX: generateHexGrid(x,z)
+	if type == SQUARE: generateGrid(x,z)
+	elif type == HEX: generateHexGrid(x,z)
 	else: printerr("Unknown grid type")
 
 func generateHexGrid(_x: int, _z:int):
@@ -50,6 +50,9 @@ func generateGrid(_x: int, _z:int):
 
 func getTiles():
 	return tiles
+	
+func getType():
+	return type
 	
 func getFirstFreeTile():
 	for tile in tiles:

@@ -10,7 +10,8 @@ func registerUnit(newUnit):
 	
 	unregisterUnit()
 	unit = newUnit
-	unit.toggleUI(get_parent().type == get_parent().Type.HEX)
+	unit.setTile(self)
+	unit.toggleUI(get_parent().type == get_parent().HEX)
 	unit.global_transform.origin = Vector3(global_transform.origin.x, unit.global_transform.origin.y, global_transform.origin.z)
 
 func unregisterUnit():
@@ -23,9 +24,6 @@ func swapUnit(oldTile):
 	var oldUnit = unit
 	registerUnit(oldTile.getUnit())
 	oldTile.registerUnit(oldUnit)
-	
-	unit.setTile(self)
-	oldUnit.setTile(oldTile)
 	
 func hasUnit():
 	return unit != null
