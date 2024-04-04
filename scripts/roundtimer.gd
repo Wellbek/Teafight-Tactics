@@ -3,8 +3,8 @@ extends Timer
 var preparing: bool
 
 var current_round = 1
-var preparationDuration = 1 #30
-var combatDuration = 2 #??
+var preparationDuration = 30 #30
+var combatDuration = 20 #??
 
 var unitShop: Control
 var label: Label
@@ -61,7 +61,20 @@ func startCombatPhase():
 
 func matchmake():
 	var round_schedule = game_schedule[current_round % len(game_schedule)]
-	print(round_schedule)
+	
+	for matchup in round_schedule:
+		var player1 = null
+		var player2 = null
+		for player in main.players:
+			if player.getID() == matchup[0]: player1 = player
+			elif player.getID() == matchup[1]: player2 = player
+		
+		if not (player1 and player2): 
+			printerr("ERROR: couldn't matchmake as one of the players is NULL")
+			return
+			
+		player1.combatphase_setup.rpc_id(matchup[0], player2.get_path(), true)
+		player2.combatphase_setup.rpc_id(matchup[1], player1.get_path(), false)
 		
 # round-robin tournament algorithm
 func round_robin_pairs(list):

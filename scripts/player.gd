@@ -31,6 +31,30 @@ func _ready():
 		global_transform.origin.x += 19 * i
 		camera.current = true
 
+@rpc("any_peer", "call_local", "reliable")
+func combatphase_setup(enemy_path, host:bool):
+	var enemy = get_tree().root.get_node(enemy_path)
+	
+	var unit_parent = find_child("Units")
+	unit_parent.visible = false
+	var combatunit_parent = find_child("CombatUnits")	
+	
+	if not host:	
+		combatunit_parent.global_transform.origin = enemy.find_child("CombatUnits").global_transform.origin
+		combatunit_parent.rotate_y(deg_to_rad(180))
+				
+	for unit in unit_parent.get_children():
+		copyUnit.rpc(unit.get_path(), combatunit_parent.get_path())
+
+	combatunit_parent.visible = true
+
+@rpc("any_peer", "call_local", "reliable")
+func copyUnit(unit_path, parent_path):
+	var unit = get_tree().root.get_node(unit_path)
+	var parent = get_tree().root.get_node(parent_path)
+	var copy = unit.duplicate()
+	parent.call("add_child", copy, true)
+
 func appendUnit(unit):
 	units.append(unit)
 
@@ -51,3 +75,6 @@ func getBoardGrid():
 	
 func getCamera():
 	return camera
+	
+func getID():
+	return myid

@@ -4,6 +4,7 @@ var peer = ENetMultiplayerPeer.new()
 @export var player_scene: PackedScene
 var port = 6005
 
+@export var main: Node
 @export var timer: Timer
 
 @export_subgroup("Temporary GUI Stuff")
@@ -26,10 +27,12 @@ func _on_tmp_join_pressed():
 	multiplayer.multiplayer_peer = peer
 	disable_enable()
 
+# only executed on server but sync using multiplayerspawner to other clients
 func add_player(id = 1):
 	var player = player_scene.instantiate()
 	player.name = str(id)
 	get_tree().root.get_child(0).find_child("World").call_deferred("add_child", player, true)
+	main.players.append(player)
 			
 func start_game():
 	if not multiplayer.is_server(): return

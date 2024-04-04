@@ -19,6 +19,18 @@ size = Vector3(18, 1, 2)
 properties/0/path = NodePath(".:position")
 properties/0/spawn = true
 properties/0/replication_mode = 1
+properties/1/path = NodePath("Units:visible")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+properties/2/path = NodePath("CombatUnits:rotation")
+properties/2/spawn = true
+properties/2/replication_mode = 1
+properties/3/path = NodePath("CombatUnits:position")
+properties/3/spawn = true
+properties/3/replication_mode = 1
+properties/4/path = NodePath("CombatUnits:visible")
+properties/4/spawn = true
+properties/4/replication_mode = 1
 
 [node name="Player" type="Node3D" node_paths=PackedStringArray("benchGrid", "boardGrid", "camera", "multiplayerSpawner")]
 script = ExtResource("1_mrq3l")
@@ -61,7 +73,18 @@ script = ExtResource("1_ust0k")
 x = 9
 z = 1
 
-[node name="Units" type="Node" parent="."]
+[node name="EnemyBench" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.3, -9)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="EnemyBench"]
+shape = SubResource("BoxShape3D_jlr6y")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="EnemyBench"]
+mesh = SubResource("BoxMesh_amsno")
+
+[node name="Units" type="Node3D" parent="."]
+
+[node name="CombatUnits" type="Node3D" parent="."]
 
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
 _spawnable_scenes = PackedStringArray("res://src/units/prep_cook.tscn", "res://src/units/test_unit.tscn")

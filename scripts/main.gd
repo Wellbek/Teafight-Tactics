@@ -1,11 +1,12 @@
 extends Node
 
-var player
+var local_player
 @export var timer: Timer
 @export var gui: Control
 
+var players = []
+
 func _input(event):
-	
 	for i in range(multiplayer.get_peers().size()):
 		if event.is_action_pressed("spectate" + str(i)):
 			changeCamera(i)
@@ -13,10 +14,10 @@ func _input(event):
 			changeCamera(-1)
 
 func setPlayer(_player):
-	player = _player
+	local_player = _player
 
 func getPlayer():
-	return player
+	return local_player
 	
 func getTimer():
 	return timer
@@ -26,7 +27,7 @@ func getUI():
 	
 func changeCamera(_index):		
 	if _index == -1: 
-		player.getCamera().current = true
+		local_player.getCamera().current = true
 	else:	
 		var ids = multiplayer.get_peers()
 		if _index >= ids.size(): return
