@@ -3,8 +3,8 @@ extends Timer
 var preparing: bool
 
 var current_round = 1
-var preparationDuration = 30 #30
-var combatDuration = 20 #??
+var preparationDuration = 10 #30
+var combatDuration = 5 #??
 
 var unitShop: Control
 var label: Label
@@ -37,6 +37,9 @@ func initialize():
 
 @rpc("authority", "call_local", "reliable")
 func startPreparationPhase():
+	for player in main.players:
+		player.reset_combatphase.rpc_id(player.getID())
+	
 	unitShop.visible = true
 	preparing = true
 	#print("Preparation Phase Started for Round: ", current_round)

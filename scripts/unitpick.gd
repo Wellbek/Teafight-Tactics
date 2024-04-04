@@ -93,6 +93,9 @@ func placeUnit():
 	setDragging(false)
 
 	toggleGrid(false)
+	
+	if coll == null: coll = tile # if mouse never passes over a collider coll will be null => precaution against this error
+	
 	changeColor(coll.find_children("MeshInstance3D")[0], Color.CYAN)
 	
 	if tile == coll: 
