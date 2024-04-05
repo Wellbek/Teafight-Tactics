@@ -4,7 +4,7 @@ var preparing: bool
 
 var current_round = 1
 var preparationDuration = 15 #30
-var combatDuration = 5 #??
+var combatDuration = 20 #??
 
 var unitShop: Control
 var label: Label
@@ -25,6 +25,7 @@ func _ready():
 	main = get_tree().root.get_child(0)
 	unitShop = main.getUI().get_node("UnitShop")
 	label = main.getUI().get_node("TimerLabel")
+	set_multiplayer_authority(1)
 	
 func initialize():
 	var peer_ids = multiplayer.get_peers()
@@ -37,13 +38,14 @@ func initialize():
 
 @rpc("authority", "call_local", "reliable")
 func startPreparationPhase():
-	for player in main.players:
-		player.reset_combatphase.rpc_id(player.getID())
+	if multiplayer.is_server():
+		for player in main.players:
+			player.reset_combatphase.rpc_id(player.getID())
 	
 	unitShop.visible = true
 	preparing = true
 	#print("Preparation Phase Started for Round: ", current_round)
-
+	
 	wait_time = preparationDuration
 	start()
 

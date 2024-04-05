@@ -27,7 +27,12 @@ properties/2/replication_mode = 2
 [node name="TestUnit" type="CharacterBody3D" node_paths=PackedStringArray("ui")]
 transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, 999, 1, 999)
 collision_layer = 8
-collision_mask = 9
+collision_mask = 8
+axis_lock_linear_y = true
+axis_lock_angular_x = true
+axis_lock_angular_z = true
+motion_mode = 1
+safe_margin = 0.5
 script = ExtResource("1_urhs2")
 image = "res://src/units/test_unit.png"
 unitName = "test"

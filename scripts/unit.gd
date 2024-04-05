@@ -1,4 +1,4 @@
-extends CollisionObject3D
+extends CharacterBody3D
 
 var dragging: bool = false
 var initialPos: Vector3
@@ -27,6 +27,10 @@ var mode = PREP
 var target = null
 var targetable = false
 
+@export_category("Stats")
+@export var movespeed = 5.0
+@export var attackrange = 4.0
+
 func _enter_tree():
 	myid = name.get_slice("#", 0).to_int()
 	set_multiplayer_authority(myid)
@@ -40,6 +44,15 @@ func _enter_tree():
 func _process(delta):
 	if mode == BATTLE and target == null and is_multiplayer_authority():
 		find_target()
+
+func _physics_process(delta):		
+	if target and mode == BATTLE:
+		var distance = global_transform.origin.distance_to(target.global_transform.origin)
+		
+		if distance > attackrange:
+			velocity = (target.global_transform.origin - global_transform.origin).normalized() * movespeed
+			move_and_slide()
+			look_at(target.global_transform.origin)	
 
 func setTile(newTile):
 	tile = newTile
@@ -104,14 +117,7 @@ func _input(event):
 				global_transform.origin = Vector3(mouse_position_3D.x, global_transform.origin.y, mouse_position_3D.z)
 
 func change_mode(_mode: int):
-	match _mode:
-		PREP:
-			mode = _mode
-		BATTLE:
-			toggleSync(true)
-			mode = _mode
-		_: 
-			return
+	mode = _mode
 			
 func get_mode():
 	return mode
@@ -187,7 +193,6 @@ func toggleSync(value):
 	for prop in multisync.replication_config.get_properties():
 		#print(prop)
 		multisync.replication_config.property_set_watch(prop, value)
-
 '
 extends CharacterBody3D
 

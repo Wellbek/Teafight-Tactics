@@ -55,14 +55,14 @@ func combatphase_setup(enemy_path, host:bool):
 	combatunit_parent.visible = true
 
 @rpc("any_peer", "call_local", "reliable")
-func reset_combatphase():
+func reset_combatphase():	
 	var unit_parent = find_child("Units")
 	var combatunit_parent = find_child("CombatUnits")	
 	
-	combatunit_parent.visible = false
-	
 	for unit in combatunit_parent.get_children():
 		deleteUnit.rpc(unit.get_path())
+		
+	combatunit_parent.visible = false
 		
 	combatunit_parent.global_transform.origin = unit_parent.global_transform.origin
 	combatunit_parent.rotation = Vector3.ZERO
@@ -77,10 +77,12 @@ func copyUnit(unit_path, parent_path):
 	var unit = get_tree().root.get_node(unit_path)
 	var parent = get_tree().root.get_node(parent_path)
 	var copy = unit.duplicate()
+	parent.call("add_child", copy, true)
+	while true:
+		if copy.is_inside_tree(): break
 	if unit.is_targetable():
 		copy.change_mode(copy.BATTLE)
 		copy.change_target_status(true)
-	parent.call("add_child", copy, true)
 
 @rpc("any_peer", "call_local", "reliable")
 func deleteUnit(unit_path):
