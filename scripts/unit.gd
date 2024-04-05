@@ -25,11 +25,21 @@ enum {PREP, BATTLE}
 var mode = PREP
 
 var target = null
-var targetable = false
+var targetable = false 
+var attacking = false
 
 @export_category("Stats")
 @export var movespeed = 5.0
 @export var attackrange = 4.0
+@export var max_health = 100.0
+var curr_health = max_health
+@export var attack_dmg = 20.0
+@export var armor = 30.0
+@export var attack_speed = 0.8
+@export var attack_timer: Timer
+
+func _ready():
+	attack_timer.timeout.connect(_on_attack_timer_timeout)
 
 func _enter_tree():
 	myid = name.get_slice("#", 0).to_int()
@@ -45,14 +55,18 @@ func _process(delta):
 	if mode == BATTLE and target == null and is_multiplayer_authority():
 		find_target()
 
-func _physics_process(delta):		
+func _physics_process(delta):	
+	if target and not is_instance_valid(target): target = null
+		
 	if target and mode == BATTLE:
 		var distance = global_transform.origin.distance_to(target.global_transform.origin)
 		
 		if distance > attackrange:
+			attacking = false
 			velocity = (target.global_transform.origin - global_transform.origin).normalized() * movespeed
 			move_and_slide()
-			look_at(target.global_transform.origin)	
+			look_at(target.global_transform.origin)
+		elif not attacking: in_attack_range()
 
 func setTile(newTile):
 	tile = newTile
@@ -224,3 +238,30 @@ func _physics_process(delta):
 		velocity.z = move_toward(velocity.z, 0, SPEED)
 
 	move_and_slide()'
+
+func in_attack_range():
+	attacking = true
+	attack_timer.wait_time = 1/attack_speed
+	attack_timer.start()
+	
+func _on_attack_timer_timeout():
+	auto_attack(target)
+
+func auto_attack(_target):
+	if _target == null or _target.get_mode() != BATTLE: return
+	
+	_target.take_dmg.rpc(attack_dmg)
+
+@rpc("any_peer", "call_local", "unreliable")
+func take_dmg(raw_dmg):
+	if mode != BATTLE: return
+	
+	var dmg = raw_dmg / (1+armor/100) # https://leagueoflegends.fandom.com/wiki/Armor
+	
+	curr_health = 0 if dmg >= curr_health else curr_health-dmg
+	
+	ui.find_child("HPBar").value = curr_health/max_health * 100
+	
+	if curr_health <= 0: 
+		queue_free()
+		# check server sided if player still has units 
