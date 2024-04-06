@@ -41,4 +41,8 @@ func changeCameraByID(_id):
 		var peer = get_tree().root.get_child(0).find_child("World").get_node(str(_id))
 		if peer:
 			peer.getEnemyCam().current = true
-
+			
+@rpc("any_peer", "call_local", "unreliable")
+func freeObject(_path):
+	var instance = get_tree().root.get_node(_path)
+	instance.queue_free()

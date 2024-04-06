@@ -17,7 +17,7 @@ var multisync
 @export_file("*.png", "*.jpg") var image
 @export var unitName: String
 @export_enum("NONE","1", "2", "3") var star: int = 1
-@export var ui: Control
+var ui: Control
 
 enum {SQUARE, HEX}
 enum {PREP, BATTLE}
@@ -40,7 +40,10 @@ var curr_health = max_health
 
 func _ready():
 	attack_timer.timeout.connect(_on_attack_timer_timeout)
-
+	var viewport = find_child("SubViewport")
+	ui = viewport.get_child(0)
+	find_child("Sprite3D").texture = viewport.get_texture()
+	
 func _enter_tree():
 	myid = name.get_slice("#", 0).to_int()
 	set_multiplayer_authority(myid)
@@ -48,7 +51,7 @@ func _enter_tree():
 	
 	main = get_tree().root.get_child(0)
 	timer = main.getTimer()
-	player = main.getPlayer()
+	player = main.find_child("World").get_node(str(myid))
 	multisync = find_child("MultiplayerSynchronizer", false)
 	
 func _process(delta):
@@ -200,6 +203,9 @@ func setDragging(value):
 	
 func isDragging():
 	return dragging
+	
+func get_owner_id():
+	return player.getID()
 
 func toggleSync(value):
 	if not is_multiplayer_authority(): return
@@ -250,7 +256,7 @@ func _on_attack_timer_timeout():
 func auto_attack(_target):
 	if _target == null or _target.get_mode() != BATTLE: return
 	
-	_target.take_dmg.rpc(attack_dmg)
+	_target.take_dmg.rpc_id(_target.get_owner_id(), attack_dmg)
 
 @rpc("any_peer", "call_local", "unreliable")
 func take_dmg(raw_dmg):
@@ -260,8 +266,8 @@ func take_dmg(raw_dmg):
 	
 	curr_health = 0 if dmg >= curr_health else curr_health-dmg
 	
-	ui.find_child("HPBar").value = curr_health/max_health * 100
+	ui.get_node("HPBar").value = curr_health/max_health * 100
 	
 	if curr_health <= 0: 
-		queue_free()
-		# check server sided if player still has units 
+		main.freeObject.rpc(get_path())
+		# TODO: check server sided if player still has units 

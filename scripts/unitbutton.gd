@@ -54,12 +54,7 @@ func handleSpawn(_unit_path):
 			tile.registerUnit(instance)
 			disabled = true
 		else: 
-			freeObject.rpc(instance.get_path())
-			
-@rpc("any_peer", "call_local", "unreliable")
-func freeObject(_path):
-	var instance = get_tree().root.get_node(_path)
-	instance.queue_free()
+			main.freeObject.rpc(instance.get_path())
 
 func upgrade(_unit):
 	if _unit.star >= 3: return null
@@ -71,18 +66,18 @@ func upgrade(_unit):
 			sameUnits.append(u)
 			if sameUnits.size() >= 2:
 				main.getPlayer().eraseUnit(_unit) # this has to be done for the recursive upgrade. If _unit not in playerUnits nothing happens
-				freeObject.rpc(_unit.get_path()) #unload
+				main.freeObject.rpc(_unit.get_path()) #unload
 				# prioritze units on board, remove in bank
 				if sameUnits[0].tile.get_parent().type == sameUnits[0].tile.get_parent().SQUARE:
 					sameUnits[0].tile.unregisterUnit()
 					main.getPlayer().eraseUnit(sameUnits[0])
-					freeObject.rpc(sameUnits[0].get_path())
+					main.freeObject.rpc(sameUnits[0].get_path())
 					sameUnits[1].levelUp()
 					return sameUnits[1]
 				else: 
 					sameUnits[1].tile.unregisterUnit()
 					main.getPlayer().eraseUnit(sameUnits[1])
-					freeObject.rpc(sameUnits[1].get_path())
+					main.freeObject.rpc(sameUnits[1].get_path())
 					sameUnits[0].levelUp()
 					return sameUnits[0]
 	return null

@@ -23,7 +23,7 @@ func _enter_tree():
 	set_multiplayer_authority(myid)
 	#print(str(multiplayer.get_unique_id()) + ": " + str(get_multiplayer_authority()))
 	multiplayerSpawner.set_multiplayer_authority(1)
-	
+
 func _ready():
 	if (is_multiplayer_authority()):
 		main.setPlayer(self)
@@ -60,7 +60,7 @@ func reset_combatphase():
 	var combatunit_parent = find_child("CombatUnits")	
 	
 	for unit in combatunit_parent.get_children():
-		deleteUnit.rpc(unit.get_path())
+		main.freeObject.rpc(unit.get_path())
 		
 	combatunit_parent.visible = false
 		
@@ -69,7 +69,7 @@ func reset_combatphase():
 	
 	current_enemy = null
 	
-	unit_parent.visible = true
+	unit_parent.visible = true	
 	main.changeCamera(0)
 
 @rpc("any_peer", "call_local", "reliable")
@@ -83,11 +83,6 @@ func copyUnit(unit_path, parent_path):
 	if unit.is_targetable():
 		copy.change_mode(copy.BATTLE)
 		copy.change_target_status(true)
-
-@rpc("any_peer", "call_local", "reliable")
-func deleteUnit(unit_path):
-	var unit = get_tree().root.get_node(unit_path)
-	unit.queue_free()
 
 func appendUnit(unit):
 	units.append(unit)

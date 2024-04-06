@@ -10,10 +10,10 @@
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_oobci"]
 albedo_color = Color(0.988235, 0.14902, 0.423529, 1)
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_5tw7b"]
+[sub_resource type="ViewportTexture" id="ViewportTexture_7fr4r"]
 viewport_path = NodePath("SubViewport")
 
-[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_8oqv2"]
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_317pc"]
 properties/0/path = NodePath(".:position")
 properties/0/spawn = true
 properties/0/replication_mode = 2
@@ -23,8 +23,11 @@ properties/1/replication_mode = 2
 properties/2/path = NodePath("SubViewport/UnitUI:visible")
 properties/2/spawn = true
 properties/2/replication_mode = 2
+properties/3/path = NodePath(".:curr_health")
+properties/3/spawn = true
+properties/3/replication_mode = 2
 
-[node name="TestUnit" type="CharacterBody3D" node_paths=PackedStringArray("ui", "attack_timer")]
+[node name="TestUnit" type="CharacterBody3D" node_paths=PackedStringArray("attack_timer")]
 transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, 999, 1, 999)
 collision_layer = 8
 collision_mask = 8
@@ -36,7 +39,6 @@ safe_margin = 0.5
 script = ExtResource("1_urhs2")
 image = "res://src/units/test_unit.png"
 unitName = "test"
-ui = NodePath("SubViewport/UnitUI")
 attack_dmg = 10.0
 attack_speed = 1.2
 attack_timer = NodePath("AttackTimer")
@@ -51,7 +53,7 @@ surface_material_override/0 = SubResource("StandardMaterial3D_oobci")
 [node name="Sprite3D" type="Sprite3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.24283, 0)
 billboard = 1
-texture = SubResource("ViewportTexture_5tw7b")
+texture = SubResource("ViewportTexture_7fr4r")
 
 [node name="AttackTimer" type="Timer" parent="."]
 
@@ -63,4 +65,4 @@ size = Vector2i(150, 30)
 [node name="UnitUI" parent="SubViewport" instance=ExtResource("2_xw0wm")]
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
-replication_config = SubResource("SceneReplicationConfig_8oqv2")
+replication_config = SubResource("SceneReplicationConfig_317pc")

@@ -23,8 +23,11 @@ properties/1/replication_mode = 2
 properties/2/path = NodePath("SubViewport/UnitUI:visible")
 properties/2/spawn = true
 properties/2/replication_mode = 2
+properties/3/path = NodePath(".:curr_health")
+properties/3/spawn = true
+properties/3/replication_mode = 2
 
-[node name="PrepCook" type="CharacterBody3D" node_paths=PackedStringArray("ui", "attack_timer")]
+[node name="PrepCook" type="CharacterBody3D" node_paths=PackedStringArray("attack_timer")]
 transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, 999, 1, 999)
 collision_layer = 8
 collision_mask = 8
@@ -37,7 +40,6 @@ safe_margin = 0.5
 script = ExtResource("1_gnff7")
 image = "res://src/units/prep_cook.png"
 unitName = "Prep Cook"
-ui = NodePath("SubViewport/UnitUI")
 attack_timer = NodePath("AttackTimer")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
