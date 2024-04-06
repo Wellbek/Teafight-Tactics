@@ -50,7 +50,7 @@ func _enter_tree():
 	#print(str(multiplayer.get_unique_id()) + ": " + str(get_multiplayer_authority()))
 	
 	main = get_tree().root.get_child(0)
-	timer = main.getTimer()
+	timer = main.get_timer()
 	player = main.find_child("World").get_node(str(myid))
 	multisync = find_child("MultiplayerSynchronizer", false)
 	
@@ -213,37 +213,6 @@ func toggleSync(value):
 	for prop in multisync.replication_config.get_properties():
 		#print(prop)
 		multisync.replication_config.property_set_watch(prop, value)
-'
-extends CharacterBody3D
-
-const SPEED = 5.0
-const JUMP_VELOCITY = 4.5
-
-# Get the gravity from the project settings to be synced with RigidBody nodes.
-var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
-
-
-func _physics_process(delta):
-	# Add the gravity.
-	if not is_on_floor():
-		velocity.y -= gravity * delta
-
-	# Handle jump.
-	if Input.is_action_just_pressed("ui_accept") and is_on_floor():
-		velocity.y = JUMP_VELOCITY
-
-	# Get the input direction and handle the movement/deceleration.
-	# As good practice, you should replace UI actions with custom gameplay actions.
-	var input_dir = Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
-	var direction = (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
-	if direction:
-		velocity.x = direction.x * SPEED
-		velocity.z = direction.z * SPEED
-	else:
-		velocity.x = move_toward(velocity.x, 0, SPEED)
-		velocity.z = move_toward(velocity.z, 0, SPEED)
-
-	move_and_slide()'
 
 func in_attack_range():
 	attacking = true
@@ -269,5 +238,27 @@ func take_dmg(raw_dmg):
 	ui.get_node("HPBar").value = curr_health/max_health * 100
 	
 	if curr_health <= 0: 
+		death.rpc(get_path())
 		main.freeObject.rpc(get_path())
-		# TODO: check server sided if player still has units 
+		
+@rpc("any_peer", "call_local", "reliable")
+func death(_path):
+	var instance = get_tree().root.get_node(_path)
+	var parent = instance.get_parent()
+	if instance != null and is_instance_valid(instance):		
+		if multiplayer.is_server():
+			#print(parent.get_child_count())
+			if parent.get_child_count() <= 1:
+				main.unregister_battle()
+				check_battle_status()
+		instance.queue_free()
+		
+# server func
+func check_battle_status():	
+	if not multiplayer.is_server(): return
+	
+	#print(main.get_num_of_battles() )
+	
+	if main.get_num_of_battles() <= 0:
+		# all battles have finished => go right into prep phase
+		main.get_timer().change_phase()

@@ -5,6 +5,7 @@ var local_player
 @export var gui: Control
 
 var players = []
+var num_of_battles = 0 # server var
 
 func _input(event):
 	for i in range(len(multiplayer.get_peers())+1):
@@ -17,11 +18,23 @@ func setPlayer(_player):
 func getPlayer():
 	return local_player
 	
-func getTimer():
+func get_timer():
 	return timer
 	
 func getUI():
 	return gui
+
+# server func
+func register_battle():
+	num_of_battles += 1
+
+# server func	
+func unregister_battle():
+	num_of_battles = max(0, num_of_battles-1)
+	
+# server func
+func get_num_of_battles():
+	return num_of_battles
 	
 func changeCamera(_index):		
 	if _index == 0: 
@@ -45,4 +58,5 @@ func changeCameraByID(_id):
 @rpc("any_peer", "call_local", "unreliable")
 func freeObject(_path):
 	var instance = get_tree().root.get_node(_path)
-	instance.queue_free()
+	if instance != null and is_instance_valid(instance):
+		instance.queue_free()

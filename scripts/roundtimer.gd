@@ -3,7 +3,7 @@ extends Timer
 var preparing: bool
 
 var current_round = 1
-var preparationDuration = 15 #30
+var preparationDuration = 10 #30
 var combatDuration = 20 #??
 
 var unitShop: Control
@@ -64,9 +64,10 @@ func startCombatPhase():
 	wait_time = combatDuration	
 	start()
 
+# server func
 func matchmake():
 	var round_schedule = game_schedule[current_round % len(game_schedule)]
-	
+
 	for matchup in round_schedule:
 		var player1 = null
 		var player2 = null
@@ -77,7 +78,9 @@ func matchmake():
 		if not (player1 and player2): 
 			printerr("ERROR: couldn't matchmake as one of the players is NULL")
 			return
-			
+
+		main.register_battle()
+
 		player1.combatphase_setup.rpc_id(matchup[0], player2.get_path(), true)
 		player2.combatphase_setup.rpc_id(matchup[1], player1.get_path(), false)
 		
@@ -102,6 +105,9 @@ func round_robin_pairs(list):
 	return schedule
 	
 func _on_Timer_timeout():
+	change_phase()
+		
+func change_phase():
 	if not multiplayer.is_server(): return
 	
 	if preparing:
