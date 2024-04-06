@@ -39,6 +39,11 @@ func spawnUnit(_feedbackid, _player_path, _unit_file_name):
 func handleSpawn(_unit_path):
 	var instance = get_tree().root.get_node(_unit_path)
 	
+	var player = main.getPlayer()
+	
+	var unit_cost = instance.get_cost()
+	player.decrease_gold(unit_cost)
+	
 	var upgradedUnit = upgrade(instance)
 
 	if upgradedUnit:
@@ -46,11 +51,11 @@ func handleSpawn(_unit_path):
 		while(upgradedUnit):
 			upgradedUnit = upgrade(upgradedUnit)
 	else:
-		var tile = main.getPlayer().getBenchGrid().getFirstFreeTile()
+		var tile = player.getBenchGrid().getFirstFreeTile()
 	
 		if tile != null:
 			instance.tile = tile
-			main.getPlayer().appendUnit(instance)
+			player.appendUnit(instance)
 			tile.registerUnit(instance)
 			disabled = true
 		else: 

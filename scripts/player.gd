@@ -17,6 +17,15 @@ var myid
 
 var current_enemy = null
 
+@export_category("Player Stats")
+@export var start_gold: int = 2
+var gold = 0
+@onready var gold_label = main.getUI().get_node("UnitShop/Gold/HBoxContainer/GoldLabel")
+@export var p_max_health = 100
+var p_curr_health = p_max_health
+var cons_wins = 0
+var cons_loss = 0
+
 func _enter_tree():
 	main = get_tree().root.get_child(0)
 	myid = name.to_int()
@@ -35,6 +44,8 @@ func _ready():
 
 		global_transform.origin.x += 19 * i
 		camera.current = true
+		
+		set_gold(start_gold)
 
 @rpc("any_peer", "call_local", "reliable")
 func combatphase_setup(enemy_path, host:bool):
@@ -113,3 +124,23 @@ func getID():
 	
 func getCurrentEnemy():
 	return current_enemy
+	
+func get_gold():
+	return gold
+	
+func set_gold(val):
+	gold = max(0, val)
+	gold_label.text = str(gold)
+	
+func increase_gold(amount):
+	set_gold(gold+amount)
+
+func decrease_gold(amount):
+	set_gold(gold-amount)
+	
+func get_winstreak():
+	return cons_wins
+	
+func get_lossstreak():
+	return cons_loss
+	

@@ -3,8 +3,8 @@ extends Timer
 var preparing: bool
 
 var current_round = 1
-var preparationDuration = 10 #30
-var combatDuration = 20 #??
+var preparationDuration = 5 #30
+var combatDuration = 5 #??
 
 var unitShop: Control
 var label: Label
@@ -38,9 +38,12 @@ func initialize():
 
 @rpc("authority", "call_local", "reliable")
 func startPreparationPhase():
-	if multiplayer.is_server():
-		for player in main.players:
-			player.reset_combatphase.rpc_id(player.getID())
+	if current_round >= 2: # skip first round
+		if multiplayer.is_server():
+			for player in main.players:
+				player.reset_combatphase.rpc_id(player.getID())
+		
+		phase_gold_econ()
 	
 	unitShop.visible = true
 	preparing = true
@@ -48,6 +51,29 @@ func startPreparationPhase():
 	
 	wait_time = preparationDuration
 	start()
+
+# https://leagueoflegends.fandom.com/wiki/Gold_(Teamfight_Tactics)
+@rpc("authority", "call_local", "reliable")
+func phase_gold_econ():
+	var player = main.getPlayer()
+	
+	# passive income
+	var passive_income = 5
+	if current_round <= 3: passive_income = 2
+	elif current_round == 4: passive_income = 3
+	elif current_round == 5: passive_income = 4
+	
+	# interest
+	var interest = floor(min(50, player.get_gold()) / 10)
+	
+	# streakgold
+	var streakgold = 0
+	var streak = max(player.get_winstreak(), player.get_lossstreak())
+	if 3 <= streak and streak <= 4: streakgold = 1
+	elif streak == 5: streakgold = 2
+	elif streak >= 6: streakgold = 3
+	
+	player.increase_gold(passive_income + interest + streakgold)
 
 @rpc("authority", "call_local", "reliable")
 func startCombatPhase():

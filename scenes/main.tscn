@@ -1,10 +1,11 @@
-[gd_scene load_steps=7 format=3 uid="uid://cqs5r3b42amb7"]
+[gd_scene load_steps=8 format=3 uid="uid://cqs5r3b42amb7"]
 
 [ext_resource type="Script" path="res://scripts/main.gd" id="1_35go2"]
 [ext_resource type="Script" path="res://scripts/roundtimer.gd" id="2_8mgga"]
 [ext_resource type="PackedScene" uid="uid://beet8rjehupwb" path="res://src/ui/unit_purchase_button.tscn" id="4_2wa6j"]
 [ext_resource type="PackedScene" uid="uid://g18y6a837usc" path="res://src/player.tscn" id="4_bh7tl"]
 [ext_resource type="Script" path="res://scripts/multiplayermanager.gd" id="4_d7qmq"]
+[ext_resource type="Texture2D" uid="uid://dt00e868xcrql" path="res://assets/images/tft_coin.png" id="6_g8e0e"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_gtjgx"]
 font_size = 50
@@ -52,7 +53,7 @@ anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
 offset_left = -400.0
-offset_top = -108.0
+offset_top = -140.0
 offset_right = 400.0
 offset_bottom = 2.0
 grow_horizontal = 2
@@ -63,6 +64,7 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_top = 26.0
 grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.415686, 0.415686, 0.415686, 0.709804)
@@ -73,9 +75,9 @@ anchors_preset = -1
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 17.0
-offset_top = 17.9999
+offset_top = 42.0
 offset_right = -17.0
-offset_bottom = -12.0001
+offset_bottom = -12.0
 grow_horizontal = 2
 grow_vertical = 0
 alignment = 1
@@ -94,6 +96,46 @@ layout_mode = 2
 
 [node name="Button5" parent="GUI/UnitShop/HBoxContainer" instance=ExtResource("4_2wa6j")]
 layout_mode = 2
+
+[node name="Gold" type="Control" parent="GUI/UnitShop"]
+layout_mode = 1
+anchor_left = 0.451
+anchor_right = 0.55
+anchor_bottom = 0.197
+offset_left = 0.199982
+offset_top = -2.0
+offset_bottom = -1.974
+grow_horizontal = 2
+
+[node name="ColorRect" type="ColorRect" parent="GUI/UnitShop/Gold"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.415686, 0.415686, 0.415686, 0.709804)
+
+[node name="HBoxContainer" type="HBoxContainer" parent="GUI/UnitShop/Gold"]
+clip_contents = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="GoldIcon" type="TextureRect" parent="GUI/UnitShop/Gold/HBoxContainer"]
+layout_mode = 2
+texture = ExtResource("6_g8e0e")
+expand_mode = 2
+stretch_mode = 3
+
+[node name="GoldLabel" type="Label" parent="GUI/UnitShop/Gold/HBoxContainer"]
+layout_mode = 2
+text = "50
+"
 
 [node name="TimerLabel" type="Label" parent="GUI"]
 layout_mode = 1

@@ -29,6 +29,7 @@ var targetable = false
 var attacking = false
 
 @export_category("Stats")
+@export var cost = 1
 @export var movespeed = 5.0
 @export var attackrange = 4.0
 @export var max_health = 100.0
@@ -189,6 +190,7 @@ func levelUp():
 		star += 1
 		ui.find_child("Star").text = str(star)
 		scale += Vector3(.1,.1,.1)
+		cost *= 3
 		
 func toggleUI(value):
 	ui.visible = value
@@ -262,3 +264,6 @@ func check_battle_status():
 	if main.get_num_of_battles() <= 0:
 		# all battles have finished => go right into prep phase
 		main.get_timer().change_phase()
+		
+func get_cost():
+	return cost
