@@ -36,11 +36,11 @@ func _enter_tree():
 	multiplayerSpawner.set_multiplayer_authority(1)
 
 func _ready():
+	while not is_instance_valid(my_bar) or my_bar == null:
+		my_bar = main.getUI().get_node("PlayerBars/ColorRect/VBoxContainer").get_node(str(myid))
+	
 	if (is_multiplayer_authority()):
 		main.setPlayer(self)
-		
-		while not is_instance_valid(my_bar) or my_bar == null:
-			my_bar = main.getUI().get_node("PlayerBars/ColorRect/VBoxContainer").get_node(str(myid))
 	
 		var ids = multiplayer.get_peers()
 		ids.append(myid)
@@ -159,6 +159,9 @@ func get_winstreak():
 func get_lossstreak():
 	return cons_loss
 	
+func get_health():
+	return p_curr_health
+	
 @rpc("any_peer", "call_local", "unreliable")
 func lose_health(amt):
 	p_curr_health -= amt
@@ -166,9 +169,29 @@ func lose_health(amt):
 	my_bar.set_bar_value(float(max(p_curr_health,0.0))/float(p_max_health) * 100.0)
 	my_bar.set_health_text(str(p_curr_health))
 	
+	sort_player_bars()
+	
 	if p_curr_health <= 0: 
 		defeat()
 		
 func defeat():
 	print(myid, ": I lost :(")
 	
+func sort_player_bars():
+	var container = main.getUI().get_node("PlayerBars/ColorRect/VBoxContainer")
+	
+	var sorted_bars = container.get_children()
+	
+	sorted_bars.sort_custom(
+		func(a: Control, b: Control):
+			var player_a = main.find_child("World").get_node(str(a.name))
+			var player_b = main.find_child("World").get_node(str(b.name))
+		
+			return player_a.get_health() > player_b.get_health()
+	)
+	
+	for bar in container.get_children():
+		container.remove_child(bar)
+	
+	for bar in sorted_bars:
+		container.add_child(bar)

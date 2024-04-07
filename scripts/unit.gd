@@ -266,7 +266,7 @@ func death(_path):
 				main.unregister_battle()
 				var player = parent.get_parent()
 				# TODO: do dmg computation here https://lolchess.gg/guide/damage?hl=en
-				player.lose_health.rpc_id(player.getID(), 35) # NOTE: TEMPORARY
+				player.lose_health.rpc(7) # NOTE: TEMPORARY
 				check_battle_status()
 		instance.queue_free()
 		
@@ -276,7 +276,7 @@ func check_battle_status():
 	
 	#print(main.get_num_of_battles() )
 	
-	if main.get_num_of_battles() <= 0:
+	if main.get_num_of_battles() <= 0 and not main.get_timer().isPreparing():
 		# all battles have finished => go right into prep phase
 		main.get_timer().change_phase()
 		

@@ -3,7 +3,7 @@ extends Timer
 var preparing: bool
 
 var current_round = 1
-var preparationDuration = 8 #30
+var preparationDuration = 15 #30
 var combatDuration = 20 #??
 
 var unitShop: Control
