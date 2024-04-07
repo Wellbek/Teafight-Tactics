@@ -3,7 +3,7 @@ extends Timer
 var preparing: bool
 
 var current_round = 1
-var preparationDuration = 5 #30
+var preparationDuration = 15 #30
 var combatDuration = 5 #??
 
 var unitShop: Control
@@ -34,16 +34,18 @@ func initialize():
 	
 	game_schedule = round_robin_pairs(player_ids)
 	
-	startPreparationPhase.rpc()
+	startPreparationPhase.rpc(current_round)
 
 @rpc("authority", "call_local", "reliable")
-func startPreparationPhase():
+func startPreparationPhase(round):
+	current_round = round
+	
 	if current_round >= 2: # skip first round
 		if multiplayer.is_server():
 			for player in main.players:
 				player.reset_combatphase.rpc_id(player.getID())
 		
-		phase_gold_econ()
+			phase_gold_econ.rpc()
 	
 	unitShop.visible = true
 	preparing = true
@@ -140,7 +142,7 @@ func change_phase():
 		startCombatPhase.rpc()
 	else:
 		current_round += 1
-		startPreparationPhase.rpc()
+		startPreparationPhase.rpc(current_round)
 		
 func isPreparing():
 	return preparing

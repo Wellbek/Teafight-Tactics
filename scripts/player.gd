@@ -43,7 +43,7 @@ func _ready():
 		var i = ids.find(myid)
 
 		global_transform.origin.x += 19 * i
-		camera.current = true
+		camera.current = true	
 		
 		set_gold(start_gold)
 
@@ -131,6 +131,16 @@ func get_gold():
 func set_gold(val):
 	gold = max(0, val)
 	gold_label.text = str(gold)
+	for i in range(1,6):
+		var econ_object = find_child("Econ").get_node(str(i))
+		if gold >= i*10:
+			econ_object.visible = true
+		else:
+			econ_object.visible = false
+	
+	var buttons = main.getUI().get_node("UnitShop/HBoxContainer").get_children()
+	for button in buttons:
+		button._on_player_gold_changed(gold)
 	
 func increase_gold(amount):
 	set_gold(gold+amount)

@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cykiugiaxullf"
-path="res://.godot/imported/prep_cook.png-723e4ad39c855322f6dc4e586dfc8cce.ctex"
+path="res://.godot/imported/prep_cook.png-e224351f1e6672a6fe3ac48dd61d14b0.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://src/units/prep_cook.png"
-dest_files=["res://.godot/imported/prep_cook.png-723e4ad39c855322f6dc4e586dfc8cce.ctex"]
+source_file="res://src/units/1/prep_cook.png"
+dest_files=["res://.godot/imported/prep_cook.png-e224351f1e6672a6fe3ac48dd61d14b0.ctex"]
 
 [params]
 

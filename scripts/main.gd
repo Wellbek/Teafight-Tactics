@@ -7,6 +7,8 @@ var local_player
 var players = []
 var num_of_battles = 0 # server var
 
+var unit_sellable = false
+
 func _input(event):
 	for i in range(len(multiplayer.get_peers())+1):
 		if event.is_action_pressed("spectate" + str(i)):
@@ -60,3 +62,12 @@ func freeObject(_path):
 	var instance = get_tree().root.get_node(_path)
 	if instance != null and is_instance_valid(instance):
 		instance.queue_free()
+
+func _on_sell_unit_mouse_entered():
+	unit_sellable = true
+	
+func _on_sell_unit_mouse_exited():
+	unit_sellable = false
+	
+func is_unit_sellable():
+	return unit_sellable

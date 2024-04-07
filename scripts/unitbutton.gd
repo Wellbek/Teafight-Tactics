@@ -2,8 +2,13 @@ extends Button
 
 @export_dir var unitFolder: String
 
-var unitFileName: String
-var unitArray = []
+@onready var button_content = get_node("SubViewport/ButtonContent")
+@onready var name_label = button_content.get_node("Name")
+@onready var cost_label = button_content.get_node("Cost")
+@onready var background = button_content.get_node("BackgroundColor")
+@onready var image = button_content.get_node("Image")
+
+var unit_path: String
 
 var unit = null
 
@@ -11,22 +16,33 @@ var preparing = true
 
 var main
 
+var unit_cost
+var unit_name
+
+var bought = false
+
 func _ready():
-	var dir = DirAccess.open(unitFolder)
-	unitArray = dir.get_files()
 	main = get_tree().root.get_child(0)
 	preparing = false
 	generateButton()
+	
+func _on_player_gold_changed(new_amount):
+	if bought: return
+	
+	if new_amount < unit_cost:
+		disabled = true
+	else:
+		disabled = false
 
 func _on_pressed():	
-	spawnUnit.rpc_id(1, multiplayer.get_unique_id(), main.getPlayer().get_path(), unitFileName) # tell server to spawn unit
+	spawnUnit.rpc_id(1, multiplayer.get_unique_id(), main.getPlayer().get_path()) # tell server to spawn unit
 	# Note the called rpc sends feedback back to the client (see handleSpawn func)
 			
 @rpc("any_peer", "call_local", "unreliable") # change call_local if server dedicated
-func spawnUnit(_feedbackid, _player_path, _unit_file_name):
+func spawnUnit(_feedbackid, _player_path):
 	var player = get_tree().root.get_node(_player_path)
 	
-	var instance = load(unitFolder + "//" + _unit_file_name + ".tscn").instantiate()
+	var instance = load(unit_path + ".tscn").instantiate()
 	instance.name = str(_feedbackid) + "#" + instance.name
 
 	player.find_child("Units").call("add_child", instance, true)
@@ -43,6 +59,7 @@ func handleSpawn(_unit_path):
 	
 	var unit_cost = instance.get_cost()
 	player.decrease_gold(unit_cost)
+	change_bought(true)
 	
 	var upgradedUnit = upgrade(instance)
 
@@ -93,6 +110,25 @@ func _on_visibility_changed():
 		
 func generateButton():
 	if preparing: return
-	unitFileName = unitArray[randi() % unitArray.size()].get_slice(".",0)
-	icon = load(unitFolder + "//" + unitFileName + ".png")
+	change_bought(false)
+	unit_cost = 1 # randomize here
+	var folder = unitFolder + "//" + str(unit_cost)
+	var dir = DirAccess.open(folder)
+	var unitArray = dir.get_files()
+	var unitFileName = unitArray[randi() % unitArray.size()].get_slice(".",0)
+	unit_path = folder + "//" + unitFileName
+	image.texture = load(unit_path + ".png")
+	cost_label.text = str(unit_cost)
+	unit_name = unitFileName.replacen("_", " ").to_pascal_case()
+	name_label.text = unit_name
+	match unit_cost:
+		1: background.color = Color(0.275, 0.306, 0.353)
+		2: background.color = Color(0.146, 0.481, 0.21)
+		3: background.color = Color(0.016, 0.381, 0.4)
+		4: background.color = Color(0.667, 0.181, 0.701)
+		5: background.color = Color(0.791, 0.469, 0.036)
 	disabled = false
+
+func change_bought(val):
+	bought = val
+	button_content.visible = !val

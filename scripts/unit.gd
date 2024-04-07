@@ -1,6 +1,7 @@
 extends CharacterBody3D
 
 var dragging: bool = false
+@onready var sell_unit_gui = main.getUI().get_node("UnitShop/SellUnit")
 var initialPos: Vector3
 
 var coll
@@ -106,7 +107,10 @@ func _input(event):
 	
 	if isDragging():
 		if event is InputEventMouseButton and event.is_released() and event.button_index == MOUSE_BUTTON_LEFT:
-			placeUnit()
+			if main.is_unit_sellable():
+				sell_unit()
+			else:
+				placeUnit()
 		elif event is InputEventMouseMotion:
 			var viewport := get_viewport()
 			var mouse_position := viewport.get_mouse_position()
@@ -201,6 +205,8 @@ func toggleGrid(value):
 
 func setDragging(value):
 	dragging = value
+	sell_unit_gui.visible = dragging
+	sell_unit_gui.get_node("CostLabel").text = "Sell for " + str(cost) + "g"
 	toggleSync(!value)
 	
 func isDragging():
@@ -267,3 +273,12 @@ func check_battle_status():
 		
 func get_cost():
 	return cost
+	
+func sell_unit():
+	player.increase_gold(get_cost())
+	setDragging(false)
+	toggleGrid(false)
+	if coll == null: coll = tile # if mouse never passes over a collider coll will be null => precaution against this error
+	changeColor(coll.find_children("MeshInstance3D")[0], Color.CYAN)
+	player.eraseUnit(self)
+	main.freeObject.rpc(get_path())

@@ -1,0 +1,88 @@
+[gd_scene load_steps=5 format=3 uid="uid://b6qey8lycnpgo"]
+
+[ext_resource type="Texture2D" uid="uid://cykiugiaxullf" path="res://src/units/1/prep_cook.png" id="1_7i48h"]
+[ext_resource type="Texture2D" uid="uid://dt00e868xcrql" path="res://assets/images/tft_coin.png" id="2_6yivg"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_i1nu6"]
+font_size = 100
+
+[sub_resource type="LabelSettings" id="LabelSettings_co21o"]
+font_size = 100
+
+[node name="ButtonContent" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="BackgroundColor" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.790996, 0.469412, 0.0360546, 1)
+
+[node name="Image" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.01
+anchor_top = 0.016
+anchor_right = 0.99
+anchor_bottom = 0.75
+offset_left = 0.0799999
+offset_top = -0.0480001
+offset_right = -0.0800171
+texture = ExtResource("1_7i48h")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="Name" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.042
+anchor_top = 0.781
+anchor_right = 0.656
+anchor_bottom = 0.969
+offset_left = -4.064
+offset_top = 0.0319977
+offset_right = 1.048
+offset_bottom = -0.0320053
+grow_vertical = 2
+text = "Name"
+label_settings = SubResource("LabelSettings_i1nu6")
+vertical_alignment = 1
+
+[node name="Cost" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.833
+anchor_top = 0.781
+anchor_right = 0.984
+anchor_bottom = 0.969
+offset_left = 4.064
+offset_top = 0.0319977
+offset_right = 0.071991
+offset_bottom = -0.0320053
+grow_vertical = 2
+text = "0"
+label_settings = SubResource("LabelSettings_co21o")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="GoldIcon" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.682
+anchor_top = 0.781
+anchor_right = 0.854
+anchor_bottom = 0.969
+offset_left = 0.0559998
+offset_top = 0.0319977
+offset_right = 0.0319977
+offset_bottom = -0.0320053
+texture = ExtResource("2_6yivg")
+stretch_mode = 5

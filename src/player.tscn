@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://g18y6a837usc"]
+[gd_scene load_steps=10 format=3 uid="uid://g18y6a837usc"]
 
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_mrq3l"]
 [ext_resource type="Script" path="res://scripts/gridmap/gridmap.gd" id="1_ust0k"]
@@ -14,6 +14,13 @@ size = Vector3(18, 1, 2)
 
 [sub_resource type="BoxMesh" id="BoxMesh_amsno"]
 size = Vector3(18, 1, 2)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bgose"]
+albedo_color = Color(1, 0.796078, 0, 1)
+metallic = 0.5
+
+[sub_resource type="SphereMesh" id="SphereMesh_2k284"]
+material = SubResource("StandardMaterial3D_bgose")
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_4k2ky"]
 properties/0/path = NodePath(".:position")
@@ -31,6 +38,21 @@ properties/3/replication_mode = 1
 properties/4/path = NodePath("CombatUnits:visible")
 properties/4/spawn = true
 properties/4/replication_mode = 1
+properties/5/path = NodePath("Econ/1:visible")
+properties/5/spawn = true
+properties/5/replication_mode = 2
+properties/6/path = NodePath("Econ/2:visible")
+properties/6/spawn = true
+properties/6/replication_mode = 2
+properties/7/path = NodePath("Econ/3:visible")
+properties/7/spawn = true
+properties/7/replication_mode = 2
+properties/8/path = NodePath("Econ/4:visible")
+properties/8/spawn = true
+properties/8/replication_mode = 2
+properties/9/path = NodePath("Econ/5:visible")
+properties/9/spawn = true
+properties/9/replication_mode = 2
 
 [node name="Player" type="Node3D" node_paths=PackedStringArray("benchGrid", "boardGrid", "camera", "enemyCam", "multiplayerSpawner")]
 script = ExtResource("1_mrq3l")
@@ -85,6 +107,33 @@ shape = SubResource("BoxShape3D_jlr6y")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="EnemyBench"]
 mesh = SubResource("BoxMesh_amsno")
+
+[node name="Econ" type="Node3D" parent="."]
+
+[node name="1" type="MeshInstance3D" parent="Econ"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.2, 0.160033, 7)
+visible = false
+mesh = SubResource("SphereMesh_2k284")
+
+[node name="2" type="MeshInstance3D" parent="Econ"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.227, 0.160033, 5.5)
+visible = false
+mesh = SubResource("SphereMesh_2k284")
+
+[node name="3" type="MeshInstance3D" parent="Econ"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.227, 0.160033, 4)
+visible = false
+mesh = SubResource("SphereMesh_2k284")
+
+[node name="4" type="MeshInstance3D" parent="Econ"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.227, 0.160033, 2.5)
+visible = false
+mesh = SubResource("SphereMesh_2k284")
+
+[node name="5" type="MeshInstance3D" parent="Econ"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.227, 0.160033, 1)
+visible = false
+mesh = SubResource("SphereMesh_2k284")
 
 [node name="Units" type="Node3D" parent="."]
 

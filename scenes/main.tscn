@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://cqs5r3b42amb7"]
+[gd_scene load_steps=14 format=3 uid="uid://cqs5r3b42amb7"]
 
 [ext_resource type="Script" path="res://scripts/main.gd" id="1_35go2"]
 [ext_resource type="Script" path="res://scripts/roundtimer.gd" id="2_8mgga"]
@@ -6,6 +6,25 @@
 [ext_resource type="PackedScene" uid="uid://g18y6a837usc" path="res://src/player.tscn" id="4_bh7tl"]
 [ext_resource type="Script" path="res://scripts/multiplayermanager.gd" id="4_d7qmq"]
 [ext_resource type="Texture2D" uid="uid://dt00e868xcrql" path="res://assets/images/tft_coin.png" id="6_g8e0e"]
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_edcna"]
+viewport_path = NodePath("SubViewport")
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_p783e"]
+viewport_path = NodePath("SubViewport")
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_mvyxn"]
+viewport_path = NodePath("SubViewport")
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_l4li8"]
+viewport_path = NodePath("SubViewport")
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_bsyvt"]
+viewport_path = NodePath("SubViewport")
+
+[sub_resource type="LabelSettings" id="LabelSettings_w1m2u"]
+font_size = 23
+font_color = Color(1, 0.929412, 0.611765, 1)
 
 [sub_resource type="LabelSettings" id="LabelSettings_gtjgx"]
 font_size = 50
@@ -53,11 +72,11 @@ anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
 offset_left = -400.0
-offset_top = -140.0
+offset_top = -142.0
 offset_right = 400.0
-offset_bottom = 2.0
 grow_horizontal = 2
 grow_vertical = 0
+mouse_filter = 1
 
 [node name="ColorRect" type="ColorRect" parent="GUI/UnitShop"]
 layout_mode = 1
@@ -68,6 +87,22 @@ offset_top = 26.0
 grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.415686, 0.415686, 0.415686, 0.709804)
+
+[node name="ColorRect2" type="ColorRect" parent="GUI/UnitShop"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.021
+anchor_top = 0.268
+anchor_right = 0.99
+anchor_bottom = 0.944
+offset_left = -0.800001
+offset_top = -0.0559998
+offset_right = -6.10352e-05
+offset_bottom = -0.0480042
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.168627, 0.168627, 0.168627, 1)
 
 [node name="HBoxContainer" type="HBoxContainer" parent="GUI/UnitShop"]
 layout_mode = 1
@@ -84,18 +119,62 @@ alignment = 1
 
 [node name="Button1" parent="GUI/UnitShop/HBoxContainer" instance=ExtResource("4_2wa6j")]
 layout_mode = 2
+icon = SubResource("ViewportTexture_edcna")
 
 [node name="Button2" parent="GUI/UnitShop/HBoxContainer" instance=ExtResource("4_2wa6j")]
 layout_mode = 2
+icon = SubResource("ViewportTexture_p783e")
 
 [node name="Button3" parent="GUI/UnitShop/HBoxContainer" instance=ExtResource("4_2wa6j")]
 layout_mode = 2
+icon = SubResource("ViewportTexture_mvyxn")
 
 [node name="Button4" parent="GUI/UnitShop/HBoxContainer" instance=ExtResource("4_2wa6j")]
 layout_mode = 2
+icon = SubResource("ViewportTexture_l4li8")
 
 [node name="Button5" parent="GUI/UnitShop/HBoxContainer" instance=ExtResource("4_2wa6j")]
 layout_mode = 2
+icon = SubResource("ViewportTexture_bsyvt")
+
+[node name="SellUnit" type="Control" parent="GUI/UnitShop"]
+visible = false
+layout_mode = 1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 16.0
+offset_top = 38.0
+offset_right = -8.00006
+offset_bottom = -7.99997
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="GUI/UnitShop/SellUnit"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.168627, 0.168627, 0.168627, 1)
+
+[node name="CostLabel" type="Label" parent="GUI/UnitShop/SellUnit"]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.02
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 200.0
+offset_top = 24.04
+offset_right = -200.0
+offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "Sell for 0g"
+label_settings = SubResource("LabelSettings_w1m2u")
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="Gold" type="Control" parent="GUI/UnitShop"]
 layout_mode = 1
@@ -181,6 +260,8 @@ spawn_path = NodePath("../World")
 spawn_limit = 8
 
 [connection signal="timeout" from="RoundTimer" to="RoundTimer" method="_on_Timer_timeout"]
+[connection signal="mouse_entered" from="GUI/UnitShop/SellUnit" to="." method="_on_sell_unit_mouse_entered"]
+[connection signal="mouse_exited" from="GUI/UnitShop/SellUnit" to="." method="_on_sell_unit_mouse_exited"]
 [connection signal="pressed" from="GUI/TmpHost" to="MultiplayerManager" method="_on_tmp_host_pressed"]
 [connection signal="pressed" from="GUI/TmpJoin" to="MultiplayerManager" method="_on_tmp_join_pressed"]
 [connection signal="pressed" from="GUI/TmpStartGame" to="MultiplayerManager" method="_on_tmp_start_game_pressed"]
