@@ -258,8 +258,11 @@ func death(_path):
 	var parent = instance.get_parent()
 	if instance != null and is_instance_valid(instance):		
 		if multiplayer.is_server():
-			#print(parent.get_child_count())
-			if parent.get_child_count() <= 1:
+			var fighter_count = 0
+			for u in parent.get_children():
+				if u.get_mode() == BATTLE: fighter_count += 1
+			
+			if fighter_count <= 1:
 				main.unregister_battle()
 				var player = parent.get_parent()
 				# TODO: do dmg computation here https://lolchess.gg/guide/damage?hl=en

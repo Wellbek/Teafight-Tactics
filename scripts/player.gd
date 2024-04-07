@@ -41,7 +41,6 @@ func _ready():
 		
 		while not is_instance_valid(my_bar) or my_bar == null:
 			my_bar = main.getUI().get_node("PlayerBars/ColorRect/VBoxContainer").get_node(str(myid))
-		print(my_bar)
 	
 		var ids = multiplayer.get_peers()
 		ids.append(myid)
