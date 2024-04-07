@@ -35,14 +35,14 @@ func _on_player_gold_changed(new_amount):
 		disabled = false
 
 func _on_pressed():	
-	spawnUnit.rpc_id(1, multiplayer.get_unique_id(), main.getPlayer().get_path()) # tell server to spawn unit
+	spawnUnit.rpc_id(1, multiplayer.get_unique_id(), main.getPlayer().get_path(), unit_path) # tell server to spawn unit
 	# Note the called rpc sends feedback back to the client (see handleSpawn func)
 			
 @rpc("any_peer", "call_local", "unreliable") # change call_local if server dedicated
-func spawnUnit(_feedbackid, _player_path):
+func spawnUnit(_feedbackid, _player_path, _unit_path):
 	var player = get_tree().root.get_node(_player_path)
 	
-	var instance = load(unit_path + ".tscn").instantiate()
+	var instance = load(_unit_path + ".tscn").instantiate()
 	instance.name = str(_feedbackid) + "#" + instance.name
 
 	player.find_child("Units").call("add_child", instance, true)
@@ -57,8 +57,8 @@ func handleSpawn(_unit_path):
 	
 	var player = main.getPlayer()
 	
-	var unit_cost = instance.get_cost()
-	player.decrease_gold(unit_cost)
+	var instance_cost = instance.get_cost()
+	player.decrease_gold(instance_cost)
 	change_bought(true)
 	
 	var upgradedUnit = upgrade(instance)

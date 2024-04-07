@@ -2,6 +2,7 @@ extends Node
 
 var peer = ENetMultiplayerPeer.new()
 @export var player_scene: PackedScene
+@export var player_bar_scene: PackedScene
 var port = 6005
 
 @export var main: Node
@@ -30,10 +31,15 @@ func _on_tmp_join_pressed():
 # only executed on server but sync using multiplayerspawner to other clients
 func add_player(id = 1):
 	var player = player_scene.instantiate()
+	var player_bar = player_bar_scene.instantiate()
 	player.name = str(id)
+	player_bar.name = str(id)
+	
+	get_tree().root.get_child(0).get_node("GUI/PlayerBars/ColorRect/VBoxContainer").call_deferred("add_child", player_bar, true)
 	get_tree().root.get_child(0).find_child("World").call_deferred("add_child", player, true)
+	
 	main.players.append(player)
-			
+
 func start_game():
 	if not multiplayer.is_server(): return
 	

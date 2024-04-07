@@ -258,6 +258,9 @@ func death(_path):
 			#print(parent.get_child_count())
 			if parent.get_child_count() <= 1:
 				main.unregister_battle()
+				var player = parent.get_parent()
+				# TODO: do dmg computation here https://lolchess.gg/guide/damage?hl=en
+				player.lose_health.rpc_id(player.getID(), 35) # NOTE: TEMPORARY
 				check_battle_status()
 		instance.queue_free()
 		

@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://cqs5r3b42amb7"]
+[gd_scene load_steps=15 format=3 uid="uid://cqs5r3b42amb7"]
 
 [ext_resource type="Script" path="res://scripts/main.gd" id="1_35go2"]
 [ext_resource type="Script" path="res://scripts/roundtimer.gd" id="2_8mgga"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://g18y6a837usc" path="res://src/player.tscn" id="4_bh7tl"]
 [ext_resource type="Script" path="res://scripts/multiplayermanager.gd" id="4_d7qmq"]
 [ext_resource type="Texture2D" uid="uid://dt00e868xcrql" path="res://assets/images/tft_coin.png" id="6_g8e0e"]
+[ext_resource type="PackedScene" uid="uid://dfbxcmkrqggoj" path="res://src/ui/player_bar.tscn" id="7_n3kcn"]
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_edcna"]
 viewport_path = NodePath("SubViewport")
@@ -37,6 +38,7 @@ gui = NodePath("GUI")
 [node name="MultiplayerManager" type="Node" parent="." node_paths=PackedStringArray("main", "timer", "startButton", "enable_on_start", "disable_on_start")]
 script = ExtResource("4_d7qmq")
 player_scene = ExtResource("4_bh7tl")
+player_bar_scene = ExtResource("7_n3kcn")
 main = NodePath("..")
 timer = NodePath("../RoundTimer")
 startButton = NodePath("../GUI/TmpStartGame")
@@ -140,6 +142,7 @@ icon = SubResource("ViewportTexture_bsyvt")
 [node name="SellUnit" type="Control" parent="GUI/UnitShop"]
 visible = false
 layout_mode = 1
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 16.0
@@ -254,9 +257,51 @@ offset_right = 280.0
 offset_bottom = 312.0
 text = "Start Game"
 
+[node name="PlayerBars" type="Control" parent="GUI"]
+layout_mode = 1
+anchor_left = 0.847
+anchor_top = 0.099
+anchor_right = 1.0
+anchor_bottom = 0.691
+offset_left = -7.74408
+offset_top = -0.152008
+offset_bottom = 0.231964
+grow_horizontal = 0
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="GUI/PlayerBars"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 1.002
+anchor_right = 1.002
+anchor_bottom = 1.0
+offset_left = -25.368
+offset_right = -0.368011
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.247059, 0.247059, 0.247059, 0.858824)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="GUI/PlayerBars/ColorRect"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = -6.972
+anchor_top = 0.038
+anchor_right = 1.0
+anchor_bottom = 0.958
+offset_left = -0.699997
+offset_top = 0.407999
+offset_bottom = 0.127991
+grow_horizontal = 2
+grow_vertical = 2
+
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
 _spawnable_scenes = PackedStringArray("res://src/player.tscn")
 spawn_path = NodePath("../World")
+spawn_limit = 8
+
+[node name="MultiplayerSpawner2" type="MultiplayerSpawner" parent="."]
+_spawnable_scenes = PackedStringArray("res://src/ui/player_bar.tscn")
+spawn_path = NodePath("../GUI/PlayerBars/ColorRect/VBoxContainer")
 spawn_limit = 8
 
 [connection signal="timeout" from="RoundTimer" to="RoundTimer" method="_on_Timer_timeout"]

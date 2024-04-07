@@ -17,6 +17,8 @@ var myid
 
 var current_enemy = null
 
+var my_bar
+
 @export_category("Player Stats")
 @export var start_gold: int = 2
 var gold = 0
@@ -36,6 +38,10 @@ func _enter_tree():
 func _ready():
 	if (is_multiplayer_authority()):
 		main.setPlayer(self)
+		
+		while not is_instance_valid(my_bar) or my_bar == null:
+			my_bar = main.getUI().get_node("PlayerBars/ColorRect/VBoxContainer").get_node(str(myid))
+		print(my_bar)
 	
 		var ids = multiplayer.get_peers()
 		ids.append(myid)
@@ -153,4 +159,17 @@ func get_winstreak():
 	
 func get_lossstreak():
 	return cons_loss
+	
+@rpc("any_peer", "call_local", "unreliable")
+func lose_health(amt):
+	p_curr_health -= amt
+	
+	my_bar.set_bar_value(float(max(p_curr_health,0.0))/float(p_max_health) * 100.0)
+	my_bar.set_health_text(str(p_curr_health))
+	
+	if p_curr_health <= 0: 
+		defeat()
+		
+func defeat():
+	print(myid, ": I lost :(")
 	
