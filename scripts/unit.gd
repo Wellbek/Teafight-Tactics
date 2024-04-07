@@ -29,6 +29,8 @@ var target = null
 var targetable = false 
 var attacking = false
 
+var dead = false
+
 @export_category("Stats")
 @export var cost = 1
 @export var movespeed = 5.0
@@ -245,7 +247,8 @@ func take_dmg(raw_dmg):
 	
 	ui.get_node("HPBar").value = curr_health/max_health * 100
 	
-	if curr_health <= 0: 
+	if curr_health <= 0 and not dead: 
+		dead = true
 		death.rpc(get_path())
 		main.freeObject.rpc(get_path())
 		
