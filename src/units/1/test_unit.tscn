@@ -26,6 +26,24 @@ properties/2/replication_mode = 2
 properties/3/path = NodePath(".:curr_health")
 properties/3/spawn = true
 properties/3/replication_mode = 2
+properties/4/path = NodePath(".:attackrange")
+properties/4/spawn = true
+properties/4/replication_mode = 2
+properties/5/path = NodePath(".:max_health")
+properties/5/spawn = true
+properties/5/replication_mode = 2
+properties/6/path = NodePath(".:attack_dmg")
+properties/6/spawn = true
+properties/6/replication_mode = 2
+properties/7/path = NodePath(".:armor")
+properties/7/spawn = true
+properties/7/replication_mode = 2
+properties/8/path = NodePath(".:attack_speed")
+properties/8/spawn = true
+properties/8/replication_mode = 2
+properties/9/path = NodePath(".:move_speed")
+properties/9/spawn = true
+properties/9/replication_mode = 2
 
 [node name="TestUnit" type="CharacterBody3D" node_paths=PackedStringArray("attack_timer")]
 transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, 999, 1, 999)
@@ -40,8 +58,10 @@ script = ExtResource("1_sw5aw")
 image = "res://src/units/test_unit.png"
 unitName = "test"
 attackrange = 2.0
-attack_dmg = 12.0
-attack_speed = 1.2
+max_health = 650.0
+attack_dmg = 50.0
+armor = 40.0
+attack_speed = 0.55
 attack_timer = NodePath("AttackTimer")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]

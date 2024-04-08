@@ -239,3 +239,13 @@ func get_level():
 	
 func increase_level():
 	level += 1
+		
+@rpc("authority", "call_local", "unreliable")
+func increment_winstreak():
+	cons_loss = 0
+	cons_wins += 1
+
+@rpc("authority", "call_local", "unreliable")
+func increment_lossstreak():
+	cons_wins = 0
+	cons_loss += 1

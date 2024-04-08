@@ -33,10 +33,10 @@ var dead = false
 
 @export_category("Stats")
 @export var cost = 1
-@export var movespeed = 5.0
+@export var move_speed = 5.0
 @export var attackrange = 4.0
 @export var max_health = 100.0
-var curr_health = max_health
+@onready var curr_health = max_health
 @export var attack_dmg = 20.0
 @export var armor = 30.0
 @export var attack_speed = 0.8
@@ -72,7 +72,7 @@ func _physics_process(delta):
 		
 		if distance > attackrange:
 			attacking = false
-			velocity = (target.global_transform.origin - global_transform.origin).normalized() * movespeed
+			velocity = (target.global_transform.origin - global_transform.origin).normalized() * move_speed
 			move_and_slide()
 			look_at(target.global_transform.origin)
 		elif not attacking: in_attack_range()
@@ -95,7 +95,7 @@ func getTileType():
 	return tile.get_parent().getType()
 
 func _input_event(camera, event, position, normal, shape_idx):
-	if not is_multiplayer_authority() or not timer.isPreparing() or not mode == PREP: return
+	if not is_multiplayer_authority() or not timer.is_preparing() or not mode == PREP: return
 
 	if event is InputEventMouseButton and event.is_pressed() and event.button_index == MOUSE_BUTTON_LEFT and !isDragging():
 		setDragging(true)
@@ -107,7 +107,7 @@ func _input_event(camera, event, position, normal, shape_idx):
 		transform.origin.y += 1
 
 func _input(event):
-	if not is_multiplayer_authority() or not timer.isPreparing() or not mode == PREP: return
+	if not is_multiplayer_authority() or not timer.is_preparing() or not mode == PREP: return
 	
 	if isDragging():
 		if event is InputEventMouseButton and event.is_released() and event.button_index == MOUSE_BUTTON_LEFT:
@@ -204,6 +204,10 @@ func levelUp():
 		ui.find_child("Star").text = str(star)
 		scale += Vector3(.1,.1,.1)
 		cost *= 3
+		# stats: https://tftactics.gg/db/champion-stats/
+		attack_dmg *= 1.8
+		max_health *= 1.8
+		curr_health = max_health
 		
 func toggleUI(value):
 	ui.visible = value
@@ -237,12 +241,18 @@ func in_attack_range():
 	attack_timer.start()
 	
 func _on_attack_timer_timeout():
-	auto_attack(target)
+	if main.get_timer().is_transitioning(): get_node("AttackTimer").stop()
+	else: auto_attack(target)
 
 func auto_attack(_target):
 	if _target == null or _target.get_mode() != BATTLE: return
 	
 	_target.take_dmg.rpc_id(_target.get_owner_id(), attack_dmg)
+
+func change_attack_speed(val):
+	attack_speed = val
+	attack_timer.wait_time = 1/attack_speed
+	if attacking == true: attack_timer.start()
 
 @rpc("any_peer", "call_local", "unreliable")
 func take_dmg(raw_dmg):
@@ -272,6 +282,10 @@ func death(_path):
 			if fighter_count <= 1:
 				main.unregister_battle()
 				var player = parent.get_parent()
+				var enemy = player.get_current_enemy()
+				
+				player.increment_lossstreak.rpc_id(player.getID())
+				enemy.increment_winstreak.rpc_id(enemy.getID())
 
 				# https://lolchess.gg/guide/damage?hl=en
 				var stage_damage = 0
@@ -285,7 +299,7 @@ func death(_path):
 				
 				var unit_damage = 0
 				var enemy_unit_count = 0
-				for u in player.get_current_enemy().get_node("CombatUnits").get_children():
+				for u in enemy.get_node("CombatUnits").get_children():
 					if is_instance_valid(u) and u != null and u.get_mode() == BATTLE: enemy_unit_count += 1
 				match enemy_unit_count:
 					1: unit_damage = 2
@@ -302,7 +316,7 @@ func check_battle_status():
 	
 	#print(main.get_num_of_battles() )
 	
-	if main.get_num_of_battles() <= 0 and not main.get_timer().isPreparing():
+	if main.get_num_of_battles() <= 0 and not main.get_timer().is_preparing():
 		# all battles have finished => go right into prep phase
 		main.get_timer().change_phase()
 		
