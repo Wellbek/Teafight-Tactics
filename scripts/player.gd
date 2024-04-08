@@ -27,6 +27,7 @@ var gold = 0
 var p_curr_health = p_max_health
 var cons_wins = 0
 var cons_loss = 0
+var level = 3
 
 var defeated = false
 
@@ -229,3 +230,9 @@ func sort_player_bars():
 		
 func is_defeated():
 	return defeated
+	
+func get_level():
+	return level
+	
+func increase_level():
+	level += 1

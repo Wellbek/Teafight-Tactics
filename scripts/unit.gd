@@ -61,7 +61,7 @@ func _enter_tree():
 	multisync = find_child("MultiplayerSynchronizer", false)
 	
 func _process(delta):
-	if mode == BATTLE and target == null and is_multiplayer_authority():
+	if mode == BATTLE and target == null and is_multiplayer_authority() and not main.get_timer().is_transitioning():
 		find_target()
 
 func _physics_process(delta):	
@@ -142,8 +142,13 @@ func _input(event):
 
 				global_transform.origin = Vector3(mouse_position_3D.x, global_transform.origin.y, mouse_position_3D.z)
 
-func change_mode(_mode: int):
+func change_mode(_mode: int):	
 	mode = _mode
+	
+	if mode == BATTLE:
+		set_collision_layer_value(5, true) # only collide with battling units (hidden prep units should be ignored)
+	else:
+		set_collision_layer_value(5, false)
 			
 func get_mode():
 	return mode

@@ -5,6 +5,7 @@ var preparing: bool
 var current_round = 1
 var preparationDuration = 15 #30
 var combatDuration = 20 #??
+var transition_time = 4
 
 var unitShop: Control
 var label: Label
@@ -12,6 +13,8 @@ var label: Label
 var main
 
 var host = false
+
+var transitioning = false
 
 func _enter_tree():
 	set_multiplayer_authority(1) #only host controls time
@@ -78,15 +81,13 @@ func startCombatPhase():
 		for unit in main.getPlayer().getUnits():
 			unit.placeUnit()
 		unitShop.visible = false
-	preparing = false
 	#print("Combat Phase Started for Round: ", current_round)
+	
+	transition()
 	
 	# determine matchups 
 	if multiplayer.is_server():
 		matchmake()
-	
-	wait_time = combatDuration	
-	start()
 
 # server func
 func matchmake():
@@ -136,16 +137,44 @@ func round_robin_pairs(list):
 	return schedule
 	
 func _on_Timer_timeout():
-	change_phase()
-		
-func change_phase():
 	if not multiplayer.is_server(): return
 	
-	if preparing:
-		startCombatPhase.rpc()
+	change_phase()
+	
+# server func	
+func change_phase():
+	if isPreparing():
+		if is_transitioning():
+			end_transition.rpc()
+			change_timer.rpc(combatDuration,true)
+			preparing = false
+		else: startCombatPhase.rpc()
 	else:
-		current_round += 1
-		startPreparationPhase.rpc(current_round)
-		
+		if is_transitioning():
+			end_transition.rpc()
+			current_round += 1
+			startPreparationPhase.rpc(current_round)
+		else: transition.rpc()
+	
+@rpc("authority", "call_local", "reliable")
+func change_timer(time, start):
+	wait_time = time
+	if start: start()
+	
+# server func sent to all clients
+@rpc("authority", "call_local", "reliable")
+func transition():
+	transitioning = true	
+	wait_time = transition_time
+	start()
+
+# server func sent to all clients
+@rpc("authority", "call_local", "reliable")
+func end_transition():
+	transitioning = false
+
+func is_transitioning():
+	return transitioning
+
 func isPreparing():
 	return preparing

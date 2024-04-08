@@ -140,7 +140,7 @@ mesh = SubResource("SphereMesh_2k284")
 [node name="CombatUnits" type="Node3D" parent="."]
 
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
-_spawnable_scenes = PackedStringArray("res://src/units/1/prep_cook.tscn", "res://src/units/1/test_unit.tscn")
+_spawnable_scenes = PackedStringArray("res://src/units/1/prep_cook.tscn", "res://src/units/1/test_unit.tscn", "res://src/units/2/tea_bag_slinger.tscn")
 spawn_path = NodePath("../Units")
 spawn_limit = 9999
 

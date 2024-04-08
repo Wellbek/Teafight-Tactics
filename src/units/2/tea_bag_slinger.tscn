@@ -1,19 +1,19 @@
-[gd_scene load_steps=8 format=3 uid="uid://c1r5t4e8vxrye"]
+[gd_scene load_steps=8 format=3 uid="uid://bcxkjvdmeu8bt"]
 
-[ext_resource type="Script" path="res://scripts/unit.gd" id="1_sw5aw"]
-[ext_resource type="PackedScene" uid="uid://cmyaotov37g7y" path="res://src/ui/unit_ui.tscn" id="2_t2lyv"]
+[ext_resource type="Script" path="res://scripts/unit.gd" id="1_sr2lk"]
+[ext_resource type="PackedScene" uid="uid://cmyaotov37g7y" path="res://src/ui/unit_ui.tscn" id="2_6mcot"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_tcrfm"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_51m0c"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_oobci"]
-albedo_color = Color(0.988235, 0.14902, 0.423529, 1)
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7k0wg"]
+albedo_color = Color(0.43917, 0.372244, 0.294087, 1)
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_7fr4r"]
+[sub_resource type="ViewportTexture" id="ViewportTexture_vdcr0"]
 viewport_path = NodePath("SubViewport")
 
-[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_317pc"]
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_metf5"]
 properties/0/path = NodePath(".:position")
 properties/0/spawn = true
 properties/0/replication_mode = 2
@@ -27,7 +27,7 @@ properties/3/path = NodePath(".:curr_health")
 properties/3/spawn = true
 properties/3/replication_mode = 2
 
-[node name="TestUnit" type="CharacterBody3D" node_paths=PackedStringArray("attack_timer")]
+[node name="TeaBagSlinger" type="CharacterBody3D" node_paths=PackedStringArray("attack_timer")]
 transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, 999, 1, 999)
 collision_layer = 8
 collision_mask = 16
@@ -35,13 +35,17 @@ axis_lock_linear_y = true
 axis_lock_angular_x = true
 axis_lock_angular_z = true
 motion_mode = 1
+slide_on_ceiling = false
 safe_margin = 0.5
-script = ExtResource("1_sw5aw")
-image = "res://src/units/test_unit.png"
-unitName = "test"
-attackrange = 2.0
-attack_dmg = 12.0
-attack_speed = 1.2
+script = ExtResource("1_sr2lk")
+image = "res://src/units/prep_cook.png"
+unitName = "Tea Bag Slinger"
+cost = 2
+attackrange = 10.0
+max_health = 75.0
+attack_dmg = 15.0
+armor = 20.0
+attack_speed = 1.0
 attack_timer = NodePath("AttackTimer")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
@@ -49,12 +53,12 @@ shape = SubResource("CapsuleShape3D_tcrfm")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 mesh = SubResource("CapsuleMesh_51m0c")
-surface_material_override/0 = SubResource("StandardMaterial3D_oobci")
+surface_material_override/0 = SubResource("StandardMaterial3D_7k0wg")
 
 [node name="Sprite3D" type="Sprite3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.24283, 0)
 billboard = 1
-texture = SubResource("ViewportTexture_7fr4r")
+texture = SubResource("ViewportTexture_vdcr0")
 
 [node name="AttackTimer" type="Timer" parent="."]
 
@@ -63,7 +67,7 @@ disable_3d = true
 transparent_bg = true
 size = Vector2i(150, 30)
 
-[node name="UnitUI" parent="SubViewport" instance=ExtResource("2_t2lyv")]
+[node name="UnitUI" parent="SubViewport" instance=ExtResource("2_6mcot")]
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
-replication_config = SubResource("SceneReplicationConfig_317pc")
+replication_config = SubResource("SceneReplicationConfig_metf5")
