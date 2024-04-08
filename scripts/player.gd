@@ -28,6 +28,8 @@ var p_curr_health = p_max_health
 var cons_wins = 0
 var cons_loss = 0
 
+var defeated = false
+
 func _enter_tree():
 	main = get_tree().root.get_child(0)
 	myid = name.to_int()
@@ -54,6 +56,8 @@ func _ready():
 
 @rpc("any_peer", "call_local", "reliable")
 func combatphase_setup(enemy_path, host:bool):
+	if is_defeated(): return
+	
 	current_enemy = get_tree().root.get_node(enemy_path)
 	
 	var unit_parent = find_child("Units")
@@ -72,6 +76,11 @@ func combatphase_setup(enemy_path, host:bool):
 
 @rpc("any_peer", "call_local", "reliable")
 func reset_combatphase():	
+	if not is_defeated() and p_curr_health <= 0: # ensure player defeat if packet was lost during dmg
+		defeat()
+		
+	if is_defeated(): return
+	
 	var unit_parent = find_child("Units")
 	var combatunit_parent = find_child("CombatUnits")	
 	
@@ -134,6 +143,8 @@ func get_gold():
 	return gold
 	
 func set_gold(val):
+	if is_defeated(): return
+	
 	gold = max(0, val)
 	gold_label.text = str(gold)
 	for i in range(1,6):
@@ -162,8 +173,11 @@ func get_lossstreak():
 func get_health():
 	return p_curr_health
 	
+# is called for every player
 @rpc("any_peer", "call_local", "unreliable")
 func lose_health(amt):
+	if is_defeated(): return
+	
 	p_curr_health -= amt
 	
 	my_bar.set_bar_value(float(max(p_curr_health,0.0))/float(p_max_health) * 100.0)
@@ -173,9 +187,26 @@ func lose_health(amt):
 	
 	if p_curr_health <= 0: 
 		defeat()
-		
+	
+# is called for every player as invoked by lose_health(amt)	
 func defeat():
-	print(myid, ": I lost :(")
+	defeated = true
+	for unit in getUnits():
+		unit.queue_free()
+		
+	var players_left = main.players
+	for player in players_left:
+		if player.is_defeated(): players_left.erase(player)
+		
+	if len(players_left) == 1:
+		trigger_win(1)
+	elif len(players_left) <= 1:
+		printerr("ERROR: no players left")
+		trigger_win(-1)
+		
+func trigger_win(id):
+	print(str(id), " won the game!")
+	# just change scene here. Is way easier
 	
 func sort_player_bars():
 	var container = main.getUI().get_node("PlayerBars/ColorRect/VBoxContainer")
@@ -195,3 +226,6 @@ func sort_player_bars():
 	
 	for bar in sorted_bars:
 		container.add_child(bar)
+		
+func is_defeated():
+	return defeated

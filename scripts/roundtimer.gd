@@ -13,8 +13,6 @@ var main
 
 var host = false
 
-var game_schedule = []
-
 func _enter_tree():
 	set_multiplayer_authority(1) #only host controls time
 
@@ -27,13 +25,7 @@ func _ready():
 	label = main.getUI().get_node("TimerLabel")
 	set_multiplayer_authority(1)
 	
-func initialize():
-	var peer_ids = multiplayer.get_peers()
-	var player_ids = [multiplayer.get_unique_id()]
-	player_ids.append_array(peer_ids)
-	
-	game_schedule = round_robin_pairs(player_ids)
-	
+func initialize():	
 	startPreparationPhase.rpc(current_round)
 
 @rpc("authority", "call_local", "reliable")
@@ -47,7 +39,8 @@ func startPreparationPhase(round):
 		
 			phase_gold_econ.rpc()
 	
-	unitShop.visible = true
+	if main.getPlayer() == null or not main.getPlayer().is_defeated():
+		unitShop.visible = true
 	preparing = true
 	#print("Preparation Phase Started for Round: ", current_round)
 	
@@ -58,6 +51,8 @@ func startPreparationPhase(round):
 @rpc("authority", "call_local", "reliable")
 func phase_gold_econ():
 	var player = main.getPlayer()
+	
+	if player.is_defeated(): return
 	
 	# passive income
 	var passive_income = 5
@@ -79,9 +74,10 @@ func phase_gold_econ():
 
 @rpc("authority", "call_local", "reliable")
 func startCombatPhase():
-	for unit in main.getPlayer().getUnits():
-		unit.placeUnit()
-	unitShop.visible = false
+	if not main.getPlayer().is_defeated():	
+		for unit in main.getPlayer().getUnits():
+			unit.placeUnit()
+		unitShop.visible = false
 	preparing = false
 	#print("Combat Phase Started for Round: ", current_round)
 	
@@ -94,6 +90,13 @@ func startCombatPhase():
 
 # server func
 func matchmake():
+	var player_ids = []
+	for player in main.players:
+		if not player.is_defeated():
+			player_ids.append(player.getID())
+	
+	var game_schedule = round_robin_pairs(player_ids)
+	
 	var round_schedule = game_schedule[current_round % len(game_schedule)]
 
 	for matchup in round_schedule:

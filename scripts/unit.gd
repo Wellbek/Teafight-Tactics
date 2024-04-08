@@ -266,7 +266,7 @@ func death(_path):
 				main.unregister_battle()
 				var player = parent.get_parent()
 				# TODO: do dmg computation here https://lolchess.gg/guide/damage?hl=en
-				player.lose_health.rpc(7) # NOTE: TEMPORARY
+				player.lose_health.rpc(35) # NOTE: TEMPORARY
 				check_battle_status()
 		instance.queue_free()
 		
