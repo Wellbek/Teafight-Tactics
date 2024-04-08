@@ -47,6 +47,8 @@ func _ready():
 	var viewport = find_child("SubViewport")
 	ui = viewport.get_child(0)
 	find_child("Sprite3D").texture = viewport.get_texture()
+	ui.get_node("HPBar").self_modulate = Color(0.2, 0.898, 0.243) if is_multiplayer_authority() else Color(0.929, 0.29, 0.302)
+		
 	
 func _enter_tree():
 	myid = name.get_slice("#", 0).to_int()
