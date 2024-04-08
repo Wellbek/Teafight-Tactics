@@ -154,9 +154,9 @@ func get_mode():
 	return mode
 			
 func find_target():
-	if not player.getCurrentEnemy() or mode != BATTLE or not is_multiplayer_authority(): return
+	if not player.get_current_enemy() or mode != BATTLE or not is_multiplayer_authority(): return
 	
-	var enemy_units = player.getCurrentEnemy().find_child("CombatUnits").get_children()
+	var enemy_units = player.get_current_enemy().find_child("CombatUnits").get_children()
 	
 	for unit in enemy_units:	
 		if not unit.is_targetable(): continue
@@ -272,8 +272,27 @@ func death(_path):
 			if fighter_count <= 1:
 				main.unregister_battle()
 				var player = parent.get_parent()
-				# TODO: do dmg computation here https://lolchess.gg/guide/damage?hl=en
-				player.lose_health.rpc(35) # NOTE: TEMPORARY
+
+				# https://lolchess.gg/guide/damage?hl=en
+				var stage_damage = 0
+				var curr_stage = main.get_timer().get_stage()
+				if curr_stage == 3: stage_damage = 3
+				elif curr_stage == 4: stage_damage = 5
+				elif curr_stage == 5: stage_damage = 7
+				elif curr_stage == 6: stage_damage = 9
+				elif curr_stage == 7: stage_damage = 15
+				elif curr_stage >= 8: stage_damage = 150
+				
+				var unit_damage = 0
+				var enemy_unit_count = 0
+				for u in player.get_current_enemy().get_node("CombatUnits").get_children():
+					if is_instance_valid(u) and u != null and u.get_mode() == BATTLE: enemy_unit_count += 1
+				match enemy_unit_count:
+					1: unit_damage = 2
+					2: unit_damage = 4
+					3,4,5,6,7,8,9,10: unit_damage = enemy_unit_count+3
+				
+				player.lose_health.rpc(stage_damage + unit_damage)
 				check_battle_status()
 		instance.queue_free()
 		

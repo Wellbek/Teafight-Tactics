@@ -15,7 +15,7 @@ var units = []
 
 var myid
 
-var current_enemy = null
+var current_enemy = null # client sided but server sees it also
 
 var my_bar
 
@@ -137,8 +137,11 @@ func getEnemyCam():
 func getID():
 	return myid
 	
-func getCurrentEnemy():
+func get_current_enemy():
 	return current_enemy
+	
+func set_current_enemy(enemy):
+	current_enemy = enemy
 	
 func get_gold():
 	return gold

@@ -2,7 +2,8 @@ extends Timer
 
 var preparing: bool
 
-var current_round = 1
+var current_round = 0
+var current_stage = 1
 var preparationDuration = 15 #30
 var combatDuration = 20 #??
 var transition_time = 4
@@ -29,11 +30,11 @@ func _ready():
 	set_multiplayer_authority(1)
 	
 func initialize():	
-	startPreparationPhase.rpc(current_round)
+	startPreparationPhase.rpc()
 
 @rpc("authority", "call_local", "reliable")
-func startPreparationPhase(round):
-	current_round = round
+func startPreparationPhase():
+	increment_round()
 	
 	if current_round >= 2: # skip first round
 		if multiplayer.is_server():
@@ -116,6 +117,9 @@ func matchmake():
 		player1.combatphase_setup.rpc_id(matchup[0], player2.get_path(), true)
 		player2.combatphase_setup.rpc_id(matchup[1], player1.get_path(), false)
 		
+		player1.set_current_enemy(player2)
+		player2.set_current_enemy(player1)
+		
 # round-robin tournament algorithm
 func round_robin_pairs(list):
 	if len(list) % 2 != 0: 
@@ -152,8 +156,7 @@ func change_phase():
 	else:
 		if is_transitioning():
 			end_transition.rpc()
-			current_round += 1
-			startPreparationPhase.rpc(current_round)
+			startPreparationPhase.rpc()
 		else: transition.rpc()
 	
 @rpc("authority", "call_local", "reliable")
@@ -178,3 +181,25 @@ func is_transitioning():
 
 func isPreparing():
 	return preparing
+	
+func get_round():
+	return current_round
+	
+func get_stage():
+	return current_stage
+	
+# https://tft.op.gg/game-guide/rounds?hl=en_US
+func increment_round():
+	if current_stage == 1:
+		if current_round >= 4:
+			current_stage += 1
+			current_round = 1
+		else: current_round += 1
+	else:
+		if current_round >= 7:
+			current_stage += 1
+			current_round = 1
+		else: current_round += 1
+	
+	if multiplayer.is_server():
+		print(current_stage, "-", current_round)
