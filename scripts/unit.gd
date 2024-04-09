@@ -42,13 +42,16 @@ var dead = false
 @export var attack_speed = 0.8
 @export var attack_timer: Timer
 
+const LOCAL_COLOR = Color(0.2, 0.898, 0.243)
+const ENEMY_HOST_COLOR = Color(0.757, 0.231, 0.259)
+const ENEMY_ATTACKER_COLOR = Color(0.918, 0.498, 0.176)
+
 func _ready():
 	attack_timer.timeout.connect(_on_attack_timer_timeout)
 	var viewport = find_child("SubViewport")
 	ui = viewport.get_child(0)
 	find_child("Sprite3D").texture = viewport.get_texture()
-	ui.get_node("HPBar").self_modulate = Color(0.2, 0.898, 0.243) if is_multiplayer_authority() else Color(0.929, 0.29, 0.302)
-		
+	ui.get_node("HPBar").self_modulate = LOCAL_COLOR if is_multiplayer_authority() else ENEMY_HOST_COLOR	
 	
 func _enter_tree():
 	myid = name.get_slice("#", 0).to_int()
@@ -212,6 +215,9 @@ func levelUp():
 func toggleUI(value):
 	ui.visible = value
 	
+func get_ui():
+	return ui
+	
 func toggleGrid(value):
 	player.getBoardGrid().visible = value
 	player.getBenchGrid().visible = value
@@ -331,3 +337,6 @@ func sell_unit():
 	changeColor(coll.find_children("MeshInstance3D")[0], Color.CYAN)
 	player.eraseUnit(self)
 	main.freeObject.rpc(get_path())
+	
+func set_bar_color(color: Color):
+	ui.get_node("HPBar").self_modulate = color

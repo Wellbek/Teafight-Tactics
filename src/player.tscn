@@ -1,7 +1,8 @@
-[gd_scene load_steps=10 format=3 uid="uid://g18y6a837usc"]
+[gd_scene load_steps=11 format=3 uid="uid://g18y6a837usc"]
 
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_mrq3l"]
 [ext_resource type="Script" path="res://scripts/gridmap/gridmap.gd" id="1_ust0k"]
+[ext_resource type="Script" path="res://scripts/camera.gd" id="2_sby6c"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_44fhn"]
 size = Vector3(18, 1, 16)
@@ -64,9 +65,11 @@ multiplayerSpawner = NodePath("MultiplayerSpawner")
 
 [node name="Camera" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.547358, 0.836898, 0, -0.836898, 0.547358, 0, 9.66365, 10.7009)
+script = ExtResource("2_sby6c")
 
 [node name="EnemyCam" type="Camera3D" parent="."]
 transform = Transform3D(-1, 7.31523e-08, -4.78695e-08, 0, 0.547563, 0.836764, 8.74228e-08, 0.836764, -0.547563, 0, 9.664, -10.701)
+script = ExtResource("2_sby6c")
 
 [node name="Board" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)

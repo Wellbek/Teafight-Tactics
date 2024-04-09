@@ -40,22 +40,22 @@ func get_num_of_battles():
 	
 func changeCamera(_index):		
 	if _index == 0: 
-		local_player.getCamera().current = true
+		local_player.getCamera().change_current(true)
 	else:	
 		var ids = multiplayer.get_peers()
 		if _index-1 >= ids.size(): return
 		ids.sort()
 		var peername = str(ids[_index-1])
 		var peer = get_tree().root.get_child(0).find_child("World").get_node(peername)
-		peer.getEnemyCam().current = true
+		peer.getEnemyCam().change_current(true)
 		
 func changeCameraByID(_id):		
 	if _id == multiplayer.get_unique_id(): 
-		local_player.getCamera().current = true
+		local_player.getCamera().change_current(true)
 	else:	
 		var peer = get_tree().root.get_child(0).find_child("World").get_node(str(_id))
 		if peer:
-			peer.getEnemyCam().current = true
+			peer.getEnemyCam().change_current(true)
 			
 @rpc("any_peer", "call_local", "unreliable")
 func freeObject(_path):

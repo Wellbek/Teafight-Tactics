@@ -4,8 +4,8 @@ var preparing: bool = true
 
 var current_round = 0
 var current_stage = 1
-var preparationDuration = 30 #30
-var combatDuration = 40 #40
+var preparationDuration = 10 #30
+var combatDuration = 40 #45
 var transition_time = 4
 
 var unitShop: Control
@@ -22,10 +22,12 @@ var urf_overtime = false
 func _enter_tree():
 	set_multiplayer_authority(1) #only host controls time
 
-func _process(delta):
-	label.text = str(time_left).get_slice(".", 0)
+func _process(delta):		
+	if preparing == false and urf_overtime == false and not is_transitioning():
+		label.text = str(time_left-15).get_slice(".", 0)
+	else: label.text = str(time_left).get_slice(".", 0)
 	
-	if time_left <= 16 and not urf_overtime and not is_preparing():
+	if time_left <= 16 and not urf_overtime and not is_preparing() and not is_transitioning():
 		urf_overtime = true
 		trigger_overtime.rpc()
 	
@@ -144,9 +146,6 @@ func matchmake():
 		player1.combatphase_setup.rpc_id(matchup[0], player2.get_path(), true)
 		player2.combatphase_setup.rpc_id(matchup[1], player1.get_path(), false)
 		
-		player1.set_current_enemy(player2)
-		player2.set_current_enemy(player1)
-		
 # round-robin tournament algorithm
 func round_robin_pairs(list):
 	if len(list) % 2 != 0: 
@@ -179,7 +178,6 @@ func change_phase():
 			end_transition.rpc()
 			change_timer.rpc(combatDuration,true)
 			change_timer_color.rpc(Color.WHITE)
-			preparing = false
 		else: startCombatPhase.rpc()
 	else:
 		if is_transitioning():
@@ -190,7 +188,9 @@ func change_phase():
 @rpc("authority", "call_local", "reliable")
 func change_timer(time, start):
 	wait_time = time
-	if start: start()
+	if start: 
+		if preparing: preparing = false
+		start()
 	
 # server func sent to all clients
 @rpc("authority", "call_local", "reliable")

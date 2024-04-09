@@ -51,7 +51,7 @@ func _ready():
 		var i = ids.find(myid)
 
 		global_transform.origin.x += 19 * i
-		camera.current = true	
+		camera.change_current(true)	
 		
 		set_gold(start_gold)
 
@@ -71,7 +71,9 @@ func combatphase_setup(enemy_path, host:bool):
 		main.changeCameraByID(current_enemy.name.to_int())
 				
 	for unit in unit_parent.get_children():
-			copyUnit.rpc(unit.get_path(), combatunit_parent.get_path())
+		var host_id = myid if host else current_enemy.getID()
+		var attacker_id = current_enemy.getID() if host else myid
+		copyUnit.rpc(unit.get_path(), combatunit_parent.get_path(), host, attacker_id, host_id)
 
 	combatunit_parent.visible = true
 
@@ -99,7 +101,7 @@ func reset_combatphase():
 	main.changeCamera(0)
 
 @rpc("any_peer", "call_local", "reliable")
-func copyUnit(unit_path, parent_path):
+func copyUnit(unit_path, parent_path, host: bool, attacker_id: int, host_id: int):
 	var unit = get_tree().root.get_node(unit_path)
 	var parent = get_tree().root.get_node(parent_path)
 	var copy = unit.duplicate()
@@ -109,6 +111,10 @@ func copyUnit(unit_path, parent_path):
 	if unit.is_targetable():
 		copy.change_mode(copy.BATTLE)
 		copy.change_target_status(true)
+		if not host: 
+			var client_id = multiplayer.get_unique_id()
+			if client_id != attacker_id and client_id != host_id:
+				copy.set_bar_color(copy.ENEMY_ATTACKER_COLOR)
 
 func appendUnit(unit):
 	units.append(unit)
