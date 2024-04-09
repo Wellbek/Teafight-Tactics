@@ -143,6 +143,11 @@ func matchmake():
 
 		main.register_battle()
 
+		# for server to do dmg calculations and clean up later
+		player1.set_current_enemy(player2)
+		player2.set_current_enemy(player1)
+
+		# ^ each client will know its enemy in the following:
 		player1.combatphase_setup.rpc_id(matchup[0], player2.get_path(), true)
 		player2.combatphase_setup.rpc_id(matchup[1], player1.get_path(), false)
 		

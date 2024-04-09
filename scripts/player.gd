@@ -61,8 +61,6 @@ func combatphase_setup(enemy_path, host:bool):
 	
 	current_enemy = get_tree().root.get_node(enemy_path)
 	
-	if current_enemy == null or not is_instance_valid(current_enemy): print(myid, " here!")
-	
 	var unit_parent = find_child("Units")
 	unit_parent.visible = false
 	var combatunit_parent = find_child("CombatUnits")	
