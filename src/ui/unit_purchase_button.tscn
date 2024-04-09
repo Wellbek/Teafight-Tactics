@@ -1,24 +1,32 @@
-[gd_scene load_steps=4 format=3 uid="uid://beet8rjehupwb"]
+[gd_scene load_steps=5 format=3 uid="uid://beet8rjehupwb"]
 
 [ext_resource type="Script" path="res://scripts/unitbutton.gd" id="1_3cbhy"]
 [ext_resource type="PackedScene" uid="uid://b6qey8lycnpgo" path="res://src/ui/unit_purchase_button_content.tscn" id="2_1rrrg"]
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_6o67b"]
+[sub_resource type="ViewportTexture" id="ViewportTexture_iwc7t"]
 viewport_path = NodePath("SubViewport")
 
-[node name="purchase_button" type="Button"]
-custom_minimum_size = Vector2(150, 80)
+[sub_resource type="ViewportTexture" id="ViewportTexture_ypxqh"]
+viewport_path = NodePath("SubViewport")
+
+[node name="purchase_button" type="TextureButton"]
+anchors_preset = -1
+anchor_right = 0.13
+anchor_bottom = 0.123
+offset_right = -35.76
+offset_bottom = 5.296
 size_flags_horizontal = 3
-icon = SubResource("ViewportTexture_6o67b")
-flat = true
-icon_alignment = 1
-expand_icon = true
+texture_normal = SubResource("ViewportTexture_iwc7t")
+texture_hover = SubResource("ViewportTexture_ypxqh")
+ignore_texture_size = true
+stretch_mode = 4
 script = ExtResource("1_3cbhy")
 unitFolder = "res://src/units"
 
 [node name="SubViewport" type="SubViewport" parent="."]
 transparent_bg = true
-size = Vector2i(992, 502)
+size = Vector2i(1100, 800)
+size_2d_override = Vector2i(1140, 655)
 
 [node name="ButtonContent" parent="SubViewport" instance=ExtResource("2_1rrrg")]
 

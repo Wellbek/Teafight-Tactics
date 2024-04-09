@@ -50,7 +50,7 @@ func _ready():
 		ids.sort()
 		var i = ids.find(myid)
 
-		global_transform.origin.x += 19 * i
+		global_transform.origin.x += 100 * i
 		camera.change_current(true)	
 		
 		set_gold(start_gold)
@@ -60,6 +60,8 @@ func combatphase_setup(enemy_path, host:bool):
 	if is_defeated(): return
 	
 	current_enemy = get_tree().root.get_node(enemy_path)
+	
+	if current_enemy == null or not is_instance_valid(current_enemy): print(myid, " here!")
 	
 	var unit_parent = find_child("Units")
 	unit_parent.visible = false

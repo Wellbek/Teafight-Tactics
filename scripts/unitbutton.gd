@@ -1,4 +1,4 @@
-extends Button
+extends TextureButton
 
 @export_dir var unitFolder: String
 
@@ -44,7 +44,9 @@ func _on_player_gold_changed(new_amount):
 	
 	if new_amount < unit_cost:
 		disabled = true
+		self_modulate = Color(0.443, 0.443, 0.443, 0.627)
 	else:
+		self_modulate = Color(1, 1, 1, 1)
 		disabled = false
 
 func _on_pressed():	
