@@ -177,29 +177,34 @@ func changeColor(mesh, color):
 	newMaterial.albedo_color = color
 	mesh.set_surface_override_material(0, newMaterial)
 
-func placeUnit():
-	if not isDragging(): return
-	
-	transform.origin.y -= 1
-	setDragging(false)
+func placeUnit(_tile: Node = coll):
+	if isDragging():
+		transform.origin.y -= 1
+		setDragging(false)
+	elif _tile == coll: return
 
 	toggleGrid(false)
 	
-	if coll == null: coll = tile # if mouse never passes over a collider coll will be null => precaution against this error
+	if _tile == null: _tile = tile # if mouse never passes over a collider coll will be null => precaution against this error
 	
-	changeColor(coll.find_children("MeshInstance3D")[0], Color.CYAN)
+	changeColor(_tile.find_children("MeshInstance3D")[0], Color.CYAN)
 	
-	if tile == coll: 
+	if tile == _tile: 
 		global_transform.origin = Vector3(tile.global_transform.origin.x, global_transform.origin.y, tile.global_transform.origin.z)
 		if tile.get_parent().type == tile.get_parent().HEX: 
 			toggleUI(true)
 	elif tile != null: 
-		if coll.hasUnit(): 
-			tile.swapUnit(coll)
+		if _tile.hasUnit(): 
+			tile.swapUnit(_tile)
 		else:
-			tile.unregisterUnit()
-			tile = coll
-			tile.registerUnit(self)
+			if _tile.get_parent().can_place_unit() or getTileType() == 1:
+				tile.unregisterUnit()
+				tile = _tile
+				tile.registerUnit(self)
+			else: 
+				global_transform.origin = Vector3(tile.global_transform.origin.x, global_transform.origin.y, tile.global_transform.origin.z)
+				if tile.get_parent().type == tile.get_parent().HEX: 
+					toggleUI(true)
 
 func levelUp():
 	if star < 3:
@@ -333,6 +338,7 @@ func sell_unit():
 	player.increase_gold(get_cost())
 	setDragging(false)
 	toggleGrid(false)
+	tile.unregisterUnit()
 	if coll == null: coll = tile # if mouse never passes over a collider coll will be null => precaution against this error
 	changeColor(coll.find_children("MeshInstance3D")[0], Color.CYAN)
 	player.eraseUnit(self)

@@ -86,6 +86,9 @@ func startPreparationPhase():
 	preparing = true
 	#print("Preparation Phase Started for Round: ", current_round)
 	
+	if main.getPlayer() and main.getPlayer().getBoardGrid().can_place_unit():
+		main.getPlayer().getBoardGrid().toggle_label(true)
+	
 	wait_time = preparationDuration
 	start()
 
@@ -119,8 +122,14 @@ func startCombatPhase():
 	timer_label.get_label_settings().set_font_color(TIMER_DEFAULT_COLOR)
 	
 	if not main.getPlayer().is_defeated():	
+		# place all units that are currently still being moved AND fill board as much as possible
 		for unit in main.getPlayer().getUnits():
-			unit.placeUnit()
+			if unit.getTileType() == 0 and main.getPlayer().getBoardGrid().can_place_unit():
+				unit.placeUnit(main.getPlayer().getBoardGrid().getFirstFreeTile())
+			else:
+				unit.placeUnit()
+			
+		main.getPlayer().getBoardGrid().toggle_label(false)
 		unitShop.visible = false
 	#print("Combat Phase Started for Round: ", current_round)
 	

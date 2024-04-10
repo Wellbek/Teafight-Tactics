@@ -96,11 +96,23 @@ shape = SubResource("BoxShape3D_44fhn")
 mesh = SubResource("BoxMesh_vclnc")
 surface_material_override/0 = SubResource("StandardMaterial3D_hw32e")
 
-[node name="BoardGrid" type="Node3D" parent="Board"]
+[node name="BoardGrid" type="Node3D" parent="Board" node_paths=PackedStringArray("amount_label")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.2, 0.5, 1.8)
 visible = false
 script = ExtResource("1_ust0k")
 type = 1
+level_restricted = true
+amount_label = NodePath("../UnitAmount")
+
+[node name="UnitAmount" type="Label3D" parent="Board"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 1, -2.378)
+visible = false
+pixel_size = 0.01
+modulate = Color(0.61944, 0.988266, 1, 1)
+outline_modulate = Color(0.376638, 0.811917, 1, 1)
+text = "0/0"
+font_size = 512
+outline_size = 40
 
 [node name="Bench" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.3, 9)

@@ -202,7 +202,7 @@ func set_gold(val):
 	var buttons = main.getUI().get_node("UnitShop/HBoxContainer").get_children()
 	for button in buttons:
 		button._on_player_gold_changed(gold)
-	
+		
 func increase_gold(amount):
 	set_gold(gold+amount)
 
@@ -295,6 +295,7 @@ func increment_winstreak():
 	var streak = main.getUI().get_node("UnitShop/Streak")
 	streak.get_node("Label").text = str(cons_wins)
 	streak.modulate = Color(1, 0, 0)
+	increase_gold(1) # win bonus
 
 @rpc("any_peer", "call_local", "unreliable")
 func increment_lossstreak():
