@@ -6,7 +6,7 @@ var current_round = 0
 var current_stage = 1
 var preparationDuration = 30 #30
 var combatDuration = 45 #45
-var transition_time = 4
+var transition_time = 5
 
 var unitShop: Control
 var timer_label: Label
@@ -30,13 +30,19 @@ func _process(delta):
 		timer_label.text = str(time_left-15).get_slice(".", 0)
 	else: timer_label.text = str(time_left).get_slice(".", 0)
 	
+	if progressbar: 
+		progressbar.value = time_left/wait_time * 100
+		if not urf_overtime and progressbar.self_modulate != Color(0.051, 0.671, 0.937): 
+			progressbar.self_modulate = Color(0.051, 0.671, 0.937)
+	
 	if time_left <= 16 and not urf_overtime and not is_preparing() and not is_transitioning():
 		urf_overtime = true
 		trigger_overtime.rpc()
 	
 @rpc("authority", "call_local", "reliable")	
 func trigger_overtime():
-	change_timer_color(Color.ORANGE)
+	change_timer_color(Color.ORANGE_RED)
+	progressbar.self_modulate = Color.ORANGE_RED
 	
 	for combat_unit in main.getPlayer().get_node("CombatUnits").get_children():
 		combat_unit.change_attack_speed(combat_unit.attack_speed*3)
@@ -63,9 +69,7 @@ func initialize():
 	startPreparationPhase.rpc()
 
 @rpc("authority", "call_local", "reliable")
-func startPreparationPhase():
-	urf_overtime = false
-	
+func startPreparationPhase():	
 	timer_label.get_label_settings().set_font_color(TIMER_DEFAULT_COLOR)
 
 	increment_round()
@@ -207,6 +211,7 @@ func change_timer(time, start):
 # server func sent to all clients
 @rpc("authority", "call_local", "reliable")
 func transition():
+	urf_overtime = false
 	transitioning = true
 	change_timer_color(Color.CRIMSON)
 	wait_time = transition_time

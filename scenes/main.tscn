@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=3 uid="uid://cqs5r3b42amb7"]
+[gd_scene load_steps=32 format=3 uid="uid://cqs5r3b42amb7"]
 
 [ext_resource type="Script" path="res://scripts/main.gd" id="1_35go2"]
 [ext_resource type="Script" path="res://scripts/roundtimer.gd" id="2_8mgga"]
@@ -8,6 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://dt00e868xcrql" path="res://assets/images/tft_coin.png" id="6_g8e0e"]
 [ext_resource type="PackedScene" uid="uid://dfbxcmkrqggoj" path="res://src/ui/player_bar.tscn" id="7_n3kcn"]
 [ext_resource type="Texture2D" uid="uid://d3ugo452yq2y5" path="res://assets/League_of_Legends_Screenshot_2021.04.26___13.43.59.70.jpeg" id="8_ukdsg"]
+[ext_resource type="Texture2D" uid="uid://isbp8j5mubnq" path="res://assets/images/streak_icon.png" id="9_8icbs"]
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_402jx"]
 viewport_path = NodePath("SubViewport")
@@ -46,6 +47,28 @@ font_color = Color(1, 0.800183, 0.282353, 1)
 [sub_resource type="LabelSettings" id="LabelSettings_r6fw1"]
 font_color = Color(0.560815, 0.266728, 0.0781567, 1)
 
+[sub_resource type="LabelSettings" id="LabelSettings_6r5o2"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_p55q3"]
+font_size = 12
+font_color = Color(0.243137, 0.243137, 0.243137, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_3hkcf"]
+font_size = 12
+font_color = Color(0.0784314, 0.584314, 0.211765, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_d0yd3"]
+font_size = 12
+font_color = Color(0.0196078, 0.592157, 0.831373, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_legmf"]
+font_size = 12
+font_color = Color(0.804089, 0, 0.651194, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_cflpm"]
+font_size = 12
+font_color = Color(1, 0.890196, 0, 1)
+
 [sub_resource type="LabelSettings" id="LabelSettings_gtjgx"]
 font_size = 17
 font_color = Color(0.560784, 0.266667, 0.0784314, 1)
@@ -58,7 +81,7 @@ font_color = Color(0.560784, 0.266667, 0.0784314, 1)
 bg_color = Color(0.0977035, 0.0977035, 0.0977035, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ykaag"]
-bg_color = Color(0.27454, 0.694179, 1, 1)
+bg_color = Color(1, 1, 1, 1)
 
 [node name="Main" type="Node" node_paths=PackedStringArray("timer", "gui")]
 script = ExtResource("1_35go2")
@@ -268,6 +291,63 @@ text = "50
 "
 label_settings = SubResource("LabelSettings_r6fw1")
 
+[node name="Streak" type="Control" parent="GUI/UnitShop"]
+layout_mode = 1
+anchor_left = 0.574
+anchor_top = 0.026
+anchor_right = 0.636
+anchor_bottom = 0.216
+offset_left = -0.315979
+offset_top = -0.250002
+offset_right = 0.176025
+offset_bottom = -1.33514e-05
+
+[node name="ColorRect" type="ColorRect" parent="GUI/UnitShop/Streak"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.043
+anchor_top = 0.083
+anchor_right = 0.957
+anchor_bottom = 0.833
+offset_left = 0.022
+offset_top = 1.008
+offset_right = -0.0219994
+offset_bottom = 1.008
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.309804, 0.309804, 0.309804, 0.752941)
+
+[node name="Label" type="Label" parent="GUI/UnitShop/Streak"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.457
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -0.0220013
+offset_right = -2.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "0"
+label_settings = SubResource("LabelSettings_6r5o2")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TextureRect" type="TextureRect" parent="GUI/UnitShop/Streak"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.174
+anchor_top = 0.25
+anchor_right = 0.413
+anchor_bottom = 0.75
+offset_left = -0.00400066
+offset_top = 6.10352e-05
+offset_right = 0.0019989
+offset_bottom = 5.91278e-05
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("9_8icbs")
+expand_mode = 1
+
 [node name="RarityChances" type="Control" parent="GUI/UnitShop"]
 layout_mode = 1
 anchor_left = 0.144
@@ -284,7 +364,55 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.957, 0.784558, 0.407904, 1)
+color = Color(0.956863, 0.784314, 0.407843, 0.823529)
+
+[node name="HBoxContainer" type="HBoxContainer" parent="GUI/UnitShop/RarityChances"]
+clip_contents = true
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.113
+anchor_right = 0.98
+anchor_bottom = 1.0
+offset_left = 0.0610027
+offset_right = 0.0600281
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="1" type="Label" parent="GUI/UnitShop/RarityChances/HBoxContainer"]
+layout_mode = 2
+text = "0%"
+label_settings = SubResource("LabelSettings_p55q3")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="2" type="Label" parent="GUI/UnitShop/RarityChances/HBoxContainer"]
+layout_mode = 2
+text = "0%"
+label_settings = SubResource("LabelSettings_3hkcf")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="3" type="Label" parent="GUI/UnitShop/RarityChances/HBoxContainer"]
+layout_mode = 2
+text = "0%"
+label_settings = SubResource("LabelSettings_d0yd3")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="4" type="Label" parent="GUI/UnitShop/RarityChances/HBoxContainer"]
+layout_mode = 2
+text = "0%"
+label_settings = SubResource("LabelSettings_legmf")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="5" type="Label" parent="GUI/UnitShop/RarityChances/HBoxContainer"]
+layout_mode = 2
+text = "0%"
+label_settings = SubResource("LabelSettings_cflpm")
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="Sidebar" type="Control" parent="GUI/UnitShop"]
 layout_mode = 1

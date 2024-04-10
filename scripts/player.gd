@@ -54,6 +54,8 @@ func _ready():
 		camera.change_current(true)	
 		
 		set_gold(start_gold)
+	
+	increase_level()
 
 @rpc("any_peer", "call_local", "reliable")
 func combatphase_setup(enemy_path, host:bool):
@@ -245,13 +247,24 @@ func get_level():
 	
 func increase_level():
 	level += 1
+	
+	var rates = main.drop_rates[level - 1]
+	var labels = main.getUI().get_node("UnitShop/RarityChances/HBoxContainer").get_children()
+	for i in range(len(rates)):
+		labels[i].text = str(rates[i]*100) + "%"
 		
-@rpc("authority", "call_local", "unreliable")
+@rpc("any_peer", "call_local", "unreliable")
 func increment_winstreak():
 	cons_loss = 0
 	cons_wins += 1
+	var streak = main.getUI().get_node("UnitShop/Streak")
+	streak.get_node("Label").text = str(cons_wins)
+	streak.modulate = Color(1, 0, 0)
 
-@rpc("authority", "call_local", "unreliable")
+@rpc("any_peer", "call_local", "unreliable")
 func increment_lossstreak():
 	cons_wins = 0
 	cons_loss += 1
+	var streak = main.getUI().get_node("UnitShop/Streak")
+	streak.get_node("Label").text = str(cons_loss)
+	streak.modulate = Color(0, 0.529, 1)

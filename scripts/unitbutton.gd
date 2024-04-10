@@ -21,19 +21,6 @@ var unit_name
 
 var bought = false
 
-@onready var drop_rates = [
-	[1.0, 0.0, 0.0, 0.0, 0.0],  # Level 1
-	[1.0, 0.0, 0.0, 0.0, 0.0],  # Level 2
-	[0.75, 0.25, 0.0, 0.0, 0.0],  # Level 3
-	[0.55, 0.30, 0.15, 0.0, 0.0],  # Level 4
-	[0.45, 0.33, 0.20, 0.02, 0.0],  # Level 5
-	[0.30, 0.40, 0.25, 0.05, 0.0],  # Level 6
-	[0.19, 0.30, 0.40, 0.10, 0.01],  # Level 7
-	[0.18, 0.25, 0.32, 0.22, 0.03],  # Level 8
-	[0.10, 0.20, 0.25, 0.35, 0.10],  # Level 9
-	[0.05, 0.10, 0.20, 0.40, 0.25]  # Level 10
-]
-
 func _ready():
 	main = get_tree().root.get_child(0)
 	preparing = false
@@ -130,7 +117,7 @@ func generateButton():
 	var player_level = 1 if main.getPlayer() == null else main.getPlayer().get_level()
 	
 	var rarity = randf() # number between 0 and 1
-	var drop_table = drop_rates[player_level - 1]
+	var drop_table = main.drop_rates[player_level - 1]
 	for i in range(len(drop_table)):
 		if rarity < drop_table[i]:
 			unit_cost = i+1
