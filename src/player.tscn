@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://g18y6a837usc"]
+[gd_scene load_steps=16 format=3 uid="uid://g18y6a837usc"]
 
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_mrq3l"]
 [ext_resource type="Script" path="res://scripts/gridmap/gridmap.gd" id="1_ust0k"]
@@ -10,11 +10,26 @@ size = Vector3(22, 1, 16)
 [sub_resource type="BoxMesh" id="BoxMesh_vclnc"]
 size = Vector3(22, 1, 16)
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hw32e"]
+albedo_color = Color(0.431357, 0.698085, 0.348791, 1)
+
 [sub_resource type="BoxShape3D" id="BoxShape3D_jlr6y"]
 size = Vector3(22, 1, 2)
 
 [sub_resource type="BoxMesh" id="BoxMesh_amsno"]
 size = Vector3(22, 1, 2)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_o1323"]
+albedo_color = Color(0.560784, 0.560784, 0.560784, 1)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_fmv0e"]
+size = Vector2(100, 100)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8o77c"]
+albedo_color = Color(0.0156863, 0.176471, 0.188235, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_i2rm3"]
+size = Vector3(100, 0.1, 100)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bgose"]
 albedo_color = Color(1, 0.796078, 0, 1)
@@ -79,6 +94,7 @@ shape = SubResource("BoxShape3D_44fhn")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Board"]
 mesh = SubResource("BoxMesh_vclnc")
+surface_material_override/0 = SubResource("StandardMaterial3D_hw32e")
 
 [node name="BoardGrid" type="Node3D" parent="Board"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.2, 0.5, 1.8)
@@ -94,6 +110,7 @@ shape = SubResource("BoxShape3D_jlr6y")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Bench"]
 mesh = SubResource("BoxMesh_amsno")
+surface_material_override/0 = SubResource("StandardMaterial3D_o1323")
 
 [node name="BenchGrid" type="Node3D" parent="Bench"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.9, 0.5, 0)
@@ -108,8 +125,20 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.3, -9)
 [node name="CollisionShape3D" type="CollisionShape3D" parent="EnemyBench"]
 shape = SubResource("BoxShape3D_jlr6y")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="EnemyBench"]
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="EnemyBench"]
 mesh = SubResource("BoxMesh_amsno")
+skeleton = NodePath("../../Bench")
+surface_material_override/0 = SubResource("StandardMaterial3D_o1323")
+
+[node name="ground" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="ground"]
+mesh = SubResource("PlaneMesh_fmv0e")
+surface_material_override/0 = SubResource("StandardMaterial3D_8o77c")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="ground"]
+shape = SubResource("BoxShape3D_i2rm3")
 
 [node name="Econ" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0, 0)

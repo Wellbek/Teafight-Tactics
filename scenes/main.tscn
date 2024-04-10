@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://cqs5r3b42amb7"]
+[gd_scene load_steps=25 format=3 uid="uid://cqs5r3b42amb7"]
 
 [ext_resource type="Script" path="res://scripts/main.gd" id="1_35go2"]
 [ext_resource type="Script" path="res://scripts/roundtimer.gd" id="2_8mgga"]
@@ -41,10 +41,24 @@ viewport_path = NodePath("SubViewport")
 
 [sub_resource type="LabelSettings" id="LabelSettings_w1m2u"]
 font_size = 18
-font_color = Color(1, 0.929412, 0.611765, 1)
+font_color = Color(1, 0.800183, 0.282353, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_r6fw1"]
+font_color = Color(0.560815, 0.266728, 0.0781567, 1)
 
 [sub_resource type="LabelSettings" id="LabelSettings_gtjgx"]
-font_size = 25
+font_size = 17
+font_color = Color(0.560784, 0.266667, 0.0784314, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_kvple"]
+font_size = 17
+font_color = Color(0.560784, 0.266667, 0.0784314, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_g6mim"]
+bg_color = Color(0.0977035, 0.0977035, 0.0977035, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ykaag"]
+bg_color = Color(0.27454, 0.694179, 1, 1)
 
 [node name="Main" type="Node" node_paths=PackedStringArray("timer", "gui")]
 script = ExtResource("1_35go2")
@@ -58,7 +72,7 @@ player_bar_scene = ExtResource("7_n3kcn")
 main = NodePath("..")
 timer = NodePath("../RoundTimer")
 startButton = NodePath("../GUI/TmpStartGame")
-enable_on_start = [NodePath("../GUI/UnitShop"), NodePath("../GUI/TimerLabel")]
+enable_on_start = [NodePath("../GUI/UnitShop"), NodePath("../GUI/StageInfo/TimerLabel")]
 disable_on_start = [NodePath("../GUI/TmpHost"), NodePath("../GUI/TmpJoin"), NodePath("../GUI/TmpStartGame")]
 
 [node name="RoundTimer" type="Timer" parent="."]
@@ -73,6 +87,12 @@ shadow_blur = 3.0
 
 [node name="World" type="Node3D" parent="."]
 
+[node name="LeagueOfLegendsScreenshot2021_04_2613_43_59_70" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(576, 324)
+scale = Vector2(0.96, 0.96)
+texture = ExtResource("8_ukdsg")
+
 [node name="GUI" type="Control" parent="."]
 layout_mode = 3
 anchors_preset = 15
@@ -84,55 +104,52 @@ mouse_filter = 1
 
 [node name="UnitShop" type="Control" parent="GUI"]
 layout_mode = 1
-anchor_left = 0.153
-anchor_top = 0.784
-anchor_right = 0.847
+anchor_left = 0.137
+anchor_top = 0.807
+anchor_right = 0.774
 anchor_bottom = 1.0
-offset_left = 106.744
-offset_top = 19.968
-offset_right = -83.744
+offset_left = 0.175995
+offset_top = 0.0639648
+offset_right = 0.351929
 grow_horizontal = 2
 grow_vertical = 0
 mouse_filter = 1
 
-[node name="ColorRect" type="ColorRect" parent="GUI/UnitShop"]
+[node name="MainBackground" type="ColorRect" parent="GUI/UnitShop"]
 layout_mode = 1
 anchors_preset = -1
-anchor_top = 0.183
+anchor_left = 0.17
+anchor_top = 0.216
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = 0.0400009
+offset_left = 0.220001
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.415686, 0.415686, 0.415686, 0.709804)
+color = Color(1, 0.890562, 0.647288, 1)
 
 [node name="ColorRect2" type="ColorRect" parent="GUI/UnitShop"]
 layout_mode = 1
 anchors_preset = -1
-anchor_left = 0.011
-anchor_top = 0.242
+anchor_left = 0.181
+anchor_top = 0.28
 anchor_right = 0.989
-anchor_bottom = 0.95
-offset_left = 0.301
-offset_top = -0.0400009
-offset_right = -0.301025
-offset_bottom = -1.00001
+anchor_bottom = 0.944
+offset_left = 0.145996
+offset_right = 0.0739746
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-color = Color(0.168627, 0.168627, 0.168627, 1)
+color = Color(0.152895, 0.172442, 0.188067, 1)
 
 [node name="HBoxContainer" type="HBoxContainer" parent="GUI/UnitShop"]
 layout_mode = 1
 anchors_preset = -1
-anchor_left = 0.011
-anchor_top = 0.242
+anchor_left = 0.181
+anchor_top = 0.28
 anchor_right = 0.989
-anchor_bottom = 0.942
-offset_left = 0.301
-offset_top = -0.0400009
-offset_right = -0.301025
-offset_bottom = -0.0400009
+anchor_bottom = 0.944
+offset_left = 0.145996
+offset_right = 0.0739746
 grow_horizontal = 2
 grow_vertical = 0
 alignment = 1
@@ -165,14 +182,13 @@ texture_hover = SubResource("ViewportTexture_68bnq")
 [node name="SellUnit" type="Control" parent="GUI/UnitShop"]
 visible = false
 layout_mode = 1
-anchor_left = 0.011
-anchor_top = 0.242
+anchor_left = 0.181
+anchor_top = 0.28
 anchor_right = 0.989
 anchor_bottom = 0.942
-offset_left = 0.301
-offset_top = -0.0400009
-offset_right = -0.301025
-offset_bottom = -0.0400009
+offset_left = 1.146
+offset_right = 0.0739746
+offset_bottom = 0.25
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -184,7 +200,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-color = Color(0.168627, 0.168627, 0.168627, 1)
+color = Color(0.152895, 0.172442, 0.188067, 1)
 
 [node name="CostLabel" type="Label" parent="GUI/UnitShop/SellUnit"]
 layout_mode = 1
@@ -206,14 +222,14 @@ vertical_alignment = 1
 
 [node name="Gold" type="Control" parent="GUI/UnitShop"]
 layout_mode = 1
-anchor_left = 0.352
-anchor_top = -0.006
-anchor_right = 0.45
-anchor_bottom = 0.191
-offset_left = -0.212067
-offset_top = 0.0280001
-offset_right = 0.199982
-offset_bottom = 0.0539951
+anchor_left = 0.453
+anchor_top = 0.018
+anchor_right = 0.551
+anchor_bottom = 0.216
+offset_left = -0.346069
+offset_top = 1.028
+offset_right = 0.065979
+offset_bottom = 0.928995
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -224,7 +240,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.415686, 0.415686, 0.415686, 0.709804)
+color = Color(1, 0.890562, 0.647288, 1)
 
 [node name="HBoxContainer" type="HBoxContainer" parent="GUI/UnitShop/Gold"]
 clip_contents = true
@@ -232,6 +248,10 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = -0.155945
+offset_top = -0.278015
+offset_right = -0.155945
+offset_bottom = -0.278015
 grow_horizontal = 2
 grow_vertical = 2
 alignment = 1
@@ -246,22 +266,43 @@ stretch_mode = 3
 layout_mode = 2
 text = "50
 "
+label_settings = SubResource("LabelSettings_r6fw1")
 
-[node name="TimerLabel" type="Label" parent="GUI"]
+[node name="RarityChances" type="Control" parent="GUI/UnitShop"]
 layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.535
-anchor_right = 0.585
-anchor_bottom = 0.054
-offset_left = -0.320007
-offset_right = 0.0799561
-offset_bottom = 0.00799942
+anchor_left = 0.144
+anchor_top = 0.072
+anchor_right = 0.421
+anchor_bottom = 0.216
+offset_left = 0.303993
+offset_right = -0.0140381
+
+[node name="ColorRect" type="ColorRect" parent="GUI/UnitShop/RarityChances"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-text = "000"
-label_settings = SubResource("LabelSettings_gtjgx")
-horizontal_alignment = 1
-vertical_alignment = 1
+grow_vertical = 2
+color = Color(0.957, 0.784558, 0.407904, 1)
+
+[node name="Sidebar" type="Control" parent="GUI/UnitShop"]
+layout_mode = 1
+anchor_left = -0.001
+anchor_top = 0.008
+anchor_right = 0.17
+anchor_bottom = 1.0
+offset_left = -0.266
+offset_right = 0.220001
+
+[node name="ColorRect" type="ColorRect" parent="GUI/UnitShop/Sidebar"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(1, 0.890562, 0.647288, 1)
 
 [node name="TmpHost" type="Button" parent="GUI"]
 layout_mode = 0
@@ -309,7 +350,7 @@ offset_left = -25.368
 offset_right = -0.368011
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.247059, 0.247059, 0.247059, 0.858824)
+color = Color(1, 0.890562, 0.647288, 1)
 
 [node name="VBoxContainer" type="VBoxContainer" parent="GUI/PlayerBars/ColorRect"]
 layout_mode = 1
@@ -324,6 +365,68 @@ offset_bottom = 0.127991
 grow_horizontal = 2
 grow_vertical = 2
 
+[node name="StageInfo" type="Control" parent="GUI"]
+layout_mode = 1
+anchor_left = 0.41
+anchor_right = 0.591
+anchor_bottom = 0.049
+offset_left = -0.320038
+offset_right = 0.167969
+offset_bottom = 0.247999
+
+[node name="ColorRect" type="ColorRect" parent="GUI/StageInfo"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 0.781
+offset_bottom = 0.00799942
+color = Color(1, 0.890562, 0.647288, 1)
+
+[node name="TimerLabel" type="Label" parent="GUI/StageInfo"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.732
+anchor_right = 0.928
+anchor_bottom = 0.75
+offset_left = 0.0119934
+offset_right = 0.0479889
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+text = "000"
+label_settings = SubResource("LabelSettings_gtjgx")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="StageLabel" type="Label" parent="GUI/StageInfo"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.12
+anchor_right = 0.306
+anchor_bottom = 0.75
+offset_left = -0.0800018
+offset_right = 0.0459938
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+text = "1-1"
+label_settings = SubResource("LabelSettings_kvple")
+horizontal_alignment = 1
+vertical_alignment = 1
+clip_text = true
+
+[node name="ProgressBar" type="ProgressBar" parent="GUI/StageInfo"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.087
+anchor_top = 0.781
+anchor_right = 0.909
+anchor_bottom = 1.0
+offset_left = -0.183001
+offset_top = 0.00799942
+offset_right = 0.0189972
+theme_override_styles/background = SubResource("StyleBoxFlat_g6mim")
+theme_override_styles/fill = SubResource("StyleBoxFlat_ykaag")
+value = 80.0
+fill_mode = 1
+show_percentage = false
+
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
 _spawnable_scenes = PackedStringArray("res://src/player.tscn")
 spawn_path = NodePath("../World")
@@ -333,13 +436,6 @@ spawn_limit = 8
 _spawnable_scenes = PackedStringArray("res://src/ui/player_bar.tscn")
 spawn_path = NodePath("../GUI/PlayerBars/ColorRect/VBoxContainer")
 spawn_limit = 8
-
-[node name="LeagueOfLegendsScreenshot2021_04_2613_43_59_70" type="Sprite2D" parent="."]
-visible = false
-modulate = Color(1, 1, 1, 0.168627)
-position = Vector2(576, 324)
-scale = Vector2(0.96, 0.96)
-texture = ExtResource("8_ukdsg")
 
 [connection signal="timeout" from="RoundTimer" to="RoundTimer" method="_on_Timer_timeout"]
 [connection signal="mouse_entered" from="GUI/UnitShop/SellUnit" to="." method="_on_sell_unit_mouse_entered"]

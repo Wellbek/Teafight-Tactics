@@ -5,9 +5,13 @@
 
 [sub_resource type="LabelSettings" id="LabelSettings_i1nu6"]
 font_size = 100
+font_color = Color(1, 0.98436, 0.827543, 1)
+shadow_size = 0
 
 [sub_resource type="LabelSettings" id="LabelSettings_co21o"]
 font_size = 100
+font_color = Color(1, 0.98436, 0.827543, 1)
+shadow_size = 0
 
 [node name="ButtonContent" type="Control"]
 layout_mode = 3
@@ -25,7 +29,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.790996, 0.469412, 0.0360546, 1)
+color = Color(0.957, 0.772824, 0.215427, 1)
 
 [node name="Image" type="TextureRect" parent="."]
 layout_mode = 1

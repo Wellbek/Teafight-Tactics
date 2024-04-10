@@ -9,7 +9,10 @@ var combatDuration = 45 #45
 var transition_time = 4
 
 var unitShop: Control
-var label: Label
+var timer_label: Label
+var TIMER_DEFAULT_COLOR: Color
+var stage_label: Label
+var progressbar: ProgressBar
 
 var main
 
@@ -24,8 +27,8 @@ func _enter_tree():
 
 func _process(delta):		
 	if preparing == false and urf_overtime == false and not is_transitioning():
-		label.text = str(time_left-15).get_slice(".", 0)
-	else: label.text = str(time_left).get_slice(".", 0)
+		timer_label.text = str(time_left-15).get_slice(".", 0)
+	else: timer_label.text = str(time_left).get_slice(".", 0)
 	
 	if time_left <= 16 and not urf_overtime and not is_preparing() and not is_transitioning():
 		urf_overtime = true
@@ -49,7 +52,11 @@ func trigger_overtime():
 func _ready():
 	main = get_tree().root.get_child(0)
 	unitShop = main.getUI().get_node("UnitShop")
-	label = main.getUI().get_node("TimerLabel")
+	var stage_info = main.getUI().get_node("StageInfo")
+	timer_label = stage_info.get_node("TimerLabel")
+	TIMER_DEFAULT_COLOR = timer_label.get_label_settings().get_font_color()
+	stage_label = stage_info.get_node("StageLabel")
+	progressbar = stage_info.get_node("ProgressBar")
 	set_multiplayer_authority(1)
 	
 func initialize():	
@@ -59,7 +66,7 @@ func initialize():
 func startPreparationPhase():
 	urf_overtime = false
 	
-	label.get_label_settings().set_font_color(Color.WHITE)
+	timer_label.get_label_settings().set_font_color(TIMER_DEFAULT_COLOR)
 
 	increment_round()
 	
@@ -105,7 +112,7 @@ func phase_gold_econ():
 
 @rpc("authority", "call_local", "reliable")
 func startCombatPhase():
-	label.get_label_settings().set_font_color(Color.WHITE)
+	timer_label.get_label_settings().set_font_color(TIMER_DEFAULT_COLOR)
 	
 	if not main.getPlayer().is_defeated():	
 		for unit in main.getPlayer().getUnits():
@@ -182,7 +189,7 @@ func change_phase():
 		if is_transitioning():
 			end_transition.rpc()
 			change_timer.rpc(combatDuration,true)
-			change_timer_color.rpc(Color.WHITE)
+			change_timer_color.rpc(TIMER_DEFAULT_COLOR)
 		else: startCombatPhase.rpc()
 	else:
 		if is_transitioning():
@@ -235,6 +242,8 @@ func increment_round():
 			current_round = 1
 		else: current_round += 1
 		
+	stage_label.text = str(current_stage) + "-" + str(current_round)
+		
 @rpc("authority","call_local", "unreliable")
 func change_timer_color(color: Color):
-	label.get_label_settings().set_font_color(color)
+	timer_label.get_label_settings().set_font_color(color)

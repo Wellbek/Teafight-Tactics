@@ -50,7 +50,7 @@ func _ready():
 		ids.sort()
 		var i = ids.find(myid)
 
-		global_transform.origin.x += 100 * i
+		global_transform.origin.x += 500 * i
 		camera.change_current(true)	
 		
 		set_gold(start_gold)

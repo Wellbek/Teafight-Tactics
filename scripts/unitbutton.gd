@@ -44,7 +44,7 @@ func _on_player_gold_changed(new_amount):
 	
 	if new_amount < unit_cost:
 		disabled = true
-		self_modulate = Color(0.443, 0.443, 0.443, 0.627)
+		self_modulate = Color(0.251, 0.251, 0.251, 0.89)
 	else:
 		self_modulate = Color(1, 1, 1, 1)
 		disabled = false
@@ -152,11 +152,11 @@ func generateButton():
 	unit_name = unitFileName.replacen("_", " ").to_pascal_case()
 	name_label.text = unit_name
 	match unit_cost:
-		1: background.color = Color(0.275, 0.306, 0.353)
-		2: background.color = Color(0.146, 0.481, 0.21)
-		3: background.color = Color(0.016, 0.381, 0.4)
-		4: background.color = Color(0.667, 0.181, 0.701)
-		5: background.color = Color(0.791, 0.469, 0.036)
+		1: background.color = Color(0.561, 0.561, 0.561)
+		2: background.color = Color(0.027, 0.722, 0.161)
+		3: background.color = Color(0.051, 0.671, 0.937)
+		4: background.color = Color(0.623, 0.141, 1)
+		5: background.color = Color(0.957, 0.773, 0.215)
 	disabled = false
 
 func change_bought(val):
