@@ -246,7 +246,8 @@ func increment_round():
 			current_stage += 1
 			current_round = 1
 		else: current_round += 1
-		
+	
+	if main.getPlayer() != null: main.getPlayer().increase_xp(2)
 	stage_label.text = str(current_stage) + "-" + str(current_round)
 		
 @rpc("authority","call_local", "unreliable")

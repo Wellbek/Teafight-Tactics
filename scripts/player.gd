@@ -20,16 +20,38 @@ var current_enemy = null # client sided but server sees it also
 var my_bar
 
 @export_category("Player Stats")
-@export var start_gold: int = 2
+@export var start_gold: int = 1
 var gold = 0
 @onready var gold_label = main.getUI().get_node("UnitShop/Gold/HBoxContainer/GoldLabel")
 @export var p_max_health = 100
 var p_curr_health = p_max_health
 var cons_wins = 0
 var cons_loss = 0
-var level = 3
+var level = 0
+var current_xp = 0
+var xp_table = [
+	0, # 1
+	0, # 2
+	2, # 3
+	6, # 4
+	10, # 5
+	20, # 6
+	36, # 7
+	48, # 8
+	72, # 9
+	84 # 10
+]
 
 var defeated = false
+
+var xp_button: Button
+var rr_button: Button
+const XP_COST = 4
+const RR_COST = 2
+
+var xp_bar: ProgressBar
+var xp_label: Label
+var level_label: Label
 
 func _enter_tree():
 	main = get_tree().root.get_child(0)
@@ -53,9 +75,20 @@ func _ready():
 		global_transform.origin.x += 500 * i
 		camera.change_current(true)	
 		
+		var sidebar = main.getUI().get_node("UnitShop/Sidebar")
+		
+		xp_button = sidebar.get_node("XPButton")
+		xp_button.pressed.connect(buy_xp)
+		rr_button = sidebar.get_node("RerollButton")
+		rr_button.pressed.connect(reroll_shop)
+		
+		level_label = sidebar.get_node("LevelLabel")
+		xp_bar = sidebar.get_node("XPBar")
+		xp_label = sidebar.get_node("XPLabel")
+		
 		set_gold(start_gold)
 	
-	increase_level()
+		increase_level()
 
 @rpc("any_peer", "call_local", "reliable")
 func combatphase_setup(enemy_path, host:bool):
@@ -248,6 +281,8 @@ func get_level():
 func increase_level():
 	level += 1
 	
+	level_label.text = str(level)
+	
 	var rates = main.drop_rates[level - 1]
 	var labels = main.getUI().get_node("UnitShop/RarityChances/HBoxContainer").get_children()
 	for i in range(len(rates)):
@@ -268,3 +303,27 @@ func increment_lossstreak():
 	var streak = main.getUI().get_node("UnitShop/Streak")
 	streak.get_node("Label").text = str(cons_loss)
 	streak.modulate = Color(0, 0.529, 1)
+	
+func increase_xp(amt: int):
+	current_xp += amt
+	
+	if current_xp >= xp_table[level-1]:
+		current_xp = min(xp_table[level-1], current_xp - xp_table[level-1])
+		increase_level()
+		
+	xp_label.text = str(current_xp) + "/" + str(xp_table[level-1])
+	xp_bar.value = float(current_xp) / float(max(1,xp_table[level-1])) * 100
+
+func buy_xp():
+	if gold < XP_COST: return
+	increase_xp(4)
+	decrease_gold(XP_COST)
+	
+func reroll_shop():
+	if gold < RR_COST: return
+	
+	decrease_gold(RR_COST)
+	
+	var buttons = main.getUI().get_node("UnitShop/HBoxContainer").get_children()
+	for button in buttons:
+		button.generateButton()

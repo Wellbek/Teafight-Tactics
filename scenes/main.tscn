@@ -1,4 +1,4 @@
-[gd_scene load_steps=32 format=3 uid="uid://cqs5r3b42amb7"]
+[gd_scene load_steps=43 format=3 uid="uid://cqs5r3b42amb7"]
 
 [ext_resource type="Script" path="res://scripts/main.gd" id="1_35go2"]
 [ext_resource type="Script" path="res://scripts/roundtimer.gd" id="2_8mgga"]
@@ -68,6 +68,41 @@ font_color = Color(0.804089, 0, 0.651194, 1)
 [sub_resource type="LabelSettings" id="LabelSettings_cflpm"]
 font_size = 12
 font_color = Color(1, 0.890196, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rplhv"]
+bg_color = Color(0.0507973, 0.670726, 0.937469, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_086ua"]
+bg_color = Color(0.27454, 0.694179, 1, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yopde"]
+bg_color = Color(0.129458, 0.553002, 0.866621, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_7nb4c"]
+font_size = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mtvsp"]
+bg_color = Color(0.623346, 0.443076, 0.207614, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gad3u"]
+bg_color = Color(0.392279, 0.258915, 0.0859693, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2u7rh"]
+bg_color = Color(0.364431, 0.13727, 0.0547036, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_ge67w"]
+font_size = 14
+font_color = Color(0.560815, 0.266728, 0.0781567, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kmty1"]
+bg_color = Color(0.0977035, 0.0977035, 0.0977035, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mcxqw"]
+bg_color = Color(0.376471, 0.811765, 1, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_odmy1"]
+font_size = 10
+font_color = Color(0.560815, 0.266728, 0.0781567, 1)
 
 [sub_resource type="LabelSettings" id="LabelSettings_gtjgx"]
 font_size = 17
@@ -431,6 +466,176 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 color = Color(1, 0.890562, 0.647288, 1)
+
+[node name="XPButton" type="Button" parent="GUI/UnitShop/Sidebar"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.063
+anchor_top = 0.274
+anchor_right = 0.96
+anchor_bottom = 0.597
+offset_left = 0.0620155
+offset_top = 0.0240402
+offset_right = 0.0400162
+offset_bottom = -0.027977
+theme_override_styles/normal = SubResource("StyleBoxFlat_rplhv")
+theme_override_styles/hover = SubResource("StyleBoxFlat_086ua")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_yopde")
+clip_text = true
+
+[node name="Label" type="Label" parent="GUI/UnitShop/Sidebar/XPButton"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.062
+anchor_top = 0.075
+anchor_right = 0.938
+anchor_bottom = 0.5
+offset_left = -0.00598526
+offset_top = 6.10352e-05
+offset_right = 0.00601196
+offset_bottom = 6.10352e-05
+text = "Buy XP"
+label_settings = SubResource("LabelSettings_7nb4c")
+vertical_alignment = 1
+clip_text = true
+
+[node name="CostLabel" type="Label" parent="GUI/UnitShop/Sidebar/XPButton"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.159
+anchor_top = 0.5
+anchor_right = 0.938
+anchor_bottom = 0.925
+offset_left = 3.03301
+offset_top = 6.10352e-05
+offset_right = 3.00601
+offset_bottom = 5.72205e-05
+text = "4"
+label_settings = SubResource("LabelSettings_7nb4c")
+vertical_alignment = 1
+clip_text = true
+
+[node name="TextureRect" type="TextureRect" parent="GUI/UnitShop/Sidebar/XPButton"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.062
+anchor_top = 0.582
+anchor_right = 0.159
+anchor_bottom = 0.875
+offset_left = -0.00598526
+offset_top = -0.27994
+offset_right = 0.0330143
+offset_bottom = 5.72205e-05
+texture = ExtResource("6_g8e0e")
+expand_mode = 1
+
+[node name="RerollButton" type="Button" parent="GUI/UnitShop/Sidebar"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.063
+anchor_top = 0.629
+anchor_right = 0.96
+anchor_bottom = 0.952
+offset_left = 0.0620003
+offset_top = 0.00395966
+offset_right = 0.0400009
+offset_bottom = -0.0480576
+theme_override_styles/normal = SubResource("StyleBoxFlat_mtvsp")
+theme_override_styles/hover = SubResource("StyleBoxFlat_gad3u")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_2u7rh")
+clip_text = true
+
+[node name="Label" type="Label" parent="GUI/UnitShop/Sidebar/RerollButton"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.062
+anchor_top = 0.075
+anchor_right = 0.938
+anchor_bottom = 0.5
+offset_left = -0.00598526
+offset_top = 6.10352e-05
+offset_right = 0.00601196
+offset_bottom = 6.10352e-05
+text = "Reroll"
+label_settings = SubResource("LabelSettings_7nb4c")
+vertical_alignment = 1
+clip_text = true
+
+[node name="CostLabel" type="Label" parent="GUI/UnitShop/Sidebar/RerollButton"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.159
+anchor_top = 0.5
+anchor_right = 0.938
+anchor_bottom = 0.925
+offset_left = 3.03301
+offset_top = 6.10352e-05
+offset_right = 3.00601
+offset_bottom = 5.72205e-05
+text = "2"
+label_settings = SubResource("LabelSettings_7nb4c")
+vertical_alignment = 1
+clip_text = true
+
+[node name="TextureRect" type="TextureRect" parent="GUI/UnitShop/Sidebar/RerollButton"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.062
+anchor_top = 0.582
+anchor_right = 0.159
+anchor_bottom = 0.875
+offset_left = -0.00598526
+offset_top = -0.27994
+offset_right = 0.0330143
+offset_bottom = 5.72205e-05
+texture = ExtResource("6_g8e0e")
+expand_mode = 1
+
+[node name="LevelLabel" type="Label" parent="GUI/UnitShop/Sidebar"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.063
+anchor_right = 0.381
+anchor_bottom = 0.161
+offset_left = 0.0620003
+offset_right = -0.00600052
+offset_bottom = 0.0359879
+text = "Lvl. 0"
+label_settings = SubResource("LabelSettings_ge67w")
+vertical_alignment = 1
+clip_text = true
+
+[node name="XPBar" type="ProgressBar" parent="GUI/UnitShop/Sidebar"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.063
+anchor_top = 0.161
+anchor_right = 0.96
+anchor_bottom = 0.202
+offset_left = 0.0620003
+offset_top = 0.0359879
+offset_right = 0.0400009
+offset_bottom = -0.0480137
+theme_override_styles/background = SubResource("StyleBoxFlat_kmty1")
+theme_override_styles/fill = SubResource("StyleBoxFlat_mcxqw")
+value = 80.0
+show_percentage = false
+
+[node name="XPLabel" type="Label" parent="GUI/UnitShop/Sidebar"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.643
+anchor_right = 0.96
+anchor_bottom = 0.161
+offset_left = -0.0179825
+offset_top = 6.10352e-05
+offset_right = 0.0400162
+offset_bottom = 0.0360489
+text = "0/0"
+label_settings = SubResource("LabelSettings_odmy1")
+horizontal_alignment = 1
+vertical_alignment = 1
+clip_text = true
 
 [node name="TmpHost" type="Button" parent="GUI"]
 layout_mode = 0

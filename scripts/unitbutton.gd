@@ -144,7 +144,10 @@ func generateButton():
 		3: background.color = Color(0.051, 0.671, 0.937)
 		4: background.color = Color(0.623, 0.141, 1)
 		5: background.color = Color(0.957, 0.773, 0.215)
-	disabled = false
+	
+	if main.getPlayer() == null or main.getPlayer().get_gold() > unit_cost:
+		disabled = false
+	else: disabled = true
 
 func change_bought(val):
 	bought = val
