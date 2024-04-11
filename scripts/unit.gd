@@ -345,8 +345,11 @@ func sell_unit():
 func set_bar_color(color: Color):
 	ui.get_node("HPBar").self_modulate = color
 	
-func equip_item(item):
+@rpc("any_peer", "call_local", "unreliable")
+func equip_item(item_path):
 	if not can_equip_item(): return
+	
+	var item = get_node(item_path)
 	
 	for i in range(len(items)):
 		if items[i] == null: 
@@ -356,14 +359,16 @@ func equip_item(item):
 		
 	var sprite = get_node("Sprite3D")
 	if sprite.position.y == 1: sprite.position.y += 0.5
-		
-	attackrange += item.get_attack_range()
-	max_health += item.get_health()
-	attack_dmg += item.get_attack_dmg()
-	armor += item.get_armor()
-	attack_speed += item.get_attack_speed()
 	
-	item.visible = false
+	
+	if is_multiplayer_authority():	
+		attackrange += item.get_attack_range()
+		max_health += item.get_health()
+		attack_dmg += item.get_attack_dmg()
+		armor += item.get_armor()
+		attack_speed += item.get_attack_speed()
+		
+		item.visible = false
 	
 func can_equip_item():
 	for item in items:
@@ -376,23 +381,27 @@ func unequip_items():
 		if items[i] == null: return
 		unequip_item(i)
 		
+@rpc("any_peer", "call_local", "unreliable")
 func unequip_item(index):
 	var item = items[index]
 	items[index] = null
 	item.position = Vector3.ZERO
-
-	attackrange -= item.get_attack_range()
-	max_health -= item.get_health()
-	attack_dmg -= item.get_attack_dmg()
-	armor -= item.get_armor()
-	attack_speed -= item.get_attack_speed()
 	
-	item.visible = true
+	ui.get_node("HBoxContainer/" + str(index)).set_texture(null)
+
+	if is_multiplayer_authority():
+		attackrange -= item.get_attack_range()
+		max_health -= item.get_health()
+		attack_dmg -= item.get_attack_dmg()
+		armor -= item.get_armor()
+		attack_speed -= item.get_attack_speed()
+	
+		item.visible = true
 	
 func transfer_items(to_unit):
 	for i in range(len(items)):
 		var item = items[i]
 		if item == null: continue
-		unequip_item(i)
+		unequip_item.rpc(i)
 		if to_unit.can_equip_item():
-			to_unit.equip_item(item)
+			to_unit.equip_item.rpc(item.get_path())

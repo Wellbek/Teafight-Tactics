@@ -20,7 +20,7 @@ var current_enemy = null # client sided but server sees it also
 var my_bar
 
 @export_category("Player Stats")
-@export var start_gold: int = 40
+@export var start_gold: int = 1
 var gold = 0
 @onready var gold_label = main.getUI().get_node("UnitShop/Gold/HBoxContainer/GoldLabel")
 @export var p_max_health = 100

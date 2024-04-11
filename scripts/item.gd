@@ -17,11 +17,18 @@ var coll
 
 var multisync: MultiplayerSynchronizer
 
+var main
+var timer
+
 func _ready():
+	set_multiplayer_authority(get_parent().get_parent().getID())
 	multisync = find_child("MultiplayerSynchronizer", false)
+	
+	main = get_tree().root.get_child(0)	
+	timer = main.get_timer()
 
 func _input_event(camera, event, position, normal, shape_idx):
-	#if not is_multiplayer_authority(): return
+	if not is_multiplayer_authority() or not timer.is_preparing() or timer.is_transitioning(): return
 
 	if event is InputEventMouseButton and event.is_pressed() and event.button_index == MOUSE_BUTTON_LEFT and !isDragging():
 		setDragging(true)
@@ -30,7 +37,7 @@ func _input_event(camera, event, position, normal, shape_idx):
 		transform.origin.y += 1
 
 func _input(event):
-	#if not is_multiplayer_authority(): return
+	if not is_multiplayer_authority() or not timer.is_preparing() or timer.is_transitioning(): return
 	
 	if isDragging():
 		if event is InputEventMouseButton and event.is_released() and event.button_index == MOUSE_BUTTON_LEFT:
@@ -91,7 +98,7 @@ func placeItem():
 				coll = null
 				global_transform.origin = initialPos
 			else:
-				coll.equip_item(self)
+				coll.equip_item.rpc(get_path())
 				
 func get_attack_range():
 	return attackrange
