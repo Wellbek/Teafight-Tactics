@@ -46,6 +46,7 @@ func spawnUnit(_feedbackid, _player_path, _unit_path):
 	
 	var instance = load(_unit_path + ".tscn").instantiate()
 	instance.name = str(_feedbackid) + "#" + instance.name
+	print(instance.get_path())
 
 	player.find_child("Units").call("add_child", instance, true)
 	
@@ -95,12 +96,14 @@ func upgrade(_unit):
 				if sameUnits[0].tile.get_parent().type == sameUnits[0].tile.get_parent().SQUARE:
 					sameUnits[0].tile.unregisterUnit()
 					main.getPlayer().eraseUnit(sameUnits[0])
+					sameUnits[0].transfer_items(sameUnits[1])
 					main.freeObject.rpc(sameUnits[0].get_path())
 					sameUnits[1].levelUp()
 					return sameUnits[1]
 				else: 
 					sameUnits[1].tile.unregisterUnit()
 					main.getPlayer().eraseUnit(sameUnits[1])
+					sameUnits[1].transfer_items(sameUnits[0])
 					main.freeObject.rpc(sameUnits[1].get_path())
 					sameUnits[0].levelUp()
 					return sameUnits[0]

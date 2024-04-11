@@ -20,7 +20,7 @@ var current_enemy = null # client sided but server sees it also
 var my_bar
 
 @export_category("Player Stats")
-@export var start_gold: int = 1
+@export var start_gold: int = 40
 var gold = 0
 @onready var gold_label = main.getUI().get_node("UnitShop/Gold/HBoxContainer/GoldLabel")
 @export var p_max_health = 100
@@ -150,6 +150,7 @@ func copyUnit(unit_path, parent_path, host: bool, attacker_id: int, host_id: int
 			var client_id = multiplayer.get_unique_id()
 			if client_id != attacker_id and client_id != host_id:
 				copy.set_bar_color(copy.ENEMY_ATTACKER_COLOR)
+	else: copy.toggleUI(false)
 
 func appendUnit(unit):
 	units.append(unit)

@@ -1,8 +1,9 @@
-[gd_scene load_steps=16 format=3 uid="uid://g18y6a837usc"]
+[gd_scene load_steps=24 format=3 uid="uid://g18y6a837usc"]
 
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_mrq3l"]
 [ext_resource type="Script" path="res://scripts/gridmap/gridmap.gd" id="1_ust0k"]
 [ext_resource type="Script" path="res://scripts/camera.gd" id="2_sby6c"]
+[ext_resource type="PackedScene" uid="uid://djrfrm48n2r7h" path="res://src/items/BFSword.tscn" id="4_spdjb"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_44fhn"]
 size = Vector3(22, 1, 16)
@@ -22,6 +23,15 @@ size = Vector3(22, 1, 2)
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_o1323"]
 albedo_color = Color(0.560784, 0.560784, 0.560784, 1)
 
+[sub_resource type="BoxMesh" id="BoxMesh_auh1a"]
+size = Vector3(2, 0.25, 2)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_pvdcg"]
+albedo_color = Color(0.705898, 0.701991, 0.701991, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_rf0rf"]
+size = Vector3(3, 0.5, 2)
+
 [sub_resource type="PlaneMesh" id="PlaneMesh_fmv0e"]
 size = Vector2(100, 100)
 
@@ -37,6 +47,18 @@ metallic = 0.5
 
 [sub_resource type="SphereMesh" id="SphereMesh_2k284"]
 material = SubResource("StandardMaterial3D_bgose")
+
+[sub_resource type="BoxMesh" id="BoxMesh_cbvan"]
+size = Vector3(1.25, 0.25, 8)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vcrcd"]
+albedo_color = Color(0.560815, 0.560815, 0.560815, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_tmgrx"]
+size = Vector3(3, 0.5, 2)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_62cms"]
+size = Vector3(2, 0.25, 2)
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_4k2ky"]
 properties/0/path = NodePath(".:position")
@@ -115,7 +137,7 @@ font_size = 512
 outline_size = 40
 
 [node name="Bench" type="StaticBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.3, 9)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.25, 9)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Bench"]
 shape = SubResource("BoxShape3D_jlr6y")
@@ -131,8 +153,13 @@ script = ExtResource("1_ust0k")
 x = 9
 z = 1
 
+[node name="MeshInstance3D4" type="MeshInstance3D" parent="Bench"]
+transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 10, 0.625, 0)
+mesh = SubResource("BoxMesh_auh1a")
+surface_material_override/0 = SubResource("StandardMaterial3D_pvdcg")
+
 [node name="EnemyBench" type="StaticBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.3, -9)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.25, -9)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="EnemyBench"]
 shape = SubResource("BoxShape3D_jlr6y")
@@ -142,8 +169,25 @@ mesh = SubResource("BoxMesh_amsno")
 skeleton = NodePath("../../Bench")
 surface_material_override/0 = SubResource("StandardMaterial3D_o1323")
 
+[node name="MeshInstance3D" type="MeshInstance3D" parent="EnemyBench"]
+transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 9.5, 0.5, 2)
+mesh = SubResource("BoxMesh_rf0rf")
+surface_material_override/0 = SubResource("StandardMaterial3D_pvdcg")
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="EnemyBench"]
+transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 10, 0.625, 0)
+mesh = SubResource("BoxMesh_auh1a")
+surface_material_override/0 = SubResource("StandardMaterial3D_pvdcg")
+
+[node name="MeshInstance3D4" type="MeshInstance3D" parent="EnemyBench"]
+transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, -10, 0.625, 0)
+mesh = SubResource("BoxMesh_auh1a")
+surface_material_override/0 = SubResource("StandardMaterial3D_pvdcg")
+
 [node name="ground" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+collision_layer = 0
+collision_mask = 0
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="ground"]
 mesh = SubResource("PlaneMesh_fmv0e")
@@ -153,41 +197,80 @@ surface_material_override/0 = SubResource("StandardMaterial3D_8o77c")
 shape = SubResource("BoxShape3D_i2rm3")
 
 [node name="Econ" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0, 0)
 
 [node name="1" type="MeshInstance3D" parent="Econ"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.2, 0.160033, 7)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.25, 0.278523, 5)
 visible = false
 mesh = SubResource("SphereMesh_2k284")
 
 [node name="2" type="MeshInstance3D" parent="Econ"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.227, 0.160033, 5.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.25, 0.278523, 3.5)
 visible = false
 mesh = SubResource("SphereMesh_2k284")
 
 [node name="3" type="MeshInstance3D" parent="Econ"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.227, 0.160033, 4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.25, 0.278523, 2)
 visible = false
 mesh = SubResource("SphereMesh_2k284")
 
 [node name="4" type="MeshInstance3D" parent="Econ"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.227, 0.160033, 2.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.25, 0.278523, 0.5)
 visible = false
 mesh = SubResource("SphereMesh_2k284")
 
 [node name="5" type="MeshInstance3D" parent="Econ"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.227, 0.160033, 1)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.25, 0.278523, -1)
 visible = false
 mesh = SubResource("SphereMesh_2k284")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Econ"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.25, 0.125, 2)
+mesh = SubResource("BoxMesh_cbvan")
+surface_material_override/0 = SubResource("StandardMaterial3D_vcrcd")
+
+[node name="ItemBench" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.5, 0.25, 7)
+collision_layer = 512
+collision_mask = 512
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="ItemBench"]
+mesh = SubResource("BoxMesh_rf0rf")
+surface_material_override/0 = SubResource("StandardMaterial3D_pvdcg")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="ItemBench"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 0.125, 2)
+mesh = SubResource("BoxMesh_auh1a")
+surface_material_override/0 = SubResource("StandardMaterial3D_pvdcg")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="ItemBench"]
+shape = SubResource("BoxShape3D_tmgrx")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="ItemBench"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 0.125, 2)
+shape = SubResource("BoxShape3D_62cms")
 
 [node name="Units" type="Node3D" parent="."]
 
 [node name="CombatUnits" type="Node3D" parent="."]
 
+[node name="items" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.078, 0.8, 7.829)
+
+[node name="BFSword" parent="items" instance=ExtResource("4_spdjb")]
+transform = Transform3D(0.866025, 0, 0.5, 0, 1, 0, -0.5, 0, 0.866025, -0.5, 0, 1)
+
+[node name="BFSword2" parent="items" instance=ExtResource("4_spdjb")]
+transform = Transform3D(0.866025, 0, 0.5, 0, 1, 0, -0.5, 0, 0.866025, -0.5, 0, 2)
+
+[node name="BFSword3" parent="items" instance=ExtResource("4_spdjb")]
+transform = Transform3D(0.866025, 0, 0.5, 0, 1, 0, -0.5, 0, 0.866025, -0.5, 0, -0.178)
+
+[node name="BFSword4" parent="items" instance=ExtResource("4_spdjb")]
+transform = Transform3D(0.866025, 0, 0.5, 0, 1, 0, -0.5, 0, 0.866025, 0.687, 0, -0.178)
+
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
 _spawnable_scenes = PackedStringArray("res://src/units/1/prep_cook.tscn", "res://src/units/1/test_unit.tscn", "res://src/units/2/tea_bag_slinger.tscn")
 spawn_path = NodePath("../Units")
-spawn_limit = 9999
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_4k2ky")

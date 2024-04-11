@@ -21,6 +21,7 @@ properties/0/replication_mode = 1
 collision_layer = 256
 collision_mask = 0
 script = ExtResource("1_u75n8")
+item_texture = ExtResource("1_f7jxe")
 attack_dmg = 10
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]

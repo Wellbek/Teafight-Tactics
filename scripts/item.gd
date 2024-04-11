@@ -1,8 +1,10 @@
 extends StaticBody3D
 
+@export var item_texture: Texture
+
 @export_category("Stats")
 @export var attackrange = 0
-@export var max_health = 0
+@export var health = 0
 @export var attack_dmg = 0
 @export var armor = 0
 @export var attack_speed = 0
@@ -45,17 +47,20 @@ func _input(event):
 			var end := origin + direction * ray_length
 			
 			var space_state := get_world_3d().direct_space_state
-			var query := PhysicsRayQueryParameters3D.create(origin, end, 0b00000000_00000000_00000001_00000111)
+			var query := PhysicsRayQueryParameters3D.create(origin, end, 0b00000000_00000000_00000010_00001111)
 			var result := space_state.intersect_ray(query)
-			if not result.is_empty() and result.collider != null and result.collider.is_multiplayer_authority(): # can only move and place on own board
-				if result.collider.get_collision_layer() == 2 and result.collider != coll:
-					if coll:
-						# reset highlight of last unit
-						pass
-					# highlight current unit
-					coll = result.collider
-					# ...
-
+			if not result.is_empty() and result.collider != null: #and result.collider.is_multiplayer_authority(): # can only move and place on own board
+				if result.collider.get_collision_layer() == 8 or result.collider.get_collision_layer() == 512:
+					if result.collider != coll:
+						if coll:
+							# reset highlight of last unit
+							pass
+						# highlight current unit
+						coll = result.collider
+						# ...
+				else: 
+					coll = null
+					
 				var mouse_position_3D:Vector3 = result.get("position", initialPos if coll == null else coll.global_transform.origin)
 
 				global_transform.origin = Vector3(mouse_position_3D.x, global_transform.origin.y, mouse_position_3D.z)
@@ -78,3 +83,31 @@ func placeItem():
 	if isDragging():
 		transform.origin.y -= 1
 		setDragging(false)
+		
+		if coll == null:  
+			global_transform.origin = initialPos
+		elif coll.get_collision_layer() == 8:
+			if not coll.can_equip_item():
+				coll = null
+				global_transform.origin = initialPos
+			else:
+				coll.equip_item(self)
+				
+func get_attack_range():
+	return attackrange
+	
+func get_health():
+	return health
+	
+func get_attack_dmg():
+	return attack_dmg
+	
+func get_armor():
+	return armor
+	
+func get_attack_speed():
+	return attack_speed	
+	
+func get_texture():
+	return item_texture
+

@@ -46,6 +46,8 @@ const LOCAL_COLOR = Color(0.2, 0.898, 0.243)
 const ENEMY_HOST_COLOR = Color(0.757, 0.231, 0.259)
 const ENEMY_ATTACKER_COLOR = Color(0.918, 0.498, 0.176)
 
+var items = [null, null, null]
+
 func _ready():
 	attack_timer.timeout.connect(_on_attack_timer_timeout)
 	var viewport = find_child("SubViewport")
@@ -98,11 +100,10 @@ func getTileType():
 	return tile.get_parent().getType()
 
 func _input_event(camera, event, position, normal, shape_idx):
-	if not is_multiplayer_authority() or not timer.is_preparing() or not mode == PREP: return
+	if not is_multiplayer_authority() or not timer.is_preparing() or not mode == PREP or timer.is_transitioning(): return
 
 	if event is InputEventMouseButton and event.is_pressed() and event.button_index == MOUSE_BUTTON_LEFT and !isDragging():
 		setDragging(true)
-		toggleUI(false)
 		toggleGrid(true)
 		changeColor(tile.find_children("MeshInstance3D")[0], Color.WHITE)	
 		initialPos = global_transform.origin
@@ -110,7 +111,7 @@ func _input_event(camera, event, position, normal, shape_idx):
 		transform.origin.y += 1
 
 func _input(event):
-	if not is_multiplayer_authority() or not timer.is_preparing() or not mode == PREP: return
+	if not is_multiplayer_authority() or not timer.is_preparing() or not mode == PREP or timer.is_transitioning(): return
 	
 	if isDragging():
 		if event is InputEventMouseButton and event.is_released() and event.button_index == MOUSE_BUTTON_LEFT:
@@ -130,7 +131,7 @@ func _input(event):
 			var end := origin + direction * ray_length
 			
 			var space_state := get_world_3d().direct_space_state
-			var query := PhysicsRayQueryParameters3D.create(origin, end, 0b00000000_00000000_00000000_00000111)
+			var query := PhysicsRayQueryParameters3D.create(origin, end, 0b00000000_00000000_00000010_00000111)
 			var result := space_state.intersect_ray(query)
 			if not result.is_empty() and result.collider != null and result.collider.is_multiplayer_authority(): # can only move and place on own board
 				if result.collider.get_collision_layer() == 2 and result.collider != coll:
@@ -191,8 +192,6 @@ func placeUnit(_tile: Node = coll):
 	
 	if tile == _tile: 
 		global_transform.origin = Vector3(tile.global_transform.origin.x, global_transform.origin.y, tile.global_transform.origin.z)
-		if tile.get_parent().type == tile.get_parent().HEX: 
-			toggleUI(true)
 	elif tile != null: 
 		if _tile.hasUnit(): 
 			tile.swapUnit(_tile)
@@ -203,8 +202,6 @@ func placeUnit(_tile: Node = coll):
 				tile.registerUnit(self)
 			else: 
 				global_transform.origin = Vector3(tile.global_transform.origin.x, global_transform.origin.y, tile.global_transform.origin.z)
-				if tile.get_parent().type == tile.get_parent().HEX: 
-					toggleUI(true)
 
 func levelUp():
 	if star < 3:
@@ -342,7 +339,60 @@ func sell_unit():
 	if coll == null: coll = tile # if mouse never passes over a collider coll will be null => precaution against this error
 	changeColor(coll.find_children("MeshInstance3D")[0], Color.CYAN)
 	player.eraseUnit(self)
+	unequip_items()
 	main.freeObject.rpc(get_path())
 	
 func set_bar_color(color: Color):
 	ui.get_node("HPBar").self_modulate = color
+	
+func equip_item(item):
+	if not can_equip_item(): return
+	
+	for i in range(len(items)):
+		if items[i] == null: 
+			items[i] = item
+			ui.get_node("HBoxContainer/" + str(i)).set_texture(item.get_texture())
+			break
+		
+	var sprite = get_node("Sprite3D")
+	if sprite.position.y == 1: sprite.position.y += 0.5
+		
+	attackrange += item.get_attack_range()
+	max_health += item.get_health()
+	attack_dmg += item.get_attack_dmg()
+	armor += item.get_armor()
+	attack_speed += item.get_attack_speed()
+	
+	item.visible = false
+	
+func can_equip_item():
+	for item in items:
+		if item == null: return true 
+	
+	return false
+	
+func unequip_items():
+	for i in range(len(items)):
+		if items[i] == null: return
+		unequip_item(i)
+		
+func unequip_item(index):
+	var item = items[index]
+	items[index] = null
+	item.position = Vector3.ZERO
+
+	attackrange -= item.get_attack_range()
+	max_health -= item.get_health()
+	attack_dmg -= item.get_attack_dmg()
+	armor -= item.get_armor()
+	attack_speed -= item.get_attack_speed()
+	
+	item.visible = true
+	
+func transfer_items(to_unit):
+	for i in range(len(items)):
+		var item = items[i]
+		if item == null: continue
+		unequip_item(i)
+		if to_unit.can_equip_item():
+			to_unit.equip_item(item)

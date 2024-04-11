@@ -4,7 +4,7 @@ var preparing: bool = true
 
 var current_round = 0
 var current_stage = 1
-var preparationDuration = 30 #30
+var preparationDuration = 10 #30
 var combatDuration = 45 #45
 var transition_time = 5
 

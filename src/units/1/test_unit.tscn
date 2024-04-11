@@ -1,7 +1,7 @@
 [gd_scene load_steps=8 format=3 uid="uid://c1r5t4e8vxrye"]
 
-[ext_resource type="Script" path="res://scripts/unit.gd" id="1_sw5aw"]
-[ext_resource type="PackedScene" uid="uid://cmyaotov37g7y" path="res://src/ui/unit_ui.tscn" id="2_t2lyv"]
+[ext_resource type="Script" path="res://scripts/unit.gd" id="1_6jabk"]
+[ext_resource type="PackedScene" uid="uid://cmyaotov37g7y" path="res://src/ui/unit_ui.tscn" id="2_2v4xk"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_tcrfm"]
 
@@ -54,7 +54,7 @@ axis_lock_angular_x = true
 axis_lock_angular_z = true
 motion_mode = 1
 safe_margin = 0.5
-script = ExtResource("1_sw5aw")
+script = ExtResource("1_6jabk")
 image = "res://src/units/test_unit.png"
 unitName = "test"
 attackrange = 2.0
@@ -72,7 +72,7 @@ mesh = SubResource("CapsuleMesh_51m0c")
 surface_material_override/0 = SubResource("StandardMaterial3D_oobci")
 
 [node name="Sprite3D" type="Sprite3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.24283, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 billboard = 1
 texture = SubResource("ViewportTexture_7fr4r")
 
@@ -81,9 +81,9 @@ texture = SubResource("ViewportTexture_7fr4r")
 [node name="SubViewport" type="SubViewport" parent="."]
 disable_3d = true
 transparent_bg = true
-size = Vector2i(150, 30)
+size = Vector2i(150, 69)
 
-[node name="UnitUI" parent="SubViewport" instance=ExtResource("2_t2lyv")]
+[node name="UnitUI" parent="SubViewport" instance=ExtResource("2_2v4xk")]
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_317pc")
