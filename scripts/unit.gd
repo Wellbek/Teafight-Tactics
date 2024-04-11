@@ -28,6 +28,7 @@ var mode = PREP
 var target = null
 var targetable = false 
 var attacking = false
+var targeting_neutral = false
 
 var dead = false
 
@@ -79,8 +80,11 @@ func _physics_process(delta):
 			attacking = false
 			velocity = (target.global_transform.origin - global_transform.origin).normalized() * move_speed
 			move_and_slide()
-			look_at(target.global_transform.origin)
 		elif not attacking: in_attack_range()
+		
+		look_at(target.global_transform.origin)
+		rotation.x = 0
+		rotation.z = 0
 
 func setTile(newTile):
 	tile = newTile
@@ -158,7 +162,18 @@ func get_mode():
 	return mode
 			
 func find_target():
-	if not player.get_current_enemy() or mode != BATTLE or not is_multiplayer_authority(): return
+	if mode != BATTLE or not is_multiplayer_authority(): return
+	
+	if not player.get_current_enemy(): # pve round
+		for pve_round in player.get_node("PVERounds").get_children():	
+			if pve_round.visible:
+				for minion in pve_round.get_children():
+					if not minion.is_targetable(): continue
+				
+					if not target or global_transform.origin.distance_to(minion.global_transform.origin) < global_transform.origin.distance_to(target.global_transform.origin):
+						target = minion
+						targeting_neutral = true
+				return
 	
 	var enemy_units = player.get_current_enemy().find_child("CombatUnits").get_children()
 	
@@ -169,6 +184,7 @@ func find_target():
 		
 		if not target or global_transform.origin.distance_to(unit.global_transform.origin) < global_transform.origin.distance_to(target.global_transform.origin):
 			target = unit
+			targeting_neutral = false
 			
 	#if multiplayer.is_server():
 	#	if target != null: print(self, " targets ", target)
@@ -250,12 +266,14 @@ func in_attack_range():
 	
 func _on_attack_timer_timeout():
 	if main.get_timer().is_transitioning(): get_node("AttackTimer").stop()
-	else: auto_attack(target)
+	else: auto_attack(target, targeting_neutral)
 
-func auto_attack(_target):
-	if _target == null or _target.get_mode() != BATTLE: return
-	
-	_target.take_dmg.rpc_id(_target.get_owner_id(), attack_dmg)
+func auto_attack(_target, pve = false):
+	if _target == null or (not pve and _target.get_mode() != BATTLE): return
+
+	var id = get_multiplayer_authority() if pve else _target.get_owner_id() 
+
+	_target.take_dmg.rpc_id(id, attack_dmg)
 
 func change_attack_speed(val):
 	attack_speed = val
@@ -293,7 +311,8 @@ func death(_path):
 				var enemy = player.get_current_enemy()
 				
 				player.increment_lossstreak.rpc_id(player.getID())
-				enemy.increment_winstreak.rpc_id(enemy.getID())
+				
+				if enemy: enemy.increment_winstreak.rpc_id(enemy.getID())
 
 				# https://lolchess.gg/guide/damage?hl=en
 				var stage_damage = 0
@@ -305,14 +324,15 @@ func death(_path):
 				elif curr_stage == 7: stage_damage = 15
 				elif curr_stage >= 8: stage_damage = 150
 				
-				var unit_damage = 0
-				var enemy_unit_count = 0
-				for u in enemy.get_node("CombatUnits").get_children():
-					if is_instance_valid(u) and u != null and u.get_mode() == BATTLE: enemy_unit_count += 1
-				match enemy_unit_count:
-					1: unit_damage = 2
-					2: unit_damage = 4
-					3,4,5,6,7,8,9,10: unit_damage = enemy_unit_count+3
+				var unit_damage = 2
+				if enemy != null:
+					var enemy_unit_count = 0
+					for u in enemy.get_node("CombatUnits").get_children():
+						if is_instance_valid(u) and u != null and u.get_mode() == BATTLE: enemy_unit_count += 1
+					match enemy_unit_count:
+						1: unit_damage = 2
+						2: unit_damage = 4
+						3,4,5,6,7,8,9,10: unit_damage = enemy_unit_count+3
 				
 				player.lose_health.rpc(stage_damage + unit_damage)
 				check_battle_status()
@@ -345,7 +365,7 @@ func sell_unit():
 func set_bar_color(color: Color):
 	ui.get_node("HPBar").self_modulate = color
 	
-@rpc("any_peer", "call_local", "unreliable")
+@rpc("any_peer", "call_local", "reliable")
 func equip_item(item_path):
 	if not can_equip_item(): return
 	

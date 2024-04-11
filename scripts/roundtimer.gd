@@ -2,11 +2,12 @@ extends Timer
 
 var preparing: bool = true
 
-var current_round = 0
+var current_round = 0 # this is what is visible: [CURRENT_STAGE]-[CURRENT_ROUND]
+var total_round = 0 # this is the overall round counting to infinity
 var current_stage = 1
-var preparationDuration = 30 #30
-var combatDuration = 45 #45
-var transition_time = 5
+const preparationDuration = 30 #30
+const combatDuration = 45 #45
+const transition_time = 5
 
 var unitShop: Control
 var timer_label: Label
@@ -35,12 +36,13 @@ func _process(delta):
 		if not urf_overtime and progressbar.self_modulate != Color(0.051, 0.671, 0.937): 
 			progressbar.self_modulate = Color(0.051, 0.671, 0.937)
 	
-	if time_left <= 16 and not urf_overtime and not is_preparing() and not is_transitioning():
-		urf_overtime = true
+	if time_left <= 16 and not urf_overtime and not is_preparing() and not is_transitioning() and multiplayer.is_server():
 		trigger_overtime.rpc()
 	
 @rpc("authority", "call_local", "reliable")	
 func trigger_overtime():
+	urf_overtime = true
+	
 	change_timer_color(Color.ORANGE_RED)
 	progressbar.self_modulate = Color.ORANGE_RED
 	
@@ -54,7 +56,13 @@ func trigger_overtime():
 		# 66% reduced crowd control duration.
 		# 66% healing and shielding reduction.
 		# 30% increased affection towards maritime mammals.
-
+		
+	for pve_round in main.getPlayer().get_node("PVERounds").get_children():
+		if pve_round.visible == true:
+			for minion in pve_round.get_children():
+				minion.change_attack_speed(minion.attack_speed*3)
+				minion.move_speed *= 1.5
+		
 func _ready():
 	main = get_tree().root.get_child(0)
 	unitShop = main.getUI().get_node("UnitShop")
@@ -69,7 +77,7 @@ func initialize():
 	startPreparationPhase.rpc()
 
 @rpc("authority", "call_local", "reliable")
-func startPreparationPhase():	
+func startPreparationPhase():		
 	timer_label.get_label_settings().set_font_color(TIMER_DEFAULT_COLOR)
 
 	increment_round()
@@ -80,8 +88,14 @@ func startPreparationPhase():
 				player.reset_combatphase.rpc_id(player.getID())
 		
 			phase_gold_econ.rpc()
+			
+			if (current_stage == 1 and (current_round == 2 or current_round == 3 or current_round == 4)) or current_round == 7: 
+				for player in main.players:
+					for pve_round in player.get_node("PVERounds").get_children():
+						set_pve_round.rpc(pve_round.get_path(), false)
+					set_pve_round.rpc(player.get_node("PVERounds/" + str(current_stage) + "-" + str(current_round)).get_path(), true)
 	
-	if main.getPlayer() == null or not main.getPlayer().is_defeated():
+	if not main.getPlayer() == null and not main.getPlayer().is_defeated():
 		unitShop.visible = true
 	preparing = true
 	#print("Preparation Phase Started for Round: ", current_round)
@@ -92,6 +106,11 @@ func startPreparationPhase():
 	wait_time = preparationDuration
 	start()
 
+@rpc("authority", "call_local", "reliable")
+func set_pve_round(path, val: bool):
+	var round = get_node(path)
+	if round != null: round.visible = val
+
 # https://leagueoflegends.fandom.com/wiki/Gold_(Teamfight_Tactics)
 @rpc("authority", "call_local", "reliable")
 func phase_gold_econ():
@@ -101,9 +120,9 @@ func phase_gold_econ():
 	
 	# passive income
 	var passive_income = 5
-	if current_round <= 3: passive_income = 2
-	elif current_round == 4: passive_income = 3
-	elif current_round == 5: passive_income = 4
+	if total_round <= 3: passive_income = 2
+	elif total_round == 4: passive_income = 3
+	elif total_round == 5: passive_income = 4
 	
 	# interest
 	var interest = floor(min(50, player.get_gold()) / 10)
@@ -141,14 +160,20 @@ func startCombatPhase():
 
 # server func
 func matchmake():
+	# pve rounds
+	if (current_stage == 1 and (current_round == 2 or current_round == 3 or current_round == 4)) or current_round == 7: 
+		for player in main.players:
+			main.register_battle()
+			player.combatphase_setup.rpc_id(player.getID())
+		return
+	
 	var player_ids = []
 	for player in main.players:
 		if not player.is_defeated():
 			player_ids.append(player.getID())
 	
 	var game_schedule = round_robin_pairs(player_ids)
-	
-	var round_schedule = game_schedule[current_round % len(game_schedule)]
+	var round_schedule = game_schedule[total_round % len(game_schedule)]
 
 	for matchup in round_schedule:
 		var player1 = null
@@ -255,6 +280,9 @@ func increment_round():
 			current_stage += 1
 			current_round = 1
 		else: current_round += 1
+		
+	if not (current_stage == 1 and (current_round == 2 or current_round == 3 or current_round == 4)) and not current_round == 7: 
+		total_round += 1 # exclude pve rounds else matchmaking is messed up
 	
 	if main.getPlayer() != null: main.getPlayer().increase_xp(2)
 	stage_label.text = str(current_stage) + "-" + str(current_round)

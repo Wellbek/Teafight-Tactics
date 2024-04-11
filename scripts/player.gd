@@ -91,14 +91,26 @@ func _ready():
 		increase_level()
 
 @rpc("any_peer", "call_local", "reliable")
-func combatphase_setup(enemy_path, host:bool):
+func combatphase_setup(enemy_path = null, host:bool = true):
 	if is_defeated(): return
-	
-	current_enemy = get_tree().root.get_node(enemy_path)
 	
 	var unit_parent = find_child("Units")
 	unit_parent.visible = false
 	var combatunit_parent = find_child("CombatUnits")	
+	
+	# NOTE: Just to make sure as sometimes in reset_combatphase issues with deleting (TEMPORARY FIX?)
+	for unit in combatunit_parent.get_children():
+		main.freeObject.rpc(unit.get_path())
+	
+	if enemy_path == null: # pve phase	
+		for unit in unit_parent.get_children():
+			var host_id = myid
+			copyUnit.rpc(unit.get_path(), combatunit_parent.get_path(), host, host_id)
+
+		combatunit_parent.visible = true
+		return
+	
+	current_enemy = get_tree().root.get_node(enemy_path)
 	
 	if not host:	
 		combatunit_parent.global_transform.origin = current_enemy.find_child("CombatUnits").global_transform.origin
@@ -108,7 +120,7 @@ func combatphase_setup(enemy_path, host:bool):
 	for unit in unit_parent.get_children():
 		var host_id = myid if host else current_enemy.getID()
 		var attacker_id = current_enemy.getID() if host else myid
-		copyUnit.rpc(unit.get_path(), combatunit_parent.get_path(), host, attacker_id, host_id)
+		copyUnit.rpc(unit.get_path(), combatunit_parent.get_path(), host, host_id, attacker_id)
 
 	combatunit_parent.visible = true
 
@@ -136,7 +148,7 @@ func reset_combatphase():
 	main.changeCamera(0)
 
 @rpc("any_peer", "call_local", "reliable")
-func copyUnit(unit_path, parent_path, host: bool, attacker_id: int, host_id: int):
+func copyUnit(unit_path, parent_path, host: bool, host_id: int, attacker_id: int = -1):
 	var unit = get_tree().root.get_node(unit_path)
 	var parent = get_tree().root.get_node(parent_path)
 	var copy = unit.duplicate()
@@ -148,7 +160,7 @@ func copyUnit(unit_path, parent_path, host: bool, attacker_id: int, host_id: int
 		copy.change_target_status(true)
 		if not host: 
 			var client_id = multiplayer.get_unique_id()
-			if client_id != attacker_id and client_id != host_id:
+			if attacker_id == -1 or client_id != attacker_id and client_id != host_id:
 				copy.set_bar_color(copy.ENEMY_ATTACKER_COLOR)
 	else: copy.toggleUI(false)
 
