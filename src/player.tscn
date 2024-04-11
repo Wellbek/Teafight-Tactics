@@ -1,9 +1,8 @@
-[gd_scene load_steps=33 format=3 uid="uid://g18y6a837usc"]
+[gd_scene load_steps=32 format=3 uid="uid://g18y6a837usc"]
 
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_mrq3l"]
 [ext_resource type="Script" path="res://scripts/gridmap/gridmap.gd" id="1_ust0k"]
 [ext_resource type="Script" path="res://scripts/camera.gd" id="2_sby6c"]
-[ext_resource type="PackedScene" uid="uid://djrfrm48n2r7h" path="res://src/items/BFSword.tscn" id="4_spdjb"]
 [ext_resource type="PackedScene" uid="uid://bnrnjxoiaaiuo" path="res://src/minions/melee_minion.tscn" id="5_o4yok"]
 [ext_resource type="PackedScene" uid="uid://divt1x550fa5f" path="res://src/minions/ranged_minion.tscn" id="6_c78bq"]
 [ext_resource type="PackedScene" uid="uid://2e2xsfjwn1bu" path="res://src/minions/krug.tscn" id="7_aytho"]
@@ -265,18 +264,6 @@ shape = SubResource("BoxShape3D_62cms")
 [node name="items" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.078, 0.8, 7.829)
 
-[node name="BFSword" parent="items" instance=ExtResource("4_spdjb")]
-transform = Transform3D(0.866025, 0, 0.5, 0, 1, 0, -0.5, 0, 0.866025, -0.5, 0, 1)
-
-[node name="BFSword2" parent="items" instance=ExtResource("4_spdjb")]
-transform = Transform3D(0.866025, 0, 0.5, 0, 1, 0, -0.5, 0, 0.866025, -0.5, 0, 2)
-
-[node name="BFSword3" parent="items" instance=ExtResource("4_spdjb")]
-transform = Transform3D(0.866025, 0, 0.5, 0, 1, 0, -0.5, 0, 0.866025, -0.5, 0, -0.178)
-
-[node name="BFSword4" parent="items" instance=ExtResource("4_spdjb")]
-transform = Transform3D(0.866025, 0, 0.5, 0, 1, 0, -0.5, 0, 0.866025, 0.687, 0, -0.178)
-
 [node name="PVERounds" type="Node3D" parent="."]
 
 [node name="1-2" type="Node3D" parent="PVERounds"]
@@ -385,6 +372,10 @@ transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, 0, 0.5, -4)
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
 _spawnable_scenes = PackedStringArray("res://src/units/1/prep_cook.tscn", "res://src/units/1/test_unit.tscn", "res://src/units/2/tea_bag_slinger.tscn")
 spawn_path = NodePath("../Units")
+
+[node name="MultiplayerItemSpawner" type="MultiplayerSpawner" parent="."]
+_spawnable_scenes = PackedStringArray("res://src/items/bf_sword.tscn", "res://src/items/giants_belt.tscn")
+spawn_path = NodePath("../items")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_4k2ky")

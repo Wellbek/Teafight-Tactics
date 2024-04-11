@@ -1,0 +1,38 @@
+[gd_scene load_steps=7 format=3 uid="uid://otudgk762xmy"]
+
+[ext_resource type="Script" path="res://scripts/item.gd" id="1_ws52a"]
+[ext_resource type="Texture2D" uid="uid://dewyf4hc1bm66" path="res://assets/ChainVest.png" id="2_hvos6"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_b61h1"]
+size = Vector3(0.5, 0.5, 0.5)
+
+[sub_resource type="BoxMesh" id="BoxMesh_jscx6"]
+size = Vector3(0.5, 0.5, 0.5)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3246w"]
+albedo_texture = ExtResource("2_hvos6")
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_pmwvr"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 2
+properties/1/path = NodePath(".:visible")
+properties/1/spawn = true
+properties/1/replication_mode = 2
+
+[node name="ChainVest" type="StaticBody3D"]
+collision_layer = 256
+collision_mask = 0
+script = ExtResource("1_ws52a")
+item_texture = ExtResource("2_hvos6")
+armor = 20
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_b61h1")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_jscx6")
+surface_material_override/0 = SubResource("StandardMaterial3D_3246w")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_pmwvr")

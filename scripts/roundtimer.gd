@@ -5,7 +5,7 @@ var preparing: bool = true
 var current_round = 0 # this is what is visible: [CURRENT_STAGE]-[CURRENT_ROUND]
 var total_round = 0 # this is the overall round counting to infinity
 var current_stage = 1
-const preparationDuration = 7 #30
+const preparationDuration = 30 #30
 const combatDuration = 45 #45
 const transition_time = 5
 

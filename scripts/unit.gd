@@ -385,7 +385,7 @@ func equip_item(item_path):
 		max_health += item.get_health()
 		attack_dmg += item.get_attack_dmg()
 		armor += item.get_armor()
-		attack_speed += item.get_attack_speed()
+		attack_speed *= 1+item.get_attack_speed()/100
 		
 		item.visible = false
 	
@@ -413,7 +413,7 @@ func unequip_item(index):
 		max_health -= item.get_health()
 		attack_dmg -= item.get_attack_dmg()
 		armor -= item.get_armor()
-		attack_speed -= item.get_attack_speed()
+		attack_speed /= 1-item.get_attack_speed()/100
 	
 		item.visible = true
 	

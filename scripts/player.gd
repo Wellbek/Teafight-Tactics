@@ -341,3 +341,9 @@ func reroll_shop():
 	var buttons = main.getUI().get_node("UnitShop/HBoxContainer").get_children()
 	for button in buttons:
 		button.generateButton()
+		
+@rpc("any_peer", "call_local", "reliable")
+func spawn_item(path):
+	var instance = load(path).instantiate()
+
+	get_node("items").call("add_child", instance, true)

@@ -26,6 +26,12 @@ var dead = false
 
 const BAR_COLOR = Color(0.757, 0.231, 0.259)
 
+# tft is to complicated and couldn't figure out orb droprate
+# still here for reference: https://twitter.com/Mortdog/status/1761019549506490633
+
+# [nothing, item component, unit, unit + 1g, unit + 2g, unit + 3g, 2 units]
+const drop_rates = [0.2, 0.45, 0.2, 0.075, 0.05, 0.025]
+
 func _ready():
 	attack_timer.timeout.connect(_on_attack_timer_timeout)
 	var viewport = find_child("SubViewport")
@@ -123,6 +129,8 @@ func death(_path):
 	var parent = instance.get_parent()
 	if instance != null and is_instance_valid(instance):		
 		if multiplayer.is_server():
+			drop()
+			
 			var fighter_count = 0
 			for u in parent.get_children():
 				fighter_count += 1
@@ -141,5 +149,37 @@ func check_battle_status():
 		main.get_timer().change_phase()
 
 func _on_visibility_changed():
-	print("test")
 	set_collision_layer_value(6, visible)
+	
+func drop():
+	var rarity = randf() # number between 0 and 1
+	var index = 0
+	for i in range(len(drop_rates)):
+		if rarity < drop_rates[i]:
+			index = i
+			break
+		rarity -= drop_rates[i]
+		
+	match index:
+		1:
+			print(player.getID(),": item")
+			var folder = "res://src/items"
+			var dir = DirAccess.open(folder)
+			var itemArray = dir.get_files()
+			var itemFileName = itemArray[randi() % itemArray.size()].get_slice(".",0)
+			
+			var instance_path = folder + "//" + itemFileName + ".tscn"
+			
+			player.spawn_item.rpc(instance_path)
+		2:
+			print(player.getID(),": one unit")
+		3:
+			print(player.getID(),": one unit and 1g")
+		4:
+			print(player.getID(),": one unit and 2g")
+		5:
+			print(player.getID(),": one unit and 3g")
+		6:
+			print(player.getID(),": two units")
+		_: 
+			print(player.getID(),": nothing bruh")
