@@ -7,10 +7,12 @@ var myid
 @export var health_label: Label
 @export var HPBar: TextureProgressBar
 
-func _ready():
-	main = get_tree().root.get_child(0)
+func _enter_tree():
 	myid = name.to_int()
 	set_multiplayer_authority(myid)
+
+func _ready():
+	main = get_tree().root.get_child(0)
 	
 	name_label.text = "host" if myid == 1 else str(myid)
 	

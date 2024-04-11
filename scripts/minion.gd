@@ -48,6 +48,7 @@ func _physics_process(delta):
 		
 	if target:
 		var distance = global_transform.origin.distance_to(target.global_transform.origin)
+		#if name == "MurkWolf": print(distance)
 		
 		if distance > attackrange:
 			attacking = false
@@ -138,3 +139,7 @@ func check_battle_status():
 	if main.get_num_of_battles() <= 0 and not main.get_timer().is_preparing():
 		# all battles have finished => go right into prep phase
 		main.get_timer().change_phase()
+
+func _on_visibility_changed():
+	print("test")
+	set_collision_layer_value(6, visible)

@@ -37,24 +37,28 @@ func _on_player_gold_changed(new_amount):
 		disabled = false
 
 func _on_pressed():	
+	disabled = true
 	spawnUnit.rpc_id(1, multiplayer.get_unique_id(), main.getPlayer().get_path(), unit_path) # tell server to spawn unit
 	# Note the called rpc sends feedback back to the client (see handleSpawn func)
 			
-@rpc("any_peer", "call_local", "unreliable") # change call_local if server dedicated
+@rpc("any_peer", "call_local", "reliable") # change call_local if server dedicated
 func spawnUnit(_feedbackid, _player_path, _unit_path):
 	var player = get_tree().root.get_node(_player_path)
 	
 	var instance = load(_unit_path + ".tscn").instantiate()
 	instance.name = str(_feedbackid) + "#" + instance.name
-	print(instance.get_path())
 
 	player.find_child("Units").call("add_child", instance, true)
 	
+	while true:
+		if instance.is_inside_tree(): break
+	
 	if _feedbackid != multiplayer.get_unique_id():
 		handleSpawn.rpc_id(_feedbackid, instance.get_path())
-	else: handleSpawn(instance.get_path())
+	else:
+		handleSpawn(instance.get_path())
 	
-@rpc("authority", "call_local", "unreliable")
+@rpc("authority", "call_local", "reliable")
 func handleSpawn(_unit_path):
 	var instance = get_tree().root.get_node(_unit_path)
 	
@@ -67,7 +71,6 @@ func handleSpawn(_unit_path):
 	var upgradedUnit = upgrade(instance)
 
 	if upgradedUnit:
-		disabled = true
 		while(upgradedUnit):
 			upgradedUnit = upgrade(upgradedUnit)
 	else:
@@ -77,9 +80,9 @@ func handleSpawn(_unit_path):
 			instance.tile = tile
 			player.appendUnit(instance)
 			tile.registerUnit(instance)
-			disabled = true
 		else: 
 			main.freeObject.rpc(instance.get_path())
+			disabled = false
 
 func upgrade(_unit):
 	if _unit.star >= 3: return null

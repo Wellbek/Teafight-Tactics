@@ -66,16 +66,16 @@ func _enter_tree():
 	player = main.find_child("World").get_node(str(myid))
 	multisync = find_child("MultiplayerSynchronizer", false)
 	
-func _process(delta):
+func _process(_delta):
 	if mode == BATTLE and target == null and is_multiplayer_authority() and not main.get_timer().is_transitioning():
 		find_target()
 
-func _physics_process(delta):	
+func _physics_process(_delta):	
 	if target and not is_instance_valid(target): target = null
 		
 	if target and mode == BATTLE:
 		var distance = global_transform.origin.distance_to(target.global_transform.origin)
-		
+
 		if distance > attackrange:
 			attacking = false
 			velocity = (target.global_transform.origin - global_transform.origin).normalized() * move_speed
@@ -90,7 +90,7 @@ func setTile(newTile):
 	tile = newTile
 	change_target_status.rpc(true if tile.get_parent().getType() == HEX else false)
 	
-@rpc("any_peer", "call_local", "unreliable")
+@rpc("any_peer", "call_local", "reliable")
 func change_target_status(value):
 	targetable = value
 	
@@ -103,7 +103,7 @@ func getTile():
 func getTileType():
 	return tile.get_parent().getType()
 
-func _input_event(camera, event, position, normal, shape_idx):
+func _input_event(_camera, event, _position, _normal, _shape_idx):
 	if not is_multiplayer_authority() or not timer.is_preparing() or not mode == PREP or timer.is_transitioning(): return
 
 	if event is InputEventMouseButton and event.is_pressed() and event.button_index == MOUSE_BUTTON_LEFT and !isDragging():
@@ -307,7 +307,6 @@ func death(_path):
 			
 			if fighter_count <= 1:
 				main.unregister_battle()
-				var player = parent.get_parent()
 				var enemy = player.get_current_enemy()
 				
 				player.increment_lossstreak.rpc_id(player.getID())

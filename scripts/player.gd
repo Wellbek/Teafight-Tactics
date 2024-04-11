@@ -232,7 +232,7 @@ func get_health():
 	return p_curr_health
 	
 # is called for every player
-@rpc("any_peer", "call_local", "unreliable")
+@rpc("any_peer", "call_local", "reliable")
 func lose_health(amt):
 	if is_defeated(): return
 	

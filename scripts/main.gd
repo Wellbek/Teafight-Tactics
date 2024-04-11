@@ -70,7 +70,7 @@ func changeCameraByID(_id):
 		if peer:
 			peer.getEnemyCam().change_current(true)
 			
-@rpc("any_peer", "call_local", "unreliable")
+@rpc("any_peer", "call_local", "reliable")
 func freeObject(_path):
 	var instance = get_tree().root.get_node(_path)
 	if instance != null and is_instance_valid(instance):
