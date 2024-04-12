@@ -63,28 +63,30 @@ func spawnUnit(_feedbackid, _player_path, _unit_path):
 @rpc("authority", "call_local", "reliable")
 func handleSpawn(_unit_path):
 	var instance = get_tree().root.get_node(_unit_path)
+			
+	instance.toggleUI(main.get_timer().is_preparing() and not main.get_timer().is_transitioning())
 	
 	var player = main.getPlayer()
 	
 	var instance_cost = instance.get_cost()
 	player.decrease_gold(instance_cost)
-	change_bought(true)
 	
 	var upgradedUnit = upgrade(instance)
 
 	if upgradedUnit:
 		while(upgradedUnit):
 			upgradedUnit = upgrade(upgradedUnit)
-	else:
-		var tile = player.getBenchGrid().getFirstFreeTile()
-	
-		if tile != null:
-			instance.tile = tile
-			player.appendUnit(instance)
-			tile.registerUnit(instance)
-		else: 
-			main.freeObject.rpc(instance.get_path())
-			change_bought(false)
+		return
+		
+	var tile = player.getBenchGrid().getFirstFreeTile()
+
+	if tile != null:
+		instance.tile = tile
+		player.appendUnit(instance)
+		tile.registerUnit(instance)
+	else: 
+		main.freeObject.rpc(instance.get_path())
+		change_bought(false)
 
 func upgrade(_unit):
 	if _unit.star >= 3: return null
@@ -92,9 +94,12 @@ func upgrade(_unit):
 	var sameUnits = []
 	# check if there are 2 more units of same name and star
 	for u in main.getPlayer().getUnits():
-		if u.unitName == _unit.unitName and u.star == _unit.star and _unit != u:
+		if u.unitName == _unit.unitName and u.star == _unit.star and _unit != u and u.get_mode() != u.BATTLE:
 			sameUnits.append(u)
 			if sameUnits.size() >= 2:
+				if _unit.getTile():
+					_unit.tile.unregisterUnit()
+				_unit.transfer_items(sameUnits[0])
 				main.getPlayer().eraseUnit(_unit) # this has to be done for the recursive upgrade. If _unit not in playerUnits nothing happens
 				main.freeObject.rpc(_unit.get_path()) #unload
 				# prioritze units on board, remove in bank
@@ -113,10 +118,6 @@ func upgrade(_unit):
 					sameUnits[0].levelUp()
 					return sameUnits[0]
 	return null
-
-func _on_visibility_changed():
-	if visible:
-		generateButton()
 		
 func generateButton():
 	if preparing: return

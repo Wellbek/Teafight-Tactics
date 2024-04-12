@@ -20,6 +20,8 @@ var multisync: MultiplayerSynchronizer
 var main
 var timer
 
+var equipped = false
+
 func _ready():
 	set_multiplayer_authority(get_parent().get_parent().getID())
 	multisync = find_child("MultiplayerSynchronizer", false)
@@ -28,7 +30,7 @@ func _ready():
 	timer = main.get_timer()
 
 func _input_event(camera, event, position, normal, shape_idx):
-	if not is_multiplayer_authority() or not timer.is_preparing() or timer.is_transitioning(): return
+	if not is_multiplayer_authority(): return
 
 	if event is InputEventMouseButton and event.is_pressed() and event.button_index == MOUSE_BUTTON_LEFT and !isDragging():
 		setDragging(true)
@@ -37,7 +39,7 @@ func _input_event(camera, event, position, normal, shape_idx):
 		transform.origin.y += 1
 
 func _input(event):
-	if not is_multiplayer_authority() or not timer.is_preparing() or timer.is_transitioning(): return
+	if not is_multiplayer_authority(): return
 	
 	if isDragging():
 		if event is InputEventMouseButton and event.is_released() and event.button_index == MOUSE_BUTTON_LEFT:
@@ -54,10 +56,10 @@ func _input(event):
 			var end := origin + direction * ray_length
 			
 			var space_state := get_world_3d().direct_space_state
-			var query := PhysicsRayQueryParameters3D.create(origin, end, 0b00000000_00000000_00000010_00001111)
+			var query := PhysicsRayQueryParameters3D.create(origin, end, 0b00000000_00000000_00000110_00011111)
 			var result := space_state.intersect_ray(query)
-			if not result.is_empty() and result.collider != null: #and result.collider.is_multiplayer_authority(): # can only move and place on own board
-				if result.collider.get_collision_layer() == 8 or result.collider.get_collision_layer() == 512:
+			if not result.is_empty() and result.collider != null:
+				if (result.collider.get_collision_layer() in [8,24] and result.collider.is_multiplayer_authority()) or result.collider.get_collision_layer() == (512 if main.getPlayer().defender else 1024):
 					if result.collider != coll:
 						if coll:
 							# reset highlight of last unit
@@ -93,12 +95,19 @@ func placeItem():
 		
 		if coll == null:  
 			global_transform.origin = initialPos
-		elif coll.get_collision_layer() == 8:
+		elif coll.get_collision_layer() in [8, 24]:
 			if not coll.can_equip_item():
 				coll = null
 				global_transform.origin = initialPos
 			else:
+				equipped = true
 				coll.equip_item.rpc(get_path())
+				
+func is_equipped():
+	return equipped
+	
+func unequip():
+	equipped = false
 				
 func get_attack_range():
 	return attackrange

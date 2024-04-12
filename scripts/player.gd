@@ -121,7 +121,7 @@ func combatphase_setup(enemy_path = null, host:bool = true):
 		item_parent.rotate_y(deg_to_rad(180))
 		item_parent.global_transform.origin += current_enemy.global_transform.origin - global_transform.origin
 		
-		benchGrid.position = Vector3(-benchGrid.position.x, benchGrid.position.y, -benchGrid.position.z)
+		benchGrid.position = Vector3(-(benchGrid.position.x + 2*benchGrid.get_parent().position.x), benchGrid.position.y, -(benchGrid.position.z + 2*benchGrid.get_parent().position.z))
 		benchGrid.rotate_y(deg_to_rad(180))
 		benchGrid.global_transform.origin += current_enemy.global_transform.origin - global_transform.origin
 			
@@ -157,7 +157,7 @@ func reset_combatphase():
 			item_parent.global_transform.origin += current_enemy.global_transform.origin - global_transform.origin
 			item_parent.rotation = Vector3.ZERO
 			
-			benchGrid.position = Vector3(-benchGrid.position.x, benchGrid.position.y, -benchGrid.position.z)
+			benchGrid.position = Vector3(-(benchGrid.position.x + 2*benchGrid.get_parent().position.x), benchGrid.position.y, -(benchGrid.position.z + 2*benchGrid.get_parent().position.z))
 			benchGrid.global_transform.origin += current_enemy.global_transform.origin - global_transform.origin
 			benchGrid.rotation = Vector3.ZERO
 			
@@ -210,6 +210,9 @@ func removeUnit(index):
 	
 func getUnits():
 	return units
+
+func get_items():
+	return get_node("Items").get_children()
 
 func getBenchGrid():
 	return benchGrid

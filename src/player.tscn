@@ -44,9 +44,6 @@ size = Vector3(2, 0.25, 2)
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_pvdcg"]
 albedo_color = Color(0.705898, 0.701991, 0.701991, 1)
 
-[sub_resource type="BoxMesh" id="BoxMesh_rf0rf"]
-size = Vector3(3, 0.5, 2)
-
 [sub_resource type="PlaneMesh" id="PlaneMesh_fmv0e"]
 size = Vector2(100, 100)
 
@@ -62,6 +59,9 @@ metallic = 0.5
 
 [sub_resource type="SphereMesh" id="SphereMesh_2k284"]
 material = SubResource("StandardMaterial3D_bgose")
+
+[sub_resource type="BoxMesh" id="BoxMesh_rf0rf"]
+size = Vector3(3, 0.5, 2)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_tmgrx"]
 size = Vector3(3, 0.5, 2)
@@ -199,16 +199,6 @@ mesh = SubResource("BoxMesh_amsno")
 skeleton = NodePath("../../Bench")
 surface_material_override/0 = SubResource("StandardMaterial3D_o1323")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="EnemyBench"]
-transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 9.5, 0.5, 2)
-mesh = SubResource("BoxMesh_rf0rf")
-surface_material_override/0 = SubResource("StandardMaterial3D_pvdcg")
-
-[node name="MeshInstance3D3" type="MeshInstance3D" parent="EnemyBench"]
-transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 10, 0.625, 0)
-mesh = SubResource("BoxMesh_auh1a")
-surface_material_override/0 = SubResource("StandardMaterial3D_pvdcg")
-
 [node name="MeshInstance3D4" type="MeshInstance3D" parent="EnemyBench"]
 transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, -10, 0.625, 0)
 mesh = SubResource("BoxMesh_auh1a")
@@ -272,6 +262,27 @@ surface_material_override/0 = SubResource("StandardMaterial3D_pvdcg")
 shape = SubResource("BoxShape3D_tmgrx")
 
 [node name="CollisionShape3D2" type="CollisionShape3D" parent="ItemBench"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 0.125, 2)
+shape = SubResource("BoxShape3D_62cms")
+
+[node name="EnemyItemBench" type="StaticBody3D" parent="."]
+transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 9.5, 0.25, -7)
+collision_layer = 1024
+collision_mask = 1024
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="EnemyItemBench"]
+mesh = SubResource("BoxMesh_rf0rf")
+surface_material_override/0 = SubResource("StandardMaterial3D_pvdcg")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="EnemyItemBench"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 0.125, 2)
+mesh = SubResource("BoxMesh_auh1a")
+surface_material_override/0 = SubResource("StandardMaterial3D_pvdcg")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="EnemyItemBench"]
+shape = SubResource("BoxShape3D_tmgrx")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="EnemyItemBench"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 0.125, 2)
 shape = SubResource("BoxShape3D_62cms")
 

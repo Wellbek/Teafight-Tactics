@@ -31,4 +31,3 @@ size_2d_override = Vector2i(1140, 655)
 [node name="ButtonContent" parent="SubViewport" instance=ExtResource("2_1rrrg")]
 
 [connection signal="pressed" from="." to="." method="_on_pressed"]
-[connection signal="visibility_changed" from="." to="." method="_on_visibility_changed"]

@@ -95,12 +95,23 @@ func startPreparationPhase():
 					set_pve_round.rpc(player.get_node("PVERounds/" + str(current_stage) + "-" + str(current_round)).get_path(), true)
 	
 	if not main.getPlayer() == null and not main.getPlayer().is_defeated():
-		unitShop.visible = true
+		var buttons = main.getUI().get_node("UnitShop/HBoxContainer").get_children()
+		for button in buttons:
+			button.generateButton()
 	preparing = true
 	#print("Preparation Phase Started for Round: ", current_round)
 	
-	if main.getPlayer() and main.getPlayer().getBoardGrid().can_place_unit():
-		main.getPlayer().getBoardGrid().toggle_label(true)
+	if main.getPlayer():		
+		for unit in main.getPlayer().getUnits():
+			var button = main.get_node("GUI/UnitShop/HBoxContainer/Button1")
+			var upgradedUnit = button.upgrade(unit)
+
+			if upgradedUnit:
+				while(upgradedUnit):
+					upgradedUnit = button.upgrade(upgradedUnit)
+					
+		if main.getPlayer().getBoardGrid().can_place_unit():
+			main.getPlayer().getBoardGrid().toggle_label(true)
 	
 	wait_time = preparationDuration
 	start()
@@ -146,9 +157,11 @@ func startCombatPhase():
 				unit.placeUnit(main.getPlayer().getBoardGrid().getFirstFreeTile())
 			else:
 				unit.placeUnit()
+				
+		for item in main.getPlayer().get_items():
+			if item.is_equipped(): item.placeItem()
 			
 		main.getPlayer().getBoardGrid().toggle_label(false)
-		unitShop.visible = false
 	#print("Combat Phase Started for Round: ", current_round)
 	
 	transition()
