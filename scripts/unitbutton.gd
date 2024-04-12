@@ -132,7 +132,7 @@ func generateButton():
 		
 	# temporary constraint
 	if unit_cost > 2: 
-		print(unit_cost)
+		#print(unit_cost)
 		unit_cost = 2
 	
 	var folder = unitFolder + "//" + str(unit_cost)

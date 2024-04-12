@@ -82,7 +82,7 @@ func startPreparationPhase():
 
 	increment_round()
 	
-	if current_round >= 2: # skip first round
+	if current_round >= 2 or current_stage >= 2: # skip first round
 		if multiplayer.is_server():
 			for player in main.players:
 				player.reset_combatphase.rpc_id(player.getID())

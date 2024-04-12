@@ -29,8 +29,8 @@ const BAR_COLOR = Color(0.757, 0.231, 0.259)
 # tft is to complicated and couldn't figure out orb droprate
 # still here for reference: https://twitter.com/Mortdog/status/1761019549506490633
 
-# [nothing, item component, unit, unit + 1g, unit + 2g, unit + 3g, 2 units]
-const drop_rates = [0.2, 0.45, 0.2, 0.075, 0.05, 0.025]
+# [nothing, item component, 2g, 4g, 6g, 8g]
+const drop_rates = [0.6, 0.20, 0.09, 0.06, 0.03, 0.02]
 
 func _ready():
 	attack_timer.timeout.connect(_on_attack_timer_timeout)
@@ -162,7 +162,7 @@ func drop():
 		
 	match index:
 		1:
-			print(player.getID(),": item")
+			#print(player.getID(),": item")
 			var folder = "res://src/items"
 			var dir = DirAccess.open(folder)
 			var itemArray = dir.get_files()
@@ -172,14 +172,12 @@ func drop():
 			
 			player.spawn_item.rpc(instance_path)
 		2:
-			print(player.getID(),": one unit")
+			player.increase_gold(2)
 		3:
-			print(player.getID(),": one unit and 1g")
+			player.increase_gold(4)
 		4:
-			print(player.getID(),": one unit and 2g")
+			player.increase_gold(6)
 		5:
-			print(player.getID(),": one unit and 3g")
-		6:
-			print(player.getID(),": two units")
+			player.increase_gold(8)
 		_: 
-			print(player.getID(),": nothing bruh")
+			pass

@@ -132,7 +132,7 @@ func reset_combatphase():
 	if is_defeated(): return
 	
 	var unit_parent = find_child("Units")
-	var combatunit_parent = find_child("CombatUnits")	
+	var combatunit_parent = find_child("CombatUnits")
 	
 	for unit in combatunit_parent.get_children():
 		main.freeObject.rpc(unit.get_path())
