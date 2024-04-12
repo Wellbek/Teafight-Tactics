@@ -1,9 +1,8 @@
-[gd_scene load_steps=33 format=3 uid="uid://g18y6a837usc"]
+[gd_scene load_steps=32 format=3 uid="uid://g18y6a837usc"]
 
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_mrq3l"]
 [ext_resource type="Script" path="res://scripts/gridmap/gridmap.gd" id="1_ust0k"]
 [ext_resource type="Script" path="res://scripts/camera.gd" id="2_sby6c"]
-[ext_resource type="PackedScene" uid="uid://djrfrm48n2r7h" path="res://src/items/bf_sword.tscn" id="4_o558n"]
 [ext_resource type="PackedScene" uid="uid://bnrnjxoiaaiuo" path="res://src/minions/melee_minion.tscn" id="5_o4yok"]
 [ext_resource type="PackedScene" uid="uid://divt1x550fa5f" path="res://src/minions/ranged_minion.tscn" id="6_c78bq"]
 [ext_resource type="PackedScene" uid="uid://2e2xsfjwn1bu" path="res://src/minions/krug.tscn" id="7_aytho"]
@@ -290,9 +289,6 @@ shape = SubResource("BoxShape3D_62cms")
 
 [node name="Items" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.078, 0.8, 7.829)
-
-[node name="BFSword" parent="Items" instance=ExtResource("4_o558n")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.708527, 0, 1)
 
 [node name="PVERounds" type="Node3D" parent="."]
 

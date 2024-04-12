@@ -12,8 +12,6 @@ var unit_path: String
 
 var unit = null
 
-var preparing = true
-
 var main
 
 var unit_cost
@@ -23,7 +21,6 @@ var bought = false
 
 func _ready():
 	main = get_tree().root.get_child(0)
-	preparing = false
 	generateButton()
 	
 func _on_player_gold_changed(new_amount):
@@ -36,7 +33,7 @@ func _on_player_gold_changed(new_amount):
 		self_modulate = Color(1, 1, 1, 1)
 		disabled = false
 
-func _on_pressed():	
+func _on_pressed():		
 	if bought: return
 	
 	change_bought(true)
@@ -79,7 +76,7 @@ func handleSpawn(_unit_path):
 		return
 		
 	var tile = player.getBenchGrid().getFirstFreeTile()
-
+	
 	if tile != null:
 		instance.tile = tile
 		player.appendUnit(instance)
@@ -120,7 +117,6 @@ func upgrade(_unit):
 	return null
 		
 func generateButton():
-	if preparing: return
 	change_bought(false)
 	
 	var player_level = 1 if main.getPlayer() == null else main.getPlayer().get_level()
@@ -154,9 +150,10 @@ func generateButton():
 		4: background.color = Color(0.623, 0.141, 1)
 		5: background.color = Color(0.957, 0.773, 0.215)
 	
-	if main.getPlayer() == null or main.getPlayer().get_gold() > unit_cost:
+	if main.getPlayer() == null or main.getPlayer().get_gold() < unit_cost:
+		disabled = true
+	else: 
 		disabled = false
-	else: disabled = true
 
 func change_bought(val):
 	bought = val

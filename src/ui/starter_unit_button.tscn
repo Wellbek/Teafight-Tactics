@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3 uid="uid://ihyct5p7cvik"]
+
+[ext_resource type="PackedScene" uid="uid://bkx13o256c58q" path="res://src/ui/starter_unit_button_content.tscn" id="1_ud87x"]
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_cl880"]
+viewport_path = NodePath("SubViewport")
+
+[node name="TextureButton" type="TextureButton"]
+texture_normal = SubResource("ViewportTexture_cl880")
+
+[node name="SubViewport" type="SubViewport" parent="."]
+size = Vector2i(150, 150)
+size_2d_override = Vector2i(256, 256)
+size_2d_override_stretch = true
+
+[node name="StarterUnitButtonContent" parent="SubViewport" instance=ExtResource("1_ud87x")]
+mouse_filter = 1

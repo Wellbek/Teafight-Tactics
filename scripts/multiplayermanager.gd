@@ -44,7 +44,6 @@ func start_game():
 	if not multiplayer.is_server(): return
 	
 	startButton.visible = false
-	timer.initialize()
 	
 	for id in multiplayer.get_peers():
 		add_player(id)
@@ -52,7 +51,7 @@ func start_game():
 	if not OS.has_feature("dedicated_server"):
 		add_player()
 		
-	#print(get_tree().root.get_child(0).find_child("World").get_children())
+	timer.initialize()
 	
 func disable_enable():
 	for c in enable_on_start:

@@ -5,7 +5,8 @@ var preparing: bool = true
 var current_round = 0 # this is what is visible: [CURRENT_STAGE]-[CURRENT_ROUND]
 var total_round = 0 # this is the overall round counting to infinity
 var current_stage = 1
-const preparationDuration = 10 #30
+const MINIGAME_DURATION = 5
+const preparationDuration = 30 #30
 const combatDuration = 45 #45
 const transition_time = 5
 
@@ -21,10 +22,16 @@ var transitioning = false
 
 var urf_overtime = false
 
+@onready var random_number = randi_range(0, 1000) if multiplayer.is_server else 0
+
 func _enter_tree():
 	set_multiplayer_authority(1) #only host controls time
 
-func _process(delta):		
+func _process(delta):
+	if current_stage == 1 and current_round == 1:
+		timer_label.text = str(time_left).get_slice(".", 0)
+		return
+	
 	if preparing == false and urf_overtime == false and not is_transitioning():
 		timer_label.text = str(time_left-15).get_slice(".", 0)
 	else: timer_label.text = str(time_left).get_slice(".", 0)
@@ -73,7 +80,20 @@ func _ready():
 	set_multiplayer_authority(1)
 	
 func initialize():	
-	startPreparationPhase.rpc()
+	start_number_minigame.rpc()
+	
+@rpc("authority", "call_local", "reliable")
+func start_number_minigame():
+	increment_round()
+	
+	wait_time = MINIGAME_DURATION
+	start()
+
+@rpc("authority", "call_local", "reliable")
+func conclude_minigame(number):
+	get_parent().get_node("GUI/Carousel/Textfield").visible = false
+	get_parent().get_node("GUI/UnitShop").visible = true
+	startPreparationPhase()
 
 @rpc("authority", "call_local", "reliable")
 func startPreparationPhase():		
@@ -81,24 +101,24 @@ func startPreparationPhase():
 
 	increment_round()
 	
-	if current_round >= 2 or current_stage >= 2: # skip first round
-		if multiplayer.is_server():
-			for player in main.players:
-				player.reset_combatphase.rpc()
+	if multiplayer.is_server():
+		for player in main.players:
+			player.reset_combatphase.rpc()
+	
+		if current_round > 2 or current_stage >= 2: phase_gold_econ.rpc()
 		
-			phase_gold_econ.rpc()
-			
-			if (current_stage == 1 and (current_round == 2 or current_round == 3 or current_round == 4)) or current_round == 7: 
-				for player in main.players:
-					for pve_round in player.get_node("PVERounds").get_children():
-						set_pve_round.rpc(pve_round.get_path(), false)
-					set_pve_round.rpc(player.get_node("PVERounds/" + str(current_stage) + "-" + str(current_round)).get_path(), true)
+		if (current_stage == 1 and (current_round == 2 or current_round == 3 or current_round == 4)) or current_round == 7: 
+			for player in main.players:
+				for pve_round in player.get_node("PVERounds").get_children():
+					set_pve_round.rpc(pve_round.get_path(), false)
+				set_pve_round.rpc(player.get_node("PVERounds/" + str(current_stage) + "-" + str(current_round)).get_path(), true)
+	
+	preparing = true
 	
 	if not main.getPlayer() == null and not main.getPlayer().is_defeated():
 		var buttons = main.getUI().get_node("UnitShop/HBoxContainer").get_children()
 		for button in buttons:
 			button.generateButton()
-	preparing = true
 	#print("Preparation Phase Started for Round: ", current_round)
 	
 	if main.getPlayer():		
@@ -231,6 +251,11 @@ func round_robin_pairs(list):
 func _on_Timer_timeout():
 	if not multiplayer.is_server(): return
 	
+	if current_round == 1 and current_stage == 1:
+		print("the number was ", random_number)
+		conclude_minigame.rpc(random_number)
+		return
+	
 	change_phase()
 	
 # server func	
@@ -299,11 +324,13 @@ func increment_round():
 			current_stage += 1
 			current_round = 1
 		else: current_round += 1
-		
-	if not (current_stage == 1 and (current_round == 2 or current_round == 3 or current_round == 4)) and not current_round == 7: 
-		total_round += 1 # exclude pve rounds else matchmaking is messed up
 	
-	if main.getPlayer() != null: main.getPlayer().increase_xp(2)
+	if not (current_stage == 1 and current_round == 1):
+		if not (current_stage == 1 and (current_round == 2 or current_round == 3 or current_round == 4)) and not current_round == 7: 
+			total_round += 1 # exclude pve rounds else matchmaking is messed up
+		
+		if current_round > 2 or current_stage >= 2 and main.getPlayer() != null: main.getPlayer().increase_xp(2)
+	
 	stage_label.text = str(current_stage) + "-" + str(current_round)
 		
 @rpc("authority","call_local", "unreliable")

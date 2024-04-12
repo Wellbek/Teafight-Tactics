@@ -22,7 +22,7 @@ var my_bar
 var defender = true
 
 @export_category("Player Stats")
-@export var start_gold: int = 40
+@export var start_gold: int = 1
 var gold = 0
 @onready var gold_label = main.getUI().get_node("UnitShop/Gold/HBoxContainer/GoldLabel")
 @export var p_max_health = 100
@@ -74,7 +74,7 @@ func _ready():
 		ids.sort()
 		var i = ids.find(myid)
 
-		global_transform.origin.x += 25 * i
+		global_transform.origin.x += 500 * i
 		camera.change_current(true)	
 		
 		var sidebar = main.getUI().get_node("UnitShop/Sidebar")

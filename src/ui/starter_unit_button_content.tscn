@@ -1,0 +1,68 @@
+[gd_scene load_steps=3 format=3 uid="uid://bkx13o256c58q"]
+
+[ext_resource type="Texture2D" uid="uid://dem4eqa3qd65n" path="res://src/units/2/tea_bag_slinger.png" id="1_1rxkb"]
+[ext_resource type="Texture2D" uid="uid://bqatgnnesy5ra" path="res://assets/BFSword.png" id="2_xaqfv"]
+
+[node name="StarterUnitButtonContent" type="Control"]
+clip_contents = true
+custom_minimum_size = Vector2(256, 256)
+layout_mode = 3
+anchor_right = 0.222
+anchor_bottom = 0.395
+offset_right = 0.255981
+offset_bottom = 0.0399933
+
+[node name="Rarity" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(1, 0.843183, 0.172442, 1)
+
+[node name="Image" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.031
+anchor_top = 0.031
+anchor_right = 0.969
+anchor_bottom = 0.969
+offset_left = 0.0639997
+offset_top = 0.0639997
+offset_right = -0.0640106
+offset_bottom = -0.0640106
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_1rxkb")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="ItemBorder" type="ColorRect" parent="."]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 152.0
+offset_bottom = -152.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.152895, 0.172442, 0.188067, 1)
+
+[node name="Item" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.594
+anchor_top = 0.031
+anchor_right = 0.969
+anchor_bottom = 0.406
+offset_left = 2.93599
+offset_top = -3.936
+offset_right = 2.93599
+offset_bottom = -3.936
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_xaqfv")
+expand_mode = 1
+stretch_mode = 6
