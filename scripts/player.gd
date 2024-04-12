@@ -19,8 +19,10 @@ var current_enemy = null # client sided but server sees it also
 
 var my_bar
 
+var defender = true
+
 @export_category("Player Stats")
-@export var start_gold: int = 1
+@export var start_gold: int = 40
 var gold = 0
 @onready var gold_label = main.getUI().get_node("UnitShop/Gold/HBoxContainer/GoldLabel")
 @export var p_max_health = 100
@@ -98,15 +100,31 @@ func combatphase_setup(enemy_path = null, host:bool = true):
 	
 	current_enemy = null
 	
+	defender = host
+	
 	if enemy_path == null: # pve phase	
 		for unit in unit_parent.get_children():
 			unit.combatphase_setup.rpc(host, myid)
 		return
 
-	
 	current_enemy = get_tree().root.get_node(enemy_path)
 
-	if not host:	
+	if not host:
+		var item_parent = find_child("Items")
+		var econ_parent = find_child("Econ")
+		
+		econ_parent.position = Vector3(-econ_parent.position.x, econ_parent.position.y, -econ_parent.position.z)
+		econ_parent.rotate_y(deg_to_rad(180))
+		econ_parent.global_transform.origin += current_enemy.global_transform.origin - global_transform.origin
+		
+		item_parent.position = Vector3(-item_parent.position.x, item_parent.position.y, -item_parent.position.z)
+		item_parent.rotate_y(deg_to_rad(180))
+		item_parent.global_transform.origin += current_enemy.global_transform.origin - global_transform.origin
+		
+		benchGrid.position = Vector3(-benchGrid.position.x, benchGrid.position.y, -benchGrid.position.z)
+		benchGrid.rotate_y(deg_to_rad(180))
+		benchGrid.global_transform.origin += current_enemy.global_transform.origin - global_transform.origin
+			
 		unit_parent.global_transform.origin = current_enemy.find_child("Units").global_transform.origin
 		unit_parent.rotate_y(deg_to_rad(180))
 		main.changeCameraByID(current_enemy.name.to_int())
@@ -125,15 +143,30 @@ func reset_combatphase():
 		
 	if is_defeated(): return
 	
-	current_enemy = null
-	
 	var unit_parent = find_child("Units")
+	var item_parent = find_child("Items")
+	var econ_parent = find_child("Econ")
 	
 	if is_multiplayer_authority():
-		unit_parent.global_transform.origin = global_transform.origin
-		unit_parent.rotation = Vector3.ZERO
+		if not defender:
+			econ_parent.position = Vector3(-econ_parent.position.x, econ_parent.position.y, -econ_parent.position.z)
+			econ_parent.global_transform.origin += current_enemy.global_transform.origin - global_transform.origin
+			econ_parent.rotation = Vector3.ZERO
+			
+			item_parent.position = Vector3(-item_parent.position.x, item_parent.position.y, -item_parent.position.z)
+			item_parent.global_transform.origin += current_enemy.global_transform.origin - global_transform.origin
+			item_parent.rotation = Vector3.ZERO
+			
+			benchGrid.position = Vector3(-benchGrid.position.x, benchGrid.position.y, -benchGrid.position.z)
+			benchGrid.global_transform.origin += current_enemy.global_transform.origin - global_transform.origin
+			benchGrid.rotation = Vector3.ZERO
+			
+			unit_parent.global_transform.origin = global_transform.origin
+			unit_parent.rotation = Vector3.ZERO
 
 		main.changeCamera(0)
+		
+	current_enemy = null
 	
 	for unit in unit_parent.get_children():
 		unit.target = null
@@ -350,6 +383,6 @@ func reroll_shop():
 func spawn_item(path):
 	var instance = load(path).instantiate()
 
-	get_node("items").call("add_child", instance, true)
+	get_node("Items").call("add_child", instance, true)
 	
 	instance.position += Vector3(randf_range(-1, 1), 0, randf_range(-1, 1))

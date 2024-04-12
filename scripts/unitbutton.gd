@@ -37,7 +37,9 @@ func _on_player_gold_changed(new_amount):
 		disabled = false
 
 func _on_pressed():	
-	disabled = true
+	if bought: return
+	
+	change_bought(true)
 	spawnUnit.rpc_id(1, multiplayer.get_unique_id(), main.getPlayer().get_path(), unit_path) # tell server to spawn unit
 	# Note the called rpc sends feedback back to the client (see handleSpawn func)
 			
@@ -82,7 +84,7 @@ func handleSpawn(_unit_path):
 			tile.registerUnit(instance)
 		else: 
 			main.freeObject.rpc(instance.get_path())
-			disabled = false
+			change_bought(false)
 
 func upgrade(_unit):
 	if _unit.star >= 3: return null

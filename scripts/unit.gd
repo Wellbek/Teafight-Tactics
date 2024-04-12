@@ -107,7 +107,7 @@ func getTileType():
 	return tile.get_parent().getType()
 
 func _input_event(_camera, event, _position, _normal, _shape_idx):
-	if not is_multiplayer_authority() or not timer.is_preparing() or not mode == PREP or timer.is_transitioning(): return
+	if not is_multiplayer_authority() or not mode == PREP: return
 
 	if event is InputEventMouseButton and event.is_pressed() and event.button_index == MOUSE_BUTTON_LEFT and !isDragging():
 		setDragging(true)
@@ -118,7 +118,7 @@ func _input_event(_camera, event, _position, _normal, _shape_idx):
 		transform.origin.y += 1
 
 func _input(event):
-	if not is_multiplayer_authority() or not timer.is_preparing() or not mode == PREP or timer.is_transitioning(): return
+	if not is_multiplayer_authority() or not mode == PREP: return
 	
 	if isDragging():
 		if event is InputEventMouseButton and event.is_released() and event.button_index == MOUSE_BUTTON_LEFT:

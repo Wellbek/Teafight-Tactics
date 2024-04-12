@@ -1,8 +1,9 @@
-[gd_scene load_steps=32 format=3 uid="uid://g18y6a837usc"]
+[gd_scene load_steps=33 format=3 uid="uid://g18y6a837usc"]
 
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_mrq3l"]
 [ext_resource type="Script" path="res://scripts/gridmap/gridmap.gd" id="1_ust0k"]
 [ext_resource type="Script" path="res://scripts/camera.gd" id="2_sby6c"]
+[ext_resource type="PackedScene" uid="uid://djrfrm48n2r7h" path="res://src/items/bf_sword.tscn" id="4_o558n"]
 [ext_resource type="PackedScene" uid="uid://bnrnjxoiaaiuo" path="res://src/minions/melee_minion.tscn" id="5_o4yok"]
 [ext_resource type="PackedScene" uid="uid://divt1x550fa5f" path="res://src/minions/ranged_minion.tscn" id="6_c78bq"]
 [ext_resource type="PackedScene" uid="uid://2e2xsfjwn1bu" path="res://src/minions/krug.tscn" id="7_aytho"]
@@ -21,6 +22,12 @@ size = Vector3(22, 1, 16)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hw32e"]
 albedo_color = Color(0.431357, 0.698085, 0.348791, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_cbvan"]
+size = Vector3(1.25, 0.25, 8)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vcrcd"]
+albedo_color = Color(0.560815, 0.560815, 0.560815, 1)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_jlr6y"]
 size = Vector3(22, 1, 2)
@@ -56,12 +63,6 @@ metallic = 0.5
 [sub_resource type="SphereMesh" id="SphereMesh_2k284"]
 material = SubResource("StandardMaterial3D_bgose")
 
-[sub_resource type="BoxMesh" id="BoxMesh_cbvan"]
-size = Vector3(1.25, 0.25, 8)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vcrcd"]
-albedo_color = Color(0.560815, 0.560815, 0.560815, 1)
-
 [sub_resource type="BoxShape3D" id="BoxShape3D_tmgrx"]
 size = Vector3(3, 0.5, 2)
 
@@ -96,6 +97,18 @@ properties/7/replication_mode = 1
 properties/8/path = NodePath("Units:rotation")
 properties/8/spawn = true
 properties/8/replication_mode = 1
+properties/9/path = NodePath("Econ:position")
+properties/9/spawn = true
+properties/9/replication_mode = 1
+properties/10/path = NodePath("Econ:rotation")
+properties/10/spawn = true
+properties/10/replication_mode = 1
+properties/11/path = NodePath("Items:position")
+properties/11/spawn = true
+properties/11/replication_mode = 1
+properties/12/path = NodePath("Items:rotation")
+properties/12/spawn = true
+properties/12/replication_mode = 1
 
 [node name="Player" type="Node3D" node_paths=PackedStringArray("benchGrid", "boardGrid", "camera", "enemyCam", "multiplayerSpawner")]
 script = ExtResource("1_mrq3l")
@@ -140,6 +153,18 @@ outline_modulate = Color(0.376638, 0.811917, 1, 1)
 text = "0/0"
 font_size = 512
 outline_size = 40
+
+[node name="EconRock" type="MeshInstance3D" parent="Board"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.25, 0.625, 2)
+mesh = SubResource("BoxMesh_cbvan")
+skeleton = NodePath("../../Econ")
+surface_material_override/0 = SubResource("StandardMaterial3D_vcrcd")
+
+[node name="EconRockEnemy" type="MeshInstance3D" parent="Board"]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 10.25, 0.625, -2)
+mesh = SubResource("BoxMesh_cbvan")
+skeleton = NodePath("../../Econ")
+surface_material_override/0 = SubResource("StandardMaterial3D_vcrcd")
 
 [node name="Bench" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.25, 9)
@@ -202,36 +227,32 @@ surface_material_override/0 = SubResource("StandardMaterial3D_8o77c")
 shape = SubResource("BoxShape3D_i2rm3")
 
 [node name="Econ" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 0, 2)
 
 [node name="1" type="MeshInstance3D" parent="Econ"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.25, 0.278523, 5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.25, 0.278523, 3)
 visible = false
 mesh = SubResource("SphereMesh_2k284")
 
 [node name="2" type="MeshInstance3D" parent="Econ"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.25, 0.278523, 3.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.25, 0.278523, 1.5)
 visible = false
 mesh = SubResource("SphereMesh_2k284")
 
 [node name="3" type="MeshInstance3D" parent="Econ"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.25, 0.278523, 2)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.25, 0.278523, 0)
 visible = false
 mesh = SubResource("SphereMesh_2k284")
 
 [node name="4" type="MeshInstance3D" parent="Econ"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.25, 0.278523, 0.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.25, 0.278523, -1.5)
 visible = false
 mesh = SubResource("SphereMesh_2k284")
 
 [node name="5" type="MeshInstance3D" parent="Econ"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.25, 0.278523, -1)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.25, 0.278523, -3)
 visible = false
 mesh = SubResource("SphereMesh_2k284")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Econ"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.25, 0.125, 2)
-mesh = SubResource("BoxMesh_cbvan")
-surface_material_override/0 = SubResource("StandardMaterial3D_vcrcd")
 
 [node name="ItemBench" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.5, 0.25, 7)
@@ -256,10 +277,11 @@ shape = SubResource("BoxShape3D_62cms")
 
 [node name="Units" type="Node3D" parent="."]
 
-[node name="CombatUnits" type="Node3D" parent="."]
-
-[node name="items" type="Node3D" parent="."]
+[node name="Items" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.078, 0.8, 7.829)
+
+[node name="BFSword" parent="Items" instance=ExtResource("4_o558n")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.708527, 0, 1)
 
 [node name="PVERounds" type="Node3D" parent="."]
 
@@ -372,7 +394,7 @@ spawn_path = NodePath("../Units")
 
 [node name="MultiplayerItemSpawner" type="MultiplayerSpawner" parent="."]
 _spawnable_scenes = PackedStringArray("res://src/items/bf_sword.tscn", "res://src/items/giants_belt.tscn")
-spawn_path = NodePath("../items")
+spawn_path = NodePath("../Items")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_4k2ky")

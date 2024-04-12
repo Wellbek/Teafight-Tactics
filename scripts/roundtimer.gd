@@ -17,8 +17,6 @@ var progressbar: ProgressBar
 
 var main
 
-var host = false
-
 var transitioning = false
 
 var urf_overtime = false
