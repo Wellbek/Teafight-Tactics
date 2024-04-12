@@ -76,7 +76,7 @@ func is_targetable():
 func find_target():
 	if not player or not is_multiplayer_authority(): return
 	
-	var player_units = player.find_child("CombatUnits").get_children()
+	var player_units = player.find_child("Units").get_children()
 	
 	for unit in player_units:	
 		if not unit.is_targetable(): continue

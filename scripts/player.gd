@@ -72,7 +72,7 @@ func _ready():
 		ids.sort()
 		var i = ids.find(myid)
 
-		global_transform.origin.x += 500 * i
+		global_transform.origin.x += 25 * i
 		camera.change_current(true)	
 		
 		var sidebar = main.getUI().get_node("UnitShop/Sidebar")
@@ -95,34 +95,28 @@ func combatphase_setup(enemy_path = null, host:bool = true):
 	if is_defeated(): return
 	
 	var unit_parent = find_child("Units")
-	unit_parent.visible = false
-	var combatunit_parent = find_child("CombatUnits")	
 	
-	# NOTE: Just to make sure as sometimes in reset_combatphase issues with deleting (TEMPORARY FIX?)
-	for unit in combatunit_parent.get_children():
-		main.freeObject.rpc(unit.get_path())
+	current_enemy = null
 	
 	if enemy_path == null: # pve phase	
 		for unit in unit_parent.get_children():
-			var host_id = myid
-			copyUnit.rpc(unit.get_path(), combatunit_parent.get_path(), host, host_id)
-
-		combatunit_parent.visible = true
+			unit.combatphase_setup.rpc(host, myid)
 		return
+
 	
 	current_enemy = get_tree().root.get_node(enemy_path)
-	
+
 	if not host:	
-		combatunit_parent.global_transform.origin = current_enemy.find_child("CombatUnits").global_transform.origin
-		combatunit_parent.rotate_y(deg_to_rad(180))
+		unit_parent.global_transform.origin = current_enemy.find_child("Units").global_transform.origin
+		unit_parent.rotate_y(deg_to_rad(180))
 		main.changeCameraByID(current_enemy.name.to_int())
 				
 	for unit in unit_parent.get_children():
 		var host_id = myid if host else current_enemy.getID()
 		var attacker_id = current_enemy.getID() if host else myid
-		copyUnit.rpc(unit.get_path(), combatunit_parent.get_path(), host, host_id, attacker_id)
+		
+		unit.combatphase_setup.rpc(host, host_id, attacker_id)
 
-	combatunit_parent.visible = true
 
 @rpc("any_peer", "call_local", "reliable")
 func reset_combatphase():	
@@ -131,21 +125,29 @@ func reset_combatphase():
 		
 	if is_defeated(): return
 	
-	var unit_parent = find_child("Units")
-	var combatunit_parent = find_child("CombatUnits")
-	
-	for unit in combatunit_parent.get_children():
-		main.freeObject.rpc(unit.get_path())
-		
-	combatunit_parent.visible = false
-		
-	combatunit_parent.global_transform.origin = unit_parent.global_transform.origin
-	combatunit_parent.rotation = Vector3.ZERO
-	
 	current_enemy = null
 	
-	unit_parent.visible = true	
-	main.changeCamera(0)
+	var unit_parent = find_child("Units")
+	
+	if is_multiplayer_authority():
+		unit_parent.global_transform.origin = global_transform.origin
+		unit_parent.rotation = Vector3.ZERO
+
+		main.changeCamera(0)
+	
+	for unit in unit_parent.get_children():
+		unit.target = null
+		unit.change_mode(unit.PREP)
+		unit.dead = false
+		
+		if unit.is_multiplayer_authority():
+			unit.curr_health = unit.max_health
+			unit.target = null
+			unit.visible = true
+			unit.refresh_hpbar()
+			unit.toggleUI(true)
+			var tile_pos = unit.getTile().global_transform.origin
+			unit.global_transform.origin = Vector3(tile_pos.x, unit.global_transform.origin.y, tile_pos.z)
 
 @rpc("any_peer", "call_local", "reliable")
 func copyUnit(unit_path, parent_path, host: bool, host_id: int, attacker_id: int = -1):
@@ -252,15 +254,17 @@ func defeat():
 	for unit in getUnits():
 		unit.queue_free()
 		
-	var players_left = main.players
-	for player in players_left:
-		if player.is_defeated(): players_left.erase(player)
-		
-	if len(players_left) == 1:
-		trigger_win(1)
-	elif len(players_left) <= 1:
-		printerr("ERROR: no players left")
-		trigger_win(-1)
+	if multiplayer.is_server():
+		var players_left = main.players
+		for player in players_left:
+			if player.is_defeated(): players_left.erase(player)
+			# TODO: trigger new scheduling
+			
+		if len(players_left) == 1:
+			trigger_win(1)
+		elif len(players_left) <= 1:
+			printerr("ERROR: no players left")
+			trigger_win(-1)
 		
 func trigger_win(id):
 	print(str(id), " won the game!")
@@ -347,3 +351,5 @@ func spawn_item(path):
 	var instance = load(path).instantiate()
 
 	get_node("items").call("add_child", instance, true)
+	
+	instance.position += Vector3(randf_range(-1, 1), 0, randf_range(-1, 1))

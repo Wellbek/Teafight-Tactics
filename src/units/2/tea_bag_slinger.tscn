@@ -44,6 +44,9 @@ properties/8/replication_mode = 2
 properties/9/path = NodePath(".:move_speed")
 properties/9/spawn = true
 properties/9/replication_mode = 2
+properties/10/path = NodePath(".:visible")
+properties/10/spawn = true
+properties/10/replication_mode = 2
 
 [node name="TeaBagSlinger" type="CharacterBody3D" node_paths=PackedStringArray("attack_timer")]
 transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, 999, 1, 999)

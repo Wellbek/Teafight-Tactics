@@ -5,7 +5,7 @@ var preparing: bool = true
 var current_round = 0 # this is what is visible: [CURRENT_STAGE]-[CURRENT_ROUND]
 var total_round = 0 # this is the overall round counting to infinity
 var current_stage = 1
-const preparationDuration = 30 #30
+const preparationDuration = 10 #30
 const combatDuration = 45 #45
 const transition_time = 5
 
@@ -46,9 +46,10 @@ func trigger_overtime():
 	change_timer_color(Color.ORANGE_RED)
 	progressbar.self_modulate = Color.ORANGE_RED
 	
-	for combat_unit in main.getPlayer().get_node("CombatUnits").get_children():
-		combat_unit.change_attack_speed(combat_unit.attack_speed*3)
-		combat_unit.move_speed *= 1.5
+	for unit in main.getPlayer().get_node("Units").get_children():
+		unit.affected_by_urf = true
+		unit.change_attack_speed(unit.attack_speed*3)
+		unit.move_speed *= 1.5
 		
 		# https://leagueoflegends.fandom.com/wiki/Teamfight_Tactics_(game)#Rounds
 		# ×3 attack speed.
@@ -85,7 +86,7 @@ func startPreparationPhase():
 	if current_round >= 2 or current_stage >= 2: # skip first round
 		if multiplayer.is_server():
 			for player in main.players:
-				player.reset_combatphase.rpc_id(player.getID())
+				player.reset_combatphase.rpc()
 		
 			phase_gold_econ.rpc()
 			
@@ -245,7 +246,14 @@ func change_timer(time, start):
 # server func sent to all clients
 @rpc("authority", "call_local", "reliable")
 func transition():
-	urf_overtime = false
+	if urf_overtime:
+		urf_overtime = false
+		for unit in main.getPlayer().get_node("Units").get_children():
+			if unit.affected_by_urf: 
+				unit.affected_by_urf = false
+				unit.change_attack_speed(unit.attack_speed/3)
+				unit.move_speed /= 1.5
+
 	transitioning = true
 	change_timer_color(Color.CRIMSON)
 	wait_time = transition_time

@@ -49,6 +49,8 @@ const ENEMY_ATTACKER_COLOR = Color(0.918, 0.498, 0.176)
 
 var items = [null, null, null]
 
+var affected_by_urf = false
+
 func _ready():
 	attack_timer.timeout.connect(_on_attack_timer_timeout)
 	var viewport = find_child("SubViewport")
@@ -71,7 +73,8 @@ func _process(_delta):
 		find_target()
 
 func _physics_process(_delta):	
-	if target and not is_instance_valid(target): target = null
+	if target and (not is_instance_valid(target) or target.dead): 
+		target = null
 		
 	if target and mode == BATTLE:
 		var distance = global_transform.origin.distance_to(target.global_transform.origin)
@@ -175,10 +178,10 @@ func find_target():
 						targeting_neutral = true
 				return
 	
-	var enemy_units = player.get_current_enemy().find_child("CombatUnits").get_children()
+	var enemy_units = player.get_current_enemy().find_child("Units").get_children()
 	
 	for unit in enemy_units:	
-		if not unit.is_targetable(): continue
+		if not unit.is_targetable() or unit.dead: continue
 		
 		#if multiplayer.is_server(): print(unit.name, ": ", global_transform.origin.distance_to(unit.global_transform.origin))
 		
@@ -288,55 +291,58 @@ func take_dmg(raw_dmg):
 	
 	curr_health = 0 if dmg >= curr_health else curr_health-dmg
 	
-	ui.get_node("HPBar").value = curr_health/max_health * 100
+	refresh_hpbar()
 	
 	if curr_health <= 0 and not dead: 
 		dead = true
-		death.rpc(get_path())
-		main.freeObject.rpc(get_path())
+		death.rpc()
+		
+# synced via multiplayersync
+func refresh_hpbar():
+	ui.get_node("HPBar").value = curr_health/max_health * 100
 		
 @rpc("any_peer", "call_local", "reliable")
-func death(_path):
-	var instance = get_tree().root.get_node(_path)
-	var parent = instance.get_parent()
-	if instance != null and is_instance_valid(instance):		
-		if multiplayer.is_server():
-			var fighter_count = 0
-			for u in parent.get_children():
-				if u.get_mode() == BATTLE: fighter_count += 1
-			
-			if fighter_count <= 1:
-				main.unregister_battle()
-				var enemy = player.get_current_enemy()
-				
-				player.increment_lossstreak.rpc_id(player.getID())
-				
-				if enemy: enemy.increment_winstreak.rpc_id(enemy.getID())
-
-				# https://lolchess.gg/guide/damage?hl=en
-				var stage_damage = 0
-				var curr_stage = main.get_timer().get_stage()
-				if curr_stage == 3: stage_damage = 3
-				elif curr_stage == 4: stage_damage = 5
-				elif curr_stage == 5: stage_damage = 7
-				elif curr_stage == 6: stage_damage = 9
-				elif curr_stage == 7: stage_damage = 15
-				elif curr_stage >= 8: stage_damage = 150
-				
-				var unit_damage = 2
-				if enemy != null:
-					var enemy_unit_count = 0
-					for u in enemy.get_node("CombatUnits").get_children():
-						if is_instance_valid(u) and u != null and u.get_mode() == BATTLE: enemy_unit_count += 1
-					match enemy_unit_count:
-						1: unit_damage = 2
-						2: unit_damage = 4
-						3,4,5,6,7,8,9,10: unit_damage = enemy_unit_count+3
-				
-				player.lose_health.rpc(stage_damage + unit_damage)
-				check_battle_status()
-		instance.queue_free()
+func death():
+	dead = true
+	change_mode(PREP)
+	visible = false
+	
+	if multiplayer.is_server():
+		var fighter_count = 0
+		for u in get_parent().get_children():
+			if u.get_mode() == BATTLE: fighter_count += 1
 		
+		if fighter_count <= 1:
+			main.unregister_battle()
+			var enemy = player.get_current_enemy()
+			
+			player.increment_lossstreak.rpc_id(player.getID())
+			
+			if enemy: enemy.increment_winstreak.rpc_id(enemy.getID())
+
+			# https://lolchess.gg/guide/damage?hl=en
+			var stage_damage = 0
+			var curr_stage = main.get_timer().get_stage()
+			if curr_stage == 3: stage_damage = 3
+			elif curr_stage == 4: stage_damage = 5
+			elif curr_stage == 5: stage_damage = 7
+			elif curr_stage == 6: stage_damage = 9
+			elif curr_stage == 7: stage_damage = 15
+			elif curr_stage >= 8: stage_damage = 150
+			
+			var unit_damage = 2
+			if enemy != null:
+				var enemy_unit_count = 0
+				for u in enemy.get_node("Units").get_children():
+					if is_instance_valid(u) and u != null and u.get_mode() == BATTLE: enemy_unit_count += 1
+				match enemy_unit_count:
+					1: unit_damage = 2
+					2: unit_damage = 4
+					3,4,5,6,7,8,9,10: unit_damage = enemy_unit_count+3
+			
+			player.lose_health.rpc(stage_damage + unit_damage)
+			check_battle_status()
+
 # server func
 func check_battle_status():	
 	if not multiplayer.is_server(): return
@@ -424,3 +430,13 @@ func transfer_items(to_unit):
 		unequip_item.rpc(i)
 		if to_unit.can_equip_item():
 			to_unit.equip_item.rpc(item.get_path())
+				
+@rpc("any_peer", "call_local", "reliable")
+func combatphase_setup(host: bool, host_id: int, attacker_id: int = -1):
+	if is_targetable():
+		change_mode(BATTLE)
+		if not host: 
+			var client_id = multiplayer.get_unique_id()
+			if attacker_id == -1 or client_id != attacker_id and client_id != host_id:
+				set_bar_color(ENEMY_ATTACKER_COLOR)
+	else: toggleUI(false)
