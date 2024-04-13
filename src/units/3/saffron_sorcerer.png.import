@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cykiugiaxullf"
-path="res://.godot/imported/prep_cook.png-e224351f1e6672a6fe3ac48dd61d14b0.ctex"
+uid="uid://bm070sfb1s0gv"
+path="res://.godot/imported/saffron_sorcerer.png-3d9a6a671a2772a42bb423caae56e2b9.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://src/units/1/prep_cook.png"
-dest_files=["res://.godot/imported/prep_cook.png-e224351f1e6672a6fe3ac48dd61d14b0.ctex"]
+source_file="res://src/units/3/saffron_sorcerer.png"
+dest_files=["res://.godot/imported/saffron_sorcerer.png-3d9a6a671a2772a42bb423caae56e2b9.ctex"]
 
 [params]
 

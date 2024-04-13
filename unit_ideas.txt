@@ -1,0 +1,43 @@
+One Cost Units (7):
+
+Rosehip Ranger (Fruitful Forces)
+Ceylon Centurion (Black Brigade)
+Rainforest Recruit (Herbal Heroes)
+Green Genie (Green Guardians)
+Darjeeling Defender (Aromatic Avatars)
+Cardamom Castellan (Aromatic Avatars)
+Assam Archer (Black Brigade)
+
+Two Cost Units (7):
+
+Hibiscus Herald (Floral Fighters)
+Earl Grey Explorer (Black Brigade)
+Chamomile Charger (Herbal Heroes)
+Oolong Occultist (Exotic Enchanters)
+Rooibos Ritter (Fruitful Forces)
+Cascara Champion (Aromatic Avatars)
+Matcha Marksman (Green Guardians)
+
+Three Cost Units (6):
+Peppermint Pugilist (Herbal Heroes)
+Saffron Sorcerer (Exotic Enchanters)
+Jasmine Jouster (Floral Fighters)
+Chai Cyclops (Black Brigade)
+White Whisperer (Aromatic Avatars)
+Mint Mage (Green Guardians)
+
+Four Cost Units (6):
+
+Pu'erh Paladin (Black Brigade)
+Dragonfruit Druid (Exotic Enchanters)
+Vanilla Valkyrie (Floral Fighters)
+Lavender Lancer (Herbal Heroes)
+Ginseng Guardian (Fruitful Forces)
+Sencha Samurai (Green Guardians)
+
+Five Cost Units (4):
+
+Peony Phoenix (Floral Fighters)
+Elderberry Enchanter (Fruitful Forces)
+Bergamot Berserker (Aromatic Avatars)
+Verbena Vampire (Herbal Heroes)

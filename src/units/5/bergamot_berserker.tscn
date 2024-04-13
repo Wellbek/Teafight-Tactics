@@ -1,0 +1,95 @@
+[gd_scene load_steps=8 format=3 uid="uid://dcbt8yswhk2ey"]
+
+[ext_resource type="Script" path="res://scripts/unit.gd" id="1_wxu1l"]
+[ext_resource type="PackedScene" uid="uid://cmyaotov37g7y" path="res://src/ui/unit_ui.tscn" id="2_28ryx"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_tcrfm"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_51m0c"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7k0wg"]
+albedo_color = Color(0.392279, 0.258915, 0.0859693, 1)
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_vdcr0"]
+viewport_path = NodePath("SubViewport")
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_ol1ia"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 2
+properties/1/path = NodePath(".:scale")
+properties/1/spawn = true
+properties/1/replication_mode = 2
+properties/2/path = NodePath("SubViewport/UnitUI:visible")
+properties/2/spawn = true
+properties/2/replication_mode = 2
+properties/3/path = NodePath(".:curr_health")
+properties/3/spawn = true
+properties/3/replication_mode = 2
+properties/4/path = NodePath(".:attackrange")
+properties/4/spawn = true
+properties/4/replication_mode = 2
+properties/5/path = NodePath(".:max_health")
+properties/5/spawn = true
+properties/5/replication_mode = 2
+properties/6/path = NodePath(".:attack_dmg")
+properties/6/spawn = true
+properties/6/replication_mode = 2
+properties/7/path = NodePath(".:armor")
+properties/7/spawn = true
+properties/7/replication_mode = 2
+properties/8/path = NodePath(".:attack_speed")
+properties/8/spawn = true
+properties/8/replication_mode = 2
+properties/9/path = NodePath(".:move_speed")
+properties/9/spawn = true
+properties/9/replication_mode = 2
+properties/10/path = NodePath(".:visible")
+properties/10/spawn = true
+properties/10/replication_mode = 2
+
+[node name="BergamotBerserker" type="CharacterBody3D" node_paths=PackedStringArray("attack_timer")]
+transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, 999, 1, 999)
+collision_layer = 8
+collision_mask = 16
+axis_lock_linear_y = true
+axis_lock_angular_x = true
+axis_lock_angular_z = true
+motion_mode = 1
+slide_on_ceiling = false
+safe_margin = 0.5
+script = ExtResource("1_wxu1l")
+image = "res://src/units/5/bergamot_berserker.png"
+unitName = "Bergamot Berserker"
+type = 6
+cost = 2
+attackrange = 8.0
+max_health = 550.0
+attack_dmg = 40.0
+armor = 20.0
+attack_speed = 0.7
+attack_timer = NodePath("AttackTimer")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("CapsuleShape3D_tcrfm")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("CapsuleMesh_51m0c")
+surface_material_override/0 = SubResource("StandardMaterial3D_7k0wg")
+
+[node name="Sprite3D" type="Sprite3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+billboard = 1
+texture = SubResource("ViewportTexture_vdcr0")
+
+[node name="AttackTimer" type="Timer" parent="."]
+
+[node name="SubViewport" type="SubViewport" parent="."]
+disable_3d = true
+transparent_bg = true
+size = Vector2i(150, 69)
+
+[node name="UnitUI" parent="SubViewport" instance=ExtResource("2_28ryx")]
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_ol1ia")

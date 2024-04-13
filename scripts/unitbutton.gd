@@ -128,11 +128,6 @@ func generateButton():
 			unit_cost = i+1
 			break
 		rarity -= drop_table[i]
-		
-	# temporary constraint
-	if unit_cost > 2: 
-		#print(unit_cost)
-		unit_cost = 2
 	
 	var folder = unitFolder + "//" + str(unit_cost)
 	var dir = DirAccess.open(folder)
@@ -151,8 +146,10 @@ func generateButton():
 		5: background.color = Color(0.957, 0.773, 0.215)
 	
 	if main.getPlayer() == null or main.getPlayer().get_gold() < unit_cost:
+		self_modulate = Color(0.251, 0.251, 0.251, 0.89)
 		disabled = true
 	else: 
+		self_modulate = Color(1, 1, 1, 1)
 		disabled = false
 
 func change_bought(val):

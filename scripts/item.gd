@@ -23,11 +23,12 @@ var timer
 var equipped = false
 
 func _ready():
-	set_multiplayer_authority(get_parent().get_parent().getID())
-	multisync = find_child("MultiplayerSynchronizer", false)
-	
 	main = get_tree().root.get_child(0)	
 	timer = main.get_timer()
+	
+	set_multiplayer_authority(get_parent().get_parent().getID())
+	
+	multisync = find_child("MultiplayerSynchronizer", false)
 
 func _input_event(camera, event, position, normal, shape_idx):
 	if not is_multiplayer_authority(): return

@@ -396,11 +396,11 @@ visible = false
 transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, 0, 0.5, -4)
 
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
-_spawnable_scenes = PackedStringArray("res://src/units/1/prep_cook.tscn", "res://src/units/1/test_unit.tscn", "res://src/units/2/tea_bag_slinger.tscn")
+_spawnable_scenes = PackedStringArray("res://src/units/1/assam_archer.tscn", "res://src/units/1/cardamom_castellan.tscn", "res://src/units/1/ceylon_centurion.tscn", "res://src/units/1/darjeeling_defender.tscn", "res://src/units/1/green_genie.tscn", "res://src/units/1/rainforest_recruit.tscn", "res://src/units/1/rosehip_ranger.tscn", "res://src/units/2/hibiscus_herald.tscn", "res://src/units/2/cascara_champion.tscn", "res://src/units/2/chamomile_charger.tscn", "res://src/units/2/earl_grey_explorer.tscn", "res://src/units/2/matcha_marksman.tscn", "res://src/units/2/oolong_occultist.tscn", "res://src/units/2/rooibos_ritter.tscn", "res://src/units/3/chai_cyclops.tscn", "res://src/units/3/jasmine_jouster.tscn", "res://src/units/3/mint_mage.tscn", "res://src/units/3/peppermint_pugilist.tscn", "res://src/units/3/saffron_sorcerer.tscn", "res://src/units/3/white_whisperer.tscn", "res://src/units/4/dragonfruit_druid.tscn", "res://src/units/4/ginseng_guardian.tscn", "res://src/units/4/lavender_lancer.tscn", "res://src/units/4/pu_erh_paladin.tscn", "res://src/units/4/sencha_samurai.tscn", "res://src/units/4/vanilla_valkyrie.tscn", "res://src/units/5/bergamot_berserker.tscn", "res://src/units/5/elderberry_enchanter.tscn", "res://src/units/5/peony_phoenix.tscn", "res://src/units/5/verbena_vampire.tscn")
 spawn_path = NodePath("../Units")
 
 [node name="MultiplayerItemSpawner" type="MultiplayerSpawner" parent="."]
-_spawnable_scenes = PackedStringArray("res://src/items/bf_sword.tscn", "res://src/items/giants_belt.tscn")
+_spawnable_scenes = PackedStringArray("res://src/items/bf_sword.tscn", "res://src/items/chain_vest.tscn", "res://src/items/giants_belt.tscn", "res://src/items/recurve_bow.tscn")
 spawn_path = NodePath("../Items")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]

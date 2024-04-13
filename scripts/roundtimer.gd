@@ -270,7 +270,7 @@ func give_start_unit():
 	
 	var instance_path = folder + "//" + itemFileName + ".tscn"
 	
-	main.getPlayer().spawn_item.rpc(instance_path)
+	main.getPlayer().spawn_item.rpc_id(multiplayer.get_unique_id(), instance_path)
 	
 	game_start_label.visible = false
 	main.getUI().get_node("StageInfo").visible = true

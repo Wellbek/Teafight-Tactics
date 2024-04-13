@@ -24,7 +24,7 @@ func _on_tmp_host_pressed():
 	disable_enable()
 
 func _on_tmp_join_pressed():
-	peer.create_client("127.0.0.1", port)
+	peer.create_client("192.168.178.33", port)
 	multiplayer.multiplayer_peer = peer
 	disable_enable()
 

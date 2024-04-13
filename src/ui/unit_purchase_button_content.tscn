@@ -1,7 +1,9 @@
 [gd_scene load_steps=5 format=3 uid="uid://b6qey8lycnpgo"]
 
-[ext_resource type="Texture2D" uid="uid://cykiugiaxullf" path="res://src/units/1/prep_cook.png" id="1_7i48h"]
 [ext_resource type="Texture2D" uid="uid://dt00e868xcrql" path="res://assets/images/tft_coin.png" id="2_6yivg"]
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_62iwh"]
+load_path = "res://.godot/imported/prep_cook.png-e224351f1e6672a6fe3ac48dd61d14b0.ctex"
 
 [sub_resource type="LabelSettings" id="LabelSettings_i1nu6"]
 font_size = 100
@@ -42,7 +44,7 @@ offset_left = 9.99
 offset_top = 0.0879993
 offset_right = 0.312988
 offset_bottom = 0.188965
-texture = ExtResource("1_7i48h")
+texture = SubResource("CompressedTexture2D_62iwh")
 expand_mode = 1
 stretch_mode = 6
 

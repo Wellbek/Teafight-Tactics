@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bshwia00p3bfx"
-path="res://.godot/imported/test_unit.png-b2cdd332af8c0de8a533a020c31b2066.ctex"
+uid="uid://y73ccoc5thaw"
+path="res://.godot/imported/mint_mage.png-c9a877c8b7cd0ba934adcd54c10b8161.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://src/units/1/test_unit.png"
-dest_files=["res://.godot/imported/test_unit.png-b2cdd332af8c0de8a533a020c31b2066.ctex"]
+source_file="res://src/units/3/mint_mage.png"
+dest_files=["res://.godot/imported/mint_mage.png-c9a877c8b7cd0ba934adcd54c10b8161.ctex"]
 
 [params]
 

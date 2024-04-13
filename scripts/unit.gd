@@ -18,6 +18,7 @@ var multisync
 @export_file("*.png", "*.jpg") var image
 @export var unitName: String
 @export_enum("NONE","1", "2", "3") var star: int = 1
+@export_enum("Herbal Heroes", "Green Guardians", "Black Brigade", "Floral Fighters", "Exotic Enchanters", "Fruitful Forces", "Aromatic Avatars") var type: int = 0
 var ui: Control
 
 enum {SQUARE, HEX}
@@ -293,8 +294,7 @@ func take_dmg(raw_dmg):
 	
 	refresh_hpbar()
 	
-	if curr_health <= 0 and not dead: 
-		dead = true
+	if curr_health <= 0 and not dead:
 		death.rpc()
 		
 # synced via multiplayersync
@@ -303,6 +303,8 @@ func refresh_hpbar():
 		
 @rpc("any_peer", "call_local", "reliable")
 func death():
+	if dead: return
+	
 	dead = true
 	change_mode(PREP)
 	visible = false
@@ -312,7 +314,7 @@ func death():
 		for u in get_parent().get_children():
 			if u.get_mode() == BATTLE: fighter_count += 1
 		
-		if fighter_count <= 1:
+		if fighter_count <= 0:
 			main.unregister_battle()
 			var enemy = player.get_current_enemy()
 			
@@ -377,16 +379,16 @@ func equip_item(item_path):
 	var item = get_node(item_path)
 	
 	for i in range(len(items)):
-		if items[i] == null: 
-			items[i] = item
-			ui.get_node("HBoxContainer/" + str(i)).set_texture(item.get_texture())
+		if items[i] == null:
+			items[i] = item 
+			ui.get_node("HBoxContainer/" + str(i)).set_texture(item.get_texture() if item else null) 
 			break
 		
 	var sprite = get_node("Sprite3D")
 	if sprite.position.y == 1: sprite.position.y += 0.5
 	
 	
-	if is_multiplayer_authority():	
+	if is_multiplayer_authority() and item:	
 		attackrange += item.get_attack_range()
 		max_health += item.get_health()
 		attack_dmg += item.get_attack_dmg()

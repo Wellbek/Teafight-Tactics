@@ -50,7 +50,8 @@ func _process(delta):
 		find_target()
 
 func _physics_process(delta):	
-	if target and not is_instance_valid(target): target = null
+	if target and (not is_instance_valid(target) or target.dead): 
+		target = null
 		
 	if target:
 		var distance = global_transform.origin.distance_to(target.global_transform.origin)
@@ -127,7 +128,8 @@ func take_dmg(raw_dmg):
 func death(_path):
 	var instance = get_tree().root.get_node(_path)
 	var parent = instance.get_parent()
-	if instance != null and is_instance_valid(instance):		
+	if instance != null and is_instance_valid(instance):
+		instance.dead = true	
 		if multiplayer.is_server():
 			drop()
 			
@@ -138,7 +140,7 @@ func death(_path):
 			if fighter_count <= 1:
 				main.unregister_battle()
 				check_battle_status()
-		instance.queue_free()
+		instance.visible = false
 		
 # server func
 func check_battle_status():	
@@ -170,7 +172,7 @@ func drop():
 			
 			var instance_path = folder + "//" + itemFileName + ".tscn"
 			
-			player.spawn_item.rpc(instance_path)
+			player.spawn_item.rpc_id(get_multiplayer_authority(), instance_path)
 		2:
 			player.increase_gold(2)
 		3:
