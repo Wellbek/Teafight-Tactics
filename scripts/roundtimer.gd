@@ -5,12 +5,13 @@ var preparing: bool = true
 var current_round = 0 # this is what is visible: [CURRENT_STAGE]-[CURRENT_ROUND]
 var total_round = 0 # this is the overall round counting to infinity
 var current_stage = 1
-const MINIGAME_DURATION = 5
+const START_GAME_DURATION = 5
 const preparationDuration = 30 #30
 const combatDuration = 45 #45
 const transition_time = 5
 
 var unitShop: Control
+var game_start_label: Label
 var timer_label: Label
 var TIMER_DEFAULT_COLOR: Color
 var stage_label: Label
@@ -22,14 +23,12 @@ var transitioning = false
 
 var urf_overtime = false
 
-@onready var random_number = randi_range(0, 1000) if multiplayer.is_server else 0
-
 func _enter_tree():
 	set_multiplayer_authority(1) #only host controls time
 
 func _process(delta):
 	if current_stage == 1 and current_round == 1:
-		timer_label.text = str(time_left).get_slice(".", 0)
+		game_start_label.text = "Game is starting in " + str(time_left).get_slice(".", 0) + "..."
 		return
 	
 	if preparing == false and urf_overtime == false and not is_transitioning():
@@ -72,6 +71,7 @@ func trigger_overtime():
 func _ready():
 	main = get_tree().root.get_child(0)
 	unitShop = main.getUI().get_node("UnitShop")
+	game_start_label = main.getUI().get_node("GameStartLabel")
 	var stage_info = main.getUI().get_node("StageInfo")
 	timer_label = stage_info.get_node("TimerLabel")
 	TIMER_DEFAULT_COLOR = timer_label.get_label_settings().get_font_color()
@@ -80,20 +80,15 @@ func _ready():
 	set_multiplayer_authority(1)
 	
 func initialize():	
-	start_number_minigame.rpc()
+	start_game.rpc()
 	
 @rpc("authority", "call_local", "reliable")
-func start_number_minigame():
+func start_game():
 	increment_round()
 	
-	wait_time = MINIGAME_DURATION
+	wait_time = START_GAME_DURATION
 	start()
 
-@rpc("authority", "call_local", "reliable")
-func conclude_minigame(number):
-	get_parent().get_node("GUI/Carousel/Textfield").visible = false
-	get_parent().get_node("GUI/UnitShop").visible = true
-	startPreparationPhase()
 
 @rpc("authority", "call_local", "reliable")
 func startPreparationPhase():		
@@ -107,7 +102,7 @@ func startPreparationPhase():
 	
 		if current_round > 2 or current_stage >= 2: phase_gold_econ.rpc()
 		
-		if (current_stage == 1 and (current_round == 2 or current_round == 3 or current_round == 4)) or current_round == 7: 
+		if (current_stage == 1 and (current_round == 2 or current_round == 3 or current_round == 4)) or current_round == 6: 
 			for player in main.players:
 				for pve_round in player.get_node("PVERounds").get_children():
 					set_pve_round.rpc(pve_round.get_path(), false)
@@ -132,8 +127,11 @@ func startPreparationPhase():
 					
 		if main.getPlayer().getBoardGrid().can_place_unit():
 			main.getPlayer().getBoardGrid().toggle_label(true)
-	
-	wait_time = preparationDuration
+			
+	if current_round > 2 or current_stage >= 2:
+		unitShop.visible = true
+		wait_time = preparationDuration
+	else: wait_time = transition_time
 	start()
 
 @rpc("authority", "call_local", "reliable")
@@ -193,7 +191,7 @@ func startCombatPhase():
 # server func
 func matchmake():
 	# pve rounds
-	if (current_stage == 1 and (current_round == 2 or current_round == 3 or current_round == 4)) or current_round == 7: 
+	if (current_stage == 1 and (current_round == 2 or current_round == 3 or current_round == 4)) or current_round == 6: 
 		for player in main.players:
 			main.register_battle()
 			player.combatphase_setup.rpc_id(player.getID())
@@ -252,12 +250,32 @@ func _on_Timer_timeout():
 	if not multiplayer.is_server(): return
 	
 	if current_round == 1 and current_stage == 1:
-		print("the number was ", random_number)
-		conclude_minigame.rpc(random_number)
+		give_start_unit.rpc()
+		startPreparationPhase.rpc()
 		return
 	
 	change_phase()
 	
+@rpc("authority", "call_local", "reliable")
+func give_start_unit():
+	# give random unit (since we only spawn one and shop is not visible during start round just use first shop button)
+	var button1 = main.get_node("GUI/UnitShop/HBoxContainer/Button1")
+	button1.spawnUnit.rpc_id(1, multiplayer.get_unique_id(), main.getPlayer().get_path(), button1.unit_path)
+	
+	# give random item
+	var folder = "res://src/items"
+	var dir = DirAccess.open(folder)
+	var itemArray = dir.get_files()
+	var itemFileName = itemArray[randi() % itemArray.size()].get_slice(".",0)
+	
+	var instance_path = folder + "//" + itemFileName + ".tscn"
+	
+	main.getPlayer().spawn_item.rpc(instance_path)
+	
+	game_start_label.visible = false
+	main.getUI().get_node("StageInfo").visible = true
+	main.getUI().get_node("PlayerBars").visible = true
+		
 # server func	
 func change_phase():
 	if is_preparing():
@@ -320,13 +338,13 @@ func increment_round():
 			current_round = 1
 		else: current_round += 1
 	else:
-		if current_round >= 7:
+		if current_round >= 6:
 			current_stage += 1
 			current_round = 1
 		else: current_round += 1
 	
 	if not (current_stage == 1 and current_round == 1):
-		if not (current_stage == 1 and (current_round == 2 or current_round == 3 or current_round == 4)) and not current_round == 7: 
+		if not (current_stage == 1 and (current_round == 2 or current_round == 3 or current_round == 4)) and not current_round == 6: 
 			total_round += 1 # exclude pve rounds else matchmaking is messed up
 		
 		if current_round > 2 or current_stage >= 2 and main.getPlayer() != null: main.getPlayer().increase_xp(2)

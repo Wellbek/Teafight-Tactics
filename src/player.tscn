@@ -329,70 +329,70 @@ transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, -2, 0.5, -2)
 [node name="MeleeMinion2" parent="PVERounds/1-4" instance=ExtResource("5_o4yok")]
 transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, 2, 0.5, -2)
 
-[node name="2-7" type="Node3D" parent="PVERounds"]
+[node name="2-6" type="Node3D" parent="PVERounds"]
 visible = false
 
-[node name="Krug" parent="PVERounds/2-7" instance=ExtResource("7_aytho")]
+[node name="Krug" parent="PVERounds/2-6" instance=ExtResource("7_aytho")]
 transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, 5, 0.5, -2)
 
-[node name="Krug2" parent="PVERounds/2-7" instance=ExtResource("7_aytho")]
+[node name="Krug2" parent="PVERounds/2-6" instance=ExtResource("7_aytho")]
 transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, -6, 0.5, -2)
 
-[node name="Krug3" parent="PVERounds/2-7" instance=ExtResource("7_aytho")]
+[node name="Krug3" parent="PVERounds/2-6" instance=ExtResource("7_aytho")]
 transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, -4, 0.5, -5)
 
-[node name="3-7" type="Node3D" parent="PVERounds"]
+[node name="3-6" type="Node3D" parent="PVERounds"]
 visible = false
 
-[node name="GreaterMurkWolf" parent="PVERounds/3-7" instance=ExtResource("8_2pv24")]
+[node name="GreaterMurkWolf" parent="PVERounds/3-6" instance=ExtResource("8_2pv24")]
 transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, 0, 0.5, -2)
 
-[node name="MurkWolf" parent="PVERounds/3-7" instance=ExtResource("9_vx1kb")]
+[node name="MurkWolf" parent="PVERounds/3-6" instance=ExtResource("9_vx1kb")]
 transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, 2, 0.5, -6)
 
-[node name="MurkWolf2" parent="PVERounds/3-7" instance=ExtResource("9_vx1kb")]
+[node name="MurkWolf2" parent="PVERounds/3-6" instance=ExtResource("9_vx1kb")]
 transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, 4, 0.5, -6)
 
-[node name="MurkWolf3" parent="PVERounds/3-7" instance=ExtResource("9_vx1kb")]
+[node name="MurkWolf3" parent="PVERounds/3-6" instance=ExtResource("9_vx1kb")]
 transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, -2, 0.5, -6)
 
-[node name="MurkWolf4" parent="PVERounds/3-7" instance=ExtResource("9_vx1kb")]
+[node name="MurkWolf4" parent="PVERounds/3-6" instance=ExtResource("9_vx1kb")]
 transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, -4, 0.5, -6)
 
-[node name="4-7" type="Node3D" parent="PVERounds"]
+[node name="4-6" type="Node3D" parent="PVERounds"]
 visible = false
 
-[node name="CrimsonRaptor" parent="PVERounds/4-7" instance=ExtResource("10_nlyb5")]
+[node name="CrimsonRaptor" parent="PVERounds/4-6" instance=ExtResource("10_nlyb5")]
 transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, 0, 0.5, -6)
 
-[node name="Raptor" parent="PVERounds/4-7" instance=ExtResource("11_nw7nf")]
+[node name="Raptor" parent="PVERounds/4-6" instance=ExtResource("11_nw7nf")]
 transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, 4, 0.5, -4)
 
-[node name="Raptor2" parent="PVERounds/4-7" instance=ExtResource("11_nw7nf")]
+[node name="Raptor2" parent="PVERounds/4-6" instance=ExtResource("11_nw7nf")]
 transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, -4, 0.5, -4)
 
-[node name="Raptor3" parent="PVERounds/4-7" instance=ExtResource("11_nw7nf")]
+[node name="Raptor3" parent="PVERounds/4-6" instance=ExtResource("11_nw7nf")]
 transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, -5, 0.5, -2)
 
-[node name="Raptor4" parent="PVERounds/4-7" instance=ExtResource("11_nw7nf")]
+[node name="Raptor4" parent="PVERounds/4-6" instance=ExtResource("11_nw7nf")]
 transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, 5, 0.5, -2)
 
-[node name="5-7" type="Node3D" parent="PVERounds"]
+[node name="5-6" type="Node3D" parent="PVERounds"]
 visible = false
 
-[node name="ElderDrake" parent="PVERounds/5-7" instance=ExtResource("12_kbg85")]
+[node name="ElderDrake" parent="PVERounds/5-6" instance=ExtResource("12_kbg85")]
 transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, 0, 0.5, -4)
 
-[node name="6-7" type="Node3D" parent="PVERounds"]
+[node name="6-6" type="Node3D" parent="PVERounds"]
 visible = false
 
-[node name="RiftHerald" parent="PVERounds/6-7" instance=ExtResource("13_eabih")]
+[node name="RiftHerald" parent="PVERounds/6-6" instance=ExtResource("13_eabih")]
 transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, 0, 0.5, -4)
 
-[node name="7-7" type="Node3D" parent="PVERounds"]
+[node name="7-6" type="Node3D" parent="PVERounds"]
 visible = false
 
-[node name="RiftHerald" parent="PVERounds/7-7" instance=ExtResource("13_eabih")]
+[node name="RiftHerald" parent="PVERounds/7-6" instance=ExtResource("13_eabih")]
 transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, 0, 0.5, -4)
 
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]

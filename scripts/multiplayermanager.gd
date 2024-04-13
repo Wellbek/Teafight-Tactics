@@ -35,8 +35,8 @@ func add_player(id = 1):
 	player.name = str(id)
 	player_bar.name = str(id)
 	
-	get_tree().root.get_child(0).get_node("GUI/PlayerBars/ColorRect/VBoxContainer").call_deferred("add_child", player_bar, true)
-	get_tree().root.get_child(0).find_child("World").call_deferred("add_child", player, true)
+	get_tree().root.get_child(0).get_node("GUI/PlayerBars/ColorRect/VBoxContainer").call("add_child", player_bar, true)
+	get_tree().root.get_child(0).find_child("World").call("add_child", player, true)
 	
 	main.players.append(player)
 
@@ -50,7 +50,7 @@ func start_game():
 	
 	if not OS.has_feature("dedicated_server"):
 		add_player()
-		
+
 	timer.initialize()
 	
 func disable_enable():

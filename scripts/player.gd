@@ -388,4 +388,5 @@ func spawn_item(path):
 
 	get_node("Items").call("add_child", instance, true)
 	
-	instance.position += Vector3(randf_range(-1, 1), 0, randf_range(-1, 1))
+	if is_multiplayer_authority():
+		instance.position += Vector3(randf_range(-1, 1), 0, randf_range(-1, 1))
