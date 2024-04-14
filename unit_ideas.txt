@@ -1,12 +1,12 @@
 One Cost Units (7):
 
-Rosehip Ranger (Fruitful Forces)
-Ceylon Centurion (Black Brigade)
-Rainforest Recruit (Herbal Heroes)
-Green Genie (Green Guardians)
-Darjeeling Defender (Aromatic Avatars)
-Cardamom Castellan (Aromatic Avatars)
-Assam Archer (Black Brigade)
+Rosehip Ranger (Fruitful Forces) - kogmaw
+Ceylon Centurion (Black Brigade) - garen
+Rainforest Recruit (Herbal Heroes) - kobuko
+Green Genie (Green Guardians) - ahri
+Darjeeling Defender (Aromatic Avatars) - Malphite
+Cardamom Castellan (Aromatic Avatars) - jax
+Assam Archer (Black Brigade) - caitlyn
 
 Two Cost Units (7):
 
@@ -41,3 +41,11 @@ Peony Phoenix (Floral Fighters)
 Elderberry Enchanter (Fruitful Forces)
 Bergamot Berserker (Aromatic Avatars)
 Verbena Vampire (Herbal Heroes)
+
+
+ff: purple
+bb: dark
+herb: red-brown
+green: green
+aromatic: yellow
+floral: soft light colors

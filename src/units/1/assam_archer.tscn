@@ -7,8 +7,8 @@
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_51m0c"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_oobci"]
-albedo_color = Color(0.866621, 0.290166, 0.290166, 1)
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hifnu"]
+albedo_color = Color(0.258824, 0.113725, 0.0823529, 1)
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_7fr4r"]
 viewport_path = NodePath("SubViewport")
@@ -61,11 +61,13 @@ script = ExtResource("1_yilxj")
 image = "res://src/units/1/assam_archer.png"
 unitName = "Assam Archer"
 type = 2
-attackrange = 2.0
-max_health = 650.0
+move_speed = 4.0
+attackrange = 8.0
+max_health = 500.0
 attack_dmg = 50.0
-armor = 40.0
-attack_speed = 0.55
+armor = 15.0
+attack_speed = 0.7
+crit_change = 0.25
 attack_timer = NodePath("AttackTimer")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
@@ -73,7 +75,7 @@ shape = SubResource("CapsuleShape3D_tcrfm")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 mesh = SubResource("CapsuleMesh_51m0c")
-surface_material_override/0 = SubResource("StandardMaterial3D_oobci")
+surface_material_override/0 = SubResource("StandardMaterial3D_hifnu")
 
 [node name="Sprite3D" type="Sprite3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)

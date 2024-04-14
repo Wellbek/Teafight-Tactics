@@ -42,6 +42,7 @@ var dead = false
 @export var attack_dmg = 20.0
 @export var armor = 30.0
 @export var attack_speed = 0.8
+@export var crit_change = 0.25
 @export var attack_timer: Timer
 
 const LOCAL_COLOR = Color(0.2, 0.898, 0.243)

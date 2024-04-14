@@ -7,8 +7,8 @@
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_51m0c"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7odyb"]
-albedo_color = Color(0.992172, 0.88275, 0.713726, 1)
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3y5fq"]
+albedo_color = Color(0.643137, 0.0156863, 0.431373, 1)
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_vdcr0"]
 viewport_path = NodePath("SubViewport")
@@ -65,11 +65,12 @@ script = ExtResource("1_j28e8")
 image = "res://src/units/1/rosehip_ranger.png"
 unitName = "Rosehip Ranger"
 type = 5
-attackrange = 2.0
-max_health = 600.0
-attack_dmg = 40.0
-armor = 45.0
-attack_speed = 0.75
+move_speed = 4.0
+attackrange = 6.0
+max_health = 500.0
+attack_dmg = 30.0
+armor = 15.0
+attack_speed = 0.7
 attack_timer = NodePath("AttackTimer")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
@@ -77,7 +78,7 @@ shape = SubResource("CapsuleShape3D_tcrfm")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 mesh = SubResource("CapsuleMesh_51m0c")
-surface_material_override/0 = SubResource("StandardMaterial3D_7odyb")
+surface_material_override/0 = SubResource("StandardMaterial3D_3y5fq")
 
 [node name="Sprite3D" type="Sprite3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
