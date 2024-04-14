@@ -784,6 +784,7 @@ focus_mode = 0
 text = "Join"
 
 [node name="TmpStartGame" type="Button" parent="GUI"]
+visible = false
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5

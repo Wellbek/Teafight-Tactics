@@ -147,7 +147,7 @@ func _input(event):
 			var query := PhysicsRayQueryParameters3D.create(origin, end, 0b00000000_00000000_00000010_00000111)
 			var result := space_state.intersect_ray(query)
 			if not result.is_empty() and result.collider != null:
-				if result.collider.get_collision_layer() == 2 and result.collider != coll and result.collider.is_multiplayer_authority():
+				if result.collider.get_collision_layer() == 2 and result.collider != coll and result.collider.is_multiplayer_authority() and result.collider.get_parent().visible:
 					if coll:
 						# reset highlight of last tile
 						changeColor(coll.find_children("MeshInstance3D")[0], Color.CYAN)
@@ -246,7 +246,7 @@ func get_ui():
 	return ui
 	
 func toggleGrid(value):
-	player.getBoardGrid().visible = value and timer.is_preparing()
+	player.getBoardGrid().visible = value and timer.is_preparing() and not timer.is_transitioning()
 	player.getBenchGrid().visible = value
 
 func setDragging(value):
