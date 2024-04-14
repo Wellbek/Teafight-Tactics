@@ -5,3 +5,4 @@
 [resource]
 albedo_color = Color(1, 0.454902, 0.352941, 1)
 albedo_texture = ExtResource("1_atbts")
+disable_receive_shadows = true
