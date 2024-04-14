@@ -1,0 +1,8 @@
+[gd_resource type="StandardMaterial3D" load_steps=2 format=3 uid="uid://b4csbwlh4mi8t"]
+
+[ext_resource type="Texture2D" uid="uid://2e6eif2p0rj7" path="res://assets/KayKit_Adventurers_1.0_FREE/Characters/gltf/rogue_texture.png" id="1_s0yfp"]
+
+[resource]
+albedo_color = Color(1, 0.152941, 1, 1)
+albedo_texture = ExtResource("1_s0yfp")
+disable_receive_shadows = true

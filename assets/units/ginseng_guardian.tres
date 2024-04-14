@@ -1,0 +1,8 @@
+[gd_resource type="StandardMaterial3D" load_steps=2 format=3 uid="uid://be4a1d6o06q0u"]
+
+[ext_resource type="Texture2D" uid="uid://bvkjs0y1q66s5" path="res://assets/KayKit_Adventurers_1.0_FREE/Characters/gltf/Knight_knight_texture.png" id="1_8lvpq"]
+
+[resource]
+albedo_color = Color(0.980453, 0.234974, 0.729351, 1)
+albedo_texture = ExtResource("1_8lvpq")
+disable_receive_shadows = true

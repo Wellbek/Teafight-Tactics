@@ -1,0 +1,8 @@
+[gd_resource type="StandardMaterial3D" load_steps=2 format=3 uid="uid://byfvrcjebk0ww"]
+
+[ext_resource type="Texture2D" uid="uid://5s56shy2ox1u" path="res://assets/KayKit_Skeletons_1.0_FREE/characters/gltf/Skeleton_Mage_skeleton_texture.png" id="1_hdj18"]
+
+[resource]
+albedo_color = Color(1, 1, 0.67451, 1)
+albedo_texture = ExtResource("1_hdj18")
+disable_receive_shadows = true

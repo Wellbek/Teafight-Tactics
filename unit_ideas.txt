@@ -10,37 +10,38 @@ Assam Archer (Black Brigade) - caitlyn
 
 Two Cost Units (7):
 
-Hibiscus Herald (Floral Fighters)
-Earl Grey Explorer (Black Brigade)
-Chamomile Charger (Herbal Heroes)
-Oolong Occultist (Exotic Enchanters)
-Rooibos Ritter (Fruitful Forces)
-Cascara Champion (Aromatic Avatars)
-Matcha Marksman (Green Guardians)
+Hibiscus Herald (Floral Fighters) - Janna
+Earl Grey Explorer (Black Brigade) - teemo
+Lavender Lancer (Herbal Heroes) - qiyana
+Oolong Occultist (Exotic Enchanters) - zyra
+Rooibos Ritter (Fruitful Forces) - Shen
+Cascara Champion (Aromatic Avatars) - Aatrox
+Matcha Marksman (Green Guardians) - kindred
 
 Three Cost Units (6):
-Peppermint Pugilist (Herbal Heroes)
-Saffron Sorcerer (Exotic Enchanters)
-Jasmine Jouster (Floral Fighters)
-Chai Cyclops (Black Brigade)
-White Whisperer (Aromatic Avatars)
-Mint Mage (Green Guardians)
+
+Peppermint Pugilist (Herbal Heroes) - yone
+Saffron Sorcerer (Exotic Enchanters) - soraka
+Jasmine Jouster (Floral Fighters) - illaoi
+Chai Cyclops (Black Brigade) - voli
+White Whisperer (Aromatic Avatars) - alune
+Mint Mage (Green Guardians) - zoe
 
 Four Cost Units (6):
 
-Pu'erh Paladin (Black Brigade)
-Dragonfruit Druid (Exotic Enchanters)
-Vanilla Valkyrie (Floral Fighters)
-Lavender Lancer (Herbal Heroes)
-Ginseng Guardian (Fruitful Forces)
-Sencha Samurai (Green Guardians)
+Pu'erh Paladin (Black Brigade) - galio
+Dragonfruit Druid (Exotic Enchanters) - Lillia
+Vanilla Valkyrie (Floral Fighters) - kaisa
+Chamomile Charger (Herbal Heroes) - sylas
+Ginseng Guardian (Fruitful Forces) - Nautilus
+Sencha Samurai (Green Guardians) - Kayn
 
 Five Cost Units (4):
 
-Peony Phoenix (Floral Fighters)
-Elderberry Enchanter (Fruitful Forces)
-Bergamot Berserker (Aromatic Avatars)
-Verbena Vampire (Herbal Heroes)
+Peony Phoenix (Floral Fighters) - lissandra
+Elderberry Enchanter (Fruitful Forces) - azir
+Bergamot Berserker (Aromatic Avatars) - udyr
+Verbena Vampire (Herbal Heroes) - irelia
 
 
 ff: purple
@@ -49,3 +50,4 @@ herb: red-brown
 green: green
 aromatic: yellow
 floral: soft light colors
+ee: 

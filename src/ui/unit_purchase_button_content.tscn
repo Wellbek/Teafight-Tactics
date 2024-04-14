@@ -3,7 +3,6 @@
 [ext_resource type="Texture2D" uid="uid://dt00e868xcrql" path="res://assets/images/tft_coin.png" id="2_6yivg"]
 
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_62iwh"]
-load_path = "res://.godot/imported/prep_cook.png-e224351f1e6672a6fe3ac48dd61d14b0.ctex"
 
 [sub_resource type="LabelSettings" id="LabelSettings_i1nu6"]
 font_size = 100

@@ -1,0 +1,22 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://cmqey85tyohm2"
+path="res://.godot/imported/Skeleton_Crossbow.obj-4e6b7ebcf09582f9d0c6d093e5fbceb6.mesh"
+
+[deps]
+
+files=["res://.godot/imported/Skeleton_Crossbow.obj-4e6b7ebcf09582f9d0c6d093e5fbceb6.mesh"]
+
+source_file="res://assets/KayKit_Skeletons_1.0_FREE/assets/obj/Skeleton_Crossbow.obj"
+dest_files=["res://.godot/imported/Skeleton_Crossbow.obj-4e6b7ebcf09582f9d0c6d093e5fbceb6.mesh", "res://.godot/imported/Skeleton_Crossbow.obj-4e6b7ebcf09582f9d0c6d093e5fbceb6.mesh"]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+optimize_mesh=true
+force_disable_mesh_compression=false

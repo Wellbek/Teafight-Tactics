@@ -1,0 +1,124 @@
+[gd_scene load_steps=31 format=3 uid="uid://binnwk55jqpvx"]
+
+[ext_resource type="PackedScene" uid="uid://c0jwmq15hwydi" path="res://src/units/1/assam_archer.tscn" id="1_fhilr"]
+[ext_resource type="PackedScene" uid="uid://cfx2xfprxcot4" path="res://src/units/1/cardamom_castellan.tscn" id="2_f48ng"]
+[ext_resource type="PackedScene" uid="uid://c1r5t4e8vxrye" path="res://src/units/1/ceylon_centurion.tscn" id="3_5c2ne"]
+[ext_resource type="PackedScene" uid="uid://d1nixaa22ysjl" path="res://src/units/1/darjeeling_defender.tscn" id="4_yln87"]
+[ext_resource type="PackedScene" uid="uid://d3mh5cma7fn68" path="res://src/units/1/green_genie.tscn" id="5_7wh1k"]
+[ext_resource type="PackedScene" uid="uid://d2w004fvayh0b" path="res://src/units/1/rainforest_recruit.tscn" id="6_32t1y"]
+[ext_resource type="PackedScene" uid="uid://ctrydh0tdlcs5" path="res://src/units/1/rosehip_ranger.tscn" id="7_eafjh"]
+[ext_resource type="PackedScene" uid="uid://bbvjn836rh28f" path="res://src/units/2/cascara_champion.tscn" id="8_spaav"]
+[ext_resource type="PackedScene" uid="uid://r3hxnreaxa2k" path="res://src/units/2/earl_grey_explorer.tscn" id="9_gvoer"]
+[ext_resource type="PackedScene" uid="uid://bcxkjvdmeu8bt" path="res://src/units/2/hibiscus_herald.tscn" id="10_d2n6r"]
+[ext_resource type="PackedScene" uid="uid://b5xhpapcf2kpj" path="res://src/units/2/lavender_lancer.tscn" id="11_i0fw0"]
+[ext_resource type="PackedScene" uid="uid://cjmuhdq00e0a7" path="res://src/units/2/matcha_marksman.tscn" id="12_m52h6"]
+[ext_resource type="PackedScene" uid="uid://fmkp1lfppcna" path="res://src/units/2/oolong_occultist.tscn" id="13_2upg4"]
+[ext_resource type="PackedScene" uid="uid://dqukyvhqt66u8" path="res://src/units/2/rooibos_ritter.tscn" id="14_1pe1v"]
+[ext_resource type="PackedScene" uid="uid://b2hjbkvd3lq48" path="res://src/units/3/chai_cyclops.tscn" id="15_3x3f1"]
+[ext_resource type="PackedScene" uid="uid://bdwo8iyg0j1mv" path="res://src/units/3/jasmine_jouster.tscn" id="16_auhpw"]
+[ext_resource type="PackedScene" uid="uid://ba8a1abc8xiff" path="res://src/units/3/mint_mage.tscn" id="17_sjpjc"]
+[ext_resource type="PackedScene" uid="uid://hvhcnmlw8np5" path="res://src/units/3/peppermint_pugilist.tscn" id="18_xo324"]
+[ext_resource type="PackedScene" uid="uid://8lotmyg6u27o" path="res://src/units/3/saffron_sorcerer.tscn" id="19_i43mj"]
+[ext_resource type="PackedScene" uid="uid://cf05m70ocljh5" path="res://src/units/3/white_whisperer.tscn" id="20_0k1k3"]
+[ext_resource type="PackedScene" uid="uid://c0uaj4iphtvic" path="res://src/units/4/chamomile_charger.tscn" id="21_e8fwm"]
+[ext_resource type="PackedScene" uid="uid://rhhlfy5gou3h" path="res://src/units/4/dragonfruit_druid.tscn" id="22_adu5j"]
+[ext_resource type="PackedScene" uid="uid://3axktrtvm28m" path="res://src/units/4/ginseng_guardian.tscn" id="23_dedyd"]
+[ext_resource type="PackedScene" uid="uid://dawiq0duv1gfd" path="res://src/units/4/pu_erh_paladin.tscn" id="24_albg2"]
+[ext_resource type="PackedScene" uid="uid://b6gxgeyemvv1r" path="res://src/units/4/sencha_samurai.tscn" id="25_ap70l"]
+[ext_resource type="PackedScene" uid="uid://o07mru0lcrcx" path="res://src/units/4/vanilla_valkyrie.tscn" id="26_30mw2"]
+[ext_resource type="PackedScene" uid="uid://dcbt8yswhk2ey" path="res://src/units/5/bergamot_berserker.tscn" id="27_e5ums"]
+[ext_resource type="PackedScene" uid="uid://bnej1o7baypu2" path="res://src/units/5/elderberry_enchanter.tscn" id="28_1nfdw"]
+[ext_resource type="PackedScene" uid="uid://u0xsbas6a68n" path="res://src/units/5/peony_phoenix.tscn" id="29_kov61"]
+[ext_resource type="PackedScene" uid="uid://drvak85pulspo" path="res://src/units/5/verbena_vampire.tscn" id="30_hmaf5"]
+
+[node name="Node3D" type="Node3D"]
+
+[node name="AssamArcher" parent="." instance=ExtResource("1_fhilr")]
+transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, -3.74978, 0, 2.70878)
+
+[node name="CardamomCastellan" parent="." instance=ExtResource("2_f48ng")]
+transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, 16.4468, 0, 2.65389)
+
+[node name="CeylonCenturion" parent="." instance=ExtResource("3_5c2ne")]
+transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, -5.25995, 0, 2.69833)
+
+[node name="DarjeelingDefender" parent="." instance=ExtResource("4_yln87")]
+transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, 15.1688, 0, 2.6184)
+
+[node name="GreenGenie" parent="." instance=ExtResource("5_7wh1k")]
+transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, 2.84892, 0, 2.55231)
+
+[node name="RainforestRecruit" parent="." instance=ExtResource("6_32t1y")]
+transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, 9.39193, 0, 2.58882)
+
+[node name="RosehipRanger" parent="." instance=ExtResource("7_eafjh")]
+transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, -12.7121, 0.501835, 1.78679)
+
+[node name="CascaraChampion" parent="." instance=ExtResource("8_spaav")]
+transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, 16.1177, 0, 4.47999)
+
+[node name="EarlGreyExplorer" parent="." instance=ExtResource("9_gvoer")]
+transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, -4.56682, 0, 4.36778)
+
+[node name="HibiscusHerald" parent="." instance=ExtResource("10_d2n6r")]
+transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, 21.799, 0, 2.30466)
+
+[node name="LavenderLancer" parent="." instance=ExtResource("11_i0fw0")]
+transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, 9.24685, 0, 4.22586)
+
+[node name="MatchaMarksman" parent="." instance=ExtResource("12_m52h6")]
+transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, 3.05477, -9.53674e-07, 4.04222)
+
+[node name="OolongOccultist" parent="." instance=ExtResource("13_2upg4")]
+transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, -20.5321, 0, 2.7369)
+
+[node name="RooibosRitter" parent="." instance=ExtResource("14_1pe1v")]
+transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, -14.1143, 0, 5.21428)
+
+[node name="ChaiCyclops" parent="." instance=ExtResource("15_3x3f1")]
+transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, -3.50192, 0, 5.22407)
+
+[node name="JasmineJouster" parent="." instance=ExtResource("16_auhpw")]
+transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, 21.8344, 0, 4.70142)
+
+[node name="MintMage" parent="." instance=ExtResource("17_sjpjc")]
+transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, 3.54784, 0, 5.914)
+
+[node name="PeppermintPugilist" parent="." instance=ExtResource("18_xo324")]
+transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, 9.49514, -9.53674e-07, 6.16952)
+
+[node name="SaffronSorcerer" parent="." instance=ExtResource("19_i43mj")]
+transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, -20.2564, 0.0229685, 5.01142)
+
+[node name="WhiteWhisperer" parent="." instance=ExtResource("20_0k1k3")]
+transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, 15.1871, 0, 6.64956)
+
+[node name="ChamomileCharger" parent="." instance=ExtResource("21_e8fwm")]
+transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, 9.63065, 0.229021, 8.33624)
+
+[node name="DragonfruitDruid" parent="." instance=ExtResource("22_adu5j")]
+transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, -19.7987, 0, 7.3287)
+
+[node name="GinsengGuardian" parent="." instance=ExtResource("23_dedyd")]
+transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, -12.3759, 0, 4.68551)
+
+[node name="PuErhPaladin" parent="." instance=ExtResource("24_albg2")]
+transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, -3.77981, 0, 6.9227)
+
+[node name="SenchaSamurai" parent="." instance=ExtResource("25_ap70l")]
+transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, 3.1098, 0, 8.68986)
+
+[node name="VanillaValkyrie" parent="." instance=ExtResource("26_30mw2")]
+transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, 21.2802, -2.38419e-07, 6.90717)
+
+[node name="BergamotBerserker" parent="." instance=ExtResource("27_e5ums")]
+transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, 14.8046, 0, 8.53658)
+
+[node name="ElderberryEnchanter" parent="." instance=ExtResource("28_1nfdw")]
+transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, -12.5059, 9.53674e-07, 7.9157)
+
+[node name="PeonyPhoenix" parent="." instance=ExtResource("29_kov61")]
+transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, 21.5456, 0, 9.26576)
+
+[node name="VerbenaVampire" parent="." instance=ExtResource("30_hmaf5")]
+transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, 8.74422, 0, 10.6213)

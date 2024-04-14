@@ -1,0 +1,43 @@
+[gd_scene load_steps=5 format=3 uid="uid://cpils0e4qynpo"]
+
+[ext_resource type="PackedScene" uid="uid://cl6utjm822ays" path="res://assets/KayKit_Skeletons_1.0_FREE/characters/gltf/Skeleton_Rogue.glb" id="1_15hwd"]
+[ext_resource type="Texture2D" uid="uid://dlo1u0wan55md" path="res://assets/KayKit_Skeletons_1.0_FREE/characters/gltf/Skeleton_Rogue_skeleton_texture.png" id="2_smy8y"]
+[ext_resource type="Material" uid="uid://ubhrl7n8i00q" path="res://assets/units/earl_grey_explorer.tres" id="3_oy0aj"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_p8sm5"]
+albedo_color = Color(0.407843, 0.407843, 0.407843, 1)
+albedo_texture = ExtResource("2_smy8y")
+disable_receive_shadows = true
+
+[node name="Skeleton_Rogue" instance=ExtResource("1_15hwd")]
+
+[node name="Skeleton_Rogue_Hood" parent="Rig/Skeleton3D" index="0"]
+transform = Transform3D(1, -1.42109e-14, 1.42109e-14, 1.42109e-14, 1, 6.17863e-15, -1.42109e-14, -6.17863e-15, 1, 1.90735e-06, 1.21587, -1.37836e-07)
+visible = false
+
+[node name="Skeleton_Rogue_Cape" parent="Rig/Skeleton3D" index="1"]
+transform = Transform3D(1, 1.25214e-21, 0, -1.25214e-21, 1, 0, 0, 0, 1, -1.90735e-06, 1.21587, -1.3411e-07)
+
+[node name="Skeleton_Rogue_Cape" parent="Rig/Skeleton3D/Skeleton_Rogue_Cape" index="0"]
+surface_material_override/0 = SubResource("StandardMaterial3D_p8sm5")
+
+[node name="Skeleton_Rogue_ArmLeft" parent="Rig/Skeleton3D" index="2"]
+surface_material_override/0 = ExtResource("3_oy0aj")
+
+[node name="Skeleton_Rogue_ArmRight" parent="Rig/Skeleton3D" index="3"]
+surface_material_override/0 = ExtResource("3_oy0aj")
+
+[node name="Skeleton_Rogue_Body" parent="Rig/Skeleton3D" index="4"]
+surface_material_override/0 = ExtResource("3_oy0aj")
+
+[node name="Skeleton_Rogue_Head" parent="Rig/Skeleton3D" index="6"]
+surface_material_override/0 = ExtResource("3_oy0aj")
+
+[node name="Skeleton_Rogue_Jaw" parent="Rig/Skeleton3D" index="7"]
+surface_material_override/0 = ExtResource("3_oy0aj")
+
+[node name="Skeleton_Rogue_LegLeft" parent="Rig/Skeleton3D" index="8"]
+surface_material_override/0 = ExtResource("3_oy0aj")
+
+[node name="Skeleton_Rogue_LegRight" parent="Rig/Skeleton3D" index="9"]
+surface_material_override/0 = ExtResource("3_oy0aj")

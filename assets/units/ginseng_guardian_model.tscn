@@ -1,0 +1,102 @@
+[gd_scene load_steps=3 format=3 uid="uid://cww5ltvcddyk0"]
+
+[ext_resource type="PackedScene" uid="uid://beqrr3dtamd2u" path="res://assets/KayKit_Adventurers_1.0_FREE/Characters/gltf/Knight.glb" id="1_hf2c7"]
+[ext_resource type="Material" uid="uid://be4a1d6o06q0u" path="res://assets/units/ginseng_guardian.tres" id="2_8i1rs"]
+
+[node name="Knight" instance=ExtResource("1_hf2c7")]
+
+[node name="Skeleton3D" parent="Rig" index="0"]
+bones/1/position = Vector3(-2.3194e-08, 0.373082, 0.0972827)
+bones/2/rotation = Quaternion(0.0969142, -0.215371, -0.0214854, 0.971474)
+bones/3/rotation = Quaternion(0.0633105, -1.35372e-08, -0.0295222, 0.997557)
+bones/4/position = Vector3(0.212007, 0.134132, 0.0345781)
+bones/4/rotation = Quaternion(-0.663522, -0.518898, -0.358999, 0.401998)
+bones/5/rotation = Quaternion(7.26026e-08, -5.63944e-08, -0.731192, 0.682172)
+bones/7/rotation = Quaternion(-0.125852, -0.636367, -0.0444701, 0.75975)
+bones/8/rotation = Quaternion(-0.386176, -0.352154, -0.600734, 0.604958)
+bones/14/rotation = Quaternion(-0.584963, 0.171521, 0.63295, 0.477255)
+bones/15/rotation = Quaternion(2.28763e-08, 7.50534e-08, 0.499767, 0.86616)
+bones/17/rotation = Quaternion(-0.113176, 0.201362, -0.0272572, 0.972575)
+bones/18/rotation = Quaternion(1.08294e-08, -1.34635e-08, 0.707107, 0.707107)
+bones/21/rotation = Quaternion(-0.0828052, 0.21566, 0.0183575, 0.972778)
+bones/24/position = Vector3(0.170945, 0.113587, 0.0640642)
+bones/24/rotation = Quaternion(0.98453, 0.0458575, 0.0317534, 0.166103)
+bones/25/rotation = Quaternion(0.420344, 6.546e-08, -2.95093e-07, 0.907365)
+bones/26/rotation = Quaternion(-0.572975, -0.268672, 0.0180077, 0.774074)
+bones/28/position = Vector3(-0.170945, 0.113587, -0.056946)
+bones/28/rotation = Quaternion(0.980075, -0.0792642, -0.0131917, -0.181649)
+bones/29/rotation = Quaternion(0.0460205, -7.04746e-08, 2.84743e-08, 0.998941)
+bones/30/rotation = Quaternion(-0.517479, 0.354419, -0.0175302, 0.77865)
+bones/31/rotation = Quaternion(3.04791e-08, 0.920355, -0.391084, -6.94849e-08)
+bones/32/rotation = Quaternion(0.707107, -2.29302e-07, -4.60552e-08, 0.707107)
+bones/33/position = Vector3(0.213918, 0.0259903, 0.432495)
+bones/33/rotation = Quaternion(-0.705092, 0.0533355, 0.0533355, 0.705092)
+bones/34/rotation = Quaternion(9.65792e-09, 1.77955e-09, 0.985719, -0.168398)
+bones/35/rotation = Quaternion(-1.04035e-07, 0.391084, 0.920355, -2.9526e-08)
+bones/37/rotation = Quaternion(1, -3.10863e-15, 1.94707e-07, -6.91739e-22)
+bones/39/rotation = Quaternion(0.707107, -3.82385e-08, 1.45009e-07, 0.707107)
+bones/40/position = Vector3(-0.170945, 0.0259903, 0.179352)
+bones/40/rotation = Quaternion(-0.707107, -7.05285e-08, -7.05285e-08, 0.707107)
+bones/41/rotation = Quaternion(-1.8695e-08, 3.81931e-09, 0.946467, 0.322802)
+bones/42/rotation = Quaternion(-1.04035e-07, 0.391084, 0.920355, -2.95261e-08)
+bones/44/rotation = Quaternion(1, -1.66773e-09, 1.93099e-07, -7.45058e-09)
+bones/46/position = Vector3(0.453507, 0.923306, -0.544694)
+bones/47/position = Vector3(0.340962, 0.990554, 0.629785)
+bones/47/rotation = Quaternion(0.381657, 0.360966, 0.595765, 0.60754)
+bones/49/position = Vector3(-0.524433, 0.856259, -0.0251961)
+bones/49/rotation = Quaternion(-0.722065, 0.23145, 0.620846, 0.199006)
+
+[node name="1H_Sword_Offhand" parent="Rig/Skeleton3D" index="0"]
+transform = Transform3D(0.999973, -0.000952982, 0.00724023, 0.000796846, 0.999767, 0.021551, -0.00725893, -0.0215447, 0.999741, 0.23111, 1.01551, 0.761563)
+visible = false
+
+[node name="Badge_Shield" parent="Rig/Skeleton3D" index="1"]
+transform = Transform3D(0.999973, -0.000955519, 0.0072409, 0.000799366, 0.999767, 0.0215512, -0.00725965, -0.0215449, 0.999741, 0.232239, 1.01887, 0.917408)
+visible = false
+
+[node name="Rectangle_Shield" parent="Rig/Skeleton3D" index="2"]
+transform = Transform3D(0.999973, -0.000955519, 0.0072409, 0.000799366, 0.999767, 0.0215512, -0.00725965, -0.0215449, 0.999741, 0.232239, 1.01887, 0.917408)
+visible = false
+
+[node name="Round_Shield" parent="Rig/Skeleton3D" index="3"]
+transform = Transform3D(0.999973, -0.000955519, 0.0072409, 0.000799366, 0.999767, 0.0215512, -0.00725965, -0.0215449, 0.999741, 0.232239, 1.01887, 0.917408)
+visible = false
+
+[node name="Spike_Shield" parent="Rig/Skeleton3D" index="4"]
+transform = Transform3D(0.999973, -0.000955519, 0.0072409, 0.000799366, 0.999767, 0.0215512, -0.00725965, -0.0215449, 0.999741, 0.232239, 1.01887, 0.917408)
+
+[node name="Spike_Shield" parent="Rig/Skeleton3D/Spike_Shield" index="0"]
+transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, 0, 0, 0)
+surface_material_override/0 = ExtResource("2_8i1rs")
+
+[node name="1H_Sword" parent="Rig/Skeleton3D" index="5"]
+transform = Transform3D(0.581347, -0.121962, 0.804462, 0.813654, 0.0871401, -0.57478, 4.43317e-07, 0.988702, 0.149894, -0.5932, 0.698958, 0.021234)
+visible = false
+
+[node name="2H_Sword" parent="Rig/Skeleton3D" index="6"]
+transform = Transform3D(0.581347, -0.121962, 0.804462, 0.813654, 0.0871401, -0.57478, 4.55833e-07, 0.988702, 0.149894, -0.5932, 0.698958, 0.021234)
+visible = false
+
+[node name="Knight_Helmet" parent="Rig/Skeleton3D" index="7"]
+transform = Transform3D(1, -7.45058e-09, 5.96046e-08, 2.98023e-08, 0.985778, -0.16805, -1.19209e-07, 0.16805, 0.985778, 4.83011e-07, 1.16101, 0.256379)
+
+[node name="Knight_Helmet" parent="Rig/Skeleton3D/Knight_Helmet" index="0"]
+surface_material_override/0 = ExtResource("2_8i1rs")
+
+[node name="Knight_Cape" parent="Rig/Skeleton3D" index="8"]
+transform = Transform3D(0.906308, -3.72529e-09, -0.422618, -0.140414, 0.943192, -0.301119, 0.39861, 0.332249, 0.854822, 6.55241e-08, 1.1621, 0.252186)
+
+[node name="Knight_ArmLeft" parent="Rig/Skeleton3D" index="9"]
+surface_material_override/0 = ExtResource("2_8i1rs")
+
+[node name="Knight_ArmRight" parent="Rig/Skeleton3D" index="10"]
+surface_material_override/0 = ExtResource("2_8i1rs")
+
+[node name="Knight_Body" parent="Rig/Skeleton3D" index="11"]
+surface_material_override/0 = ExtResource("2_8i1rs")
+
+[node name="Knight_LegLeft" parent="Rig/Skeleton3D" index="13"]
+surface_material_override/0 = ExtResource("2_8i1rs")
+
+[node name="Knight_LegRight" parent="Rig/Skeleton3D" index="14"]
+surface_material_override/0 = ExtResource("2_8i1rs")

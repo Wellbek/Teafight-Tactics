@@ -1,0 +1,89 @@
+[gd_scene load_steps=4 format=3 uid="uid://byqaga6qbkukv"]
+
+[ext_resource type="PackedScene" uid="uid://dfbu35ia7xlss" path="res://assets/KayKit_Adventurers_1.0_FREE/Characters/gltf/Mage.glb" id="1_uhw55"]
+[ext_resource type="Material" uid="uid://dg0sr5h31l66j" path="res://assets/units/saffron_sorcerer.tres" id="2_d4d25"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_v2f3n"]
+albedo_color = Color(0, 0.470588, 1, 1)
+
+[node name="Mage" instance=ExtResource("1_uhw55")]
+
+[node name="Skeleton3D" parent="Rig" index="0"]
+bones/1/position = Vector3(8.43534e-09, 0.392064, -0.0353804)
+bones/1/rotation = Quaternion(-1.13347e-09, 0.173193, 1.02934e-08, 0.984888)
+bones/2/rotation = Quaternion(-1.02169e-09, 0.130526, 7.72063e-09, 0.991445)
+bones/3/rotation = Quaternion(-9.03925e-10, -0.130526, -8.41947e-09, 0.991445)
+bones/4/rotation = Quaternion(-0.682433, -0.279469, -0.501259, 0.452683)
+bones/5/rotation = Quaternion(2.14744e-08, -3.94271e-08, -0.600726, 0.799455)
+bones/7/rotation = Quaternion(0.125599, -0.422951, 0.357683, 0.823043)
+bones/8/rotation = Quaternion(-0.206375, -0.160685, -0.825328, 0.500423)
+bones/11/rotation = Quaternion(-0.706891, 0.361301, 0.486395, 0.364946)
+bones/12/rotation = Quaternion(1.62731e-08, 2.30034e-08, 0.564285, 0.82558)
+bones/14/rotation = Quaternion(-0.281186, 0.481893, -0.166825, 0.812947)
+bones/15/rotation = Quaternion(-0.00527404, -0.0318963, 0.706701, 0.706773)
+bones/18/rotation = Quaternion(-0.0369069, -0.197161, -0.0406767, 0.978831)
+bones/21/rotation = Quaternion(0.978175, 0.0863723, 0.185571, -0.0357211)
+bones/22/rotation = Quaternion(0.135868, 6.95869e-08, -1.05435e-07, 0.990727)
+bones/23/rotation = Quaternion(-0.492678, -0.315802, 0.0134192, 0.810775)
+bones/25/rotation = Quaternion(0.974949, -0.0664318, 0.157785, 0.142005)
+bones/26/rotation = Quaternion(0.270249, -6.5949e-08, 1.8943e-07, 0.96279)
+bones/27/rotation = Quaternion(-0.476805, 0.115911, -0.012656, 0.871241)
+bones/28/rotation = Quaternion(3.04791e-08, 0.920355, -0.391084, -6.94849e-08)
+bones/29/rotation = Quaternion(0.707107, -2.29302e-07, -4.60552e-08, 0.707107)
+bones/30/position = Vector3(0.202182, 0.0259903, 0.205181)
+bones/30/rotation = Quaternion(-0.707107, -7.05285e-08, -7.05285e-08, 0.707107)
+bones/31/position = Vector3(-0.0369076, 0.45686, -1.90412e-15)
+bones/31/rotation = Quaternion(1.66686e-08, 2.74722e-09, 0.95653, -0.291635)
+bones/32/rotation = Quaternion(-1.04035e-07, 0.391084, 0.920355, -2.9526e-08)
+bones/34/rotation = Quaternion(1, -3.10863e-15, 1.94707e-07, -6.91739e-22)
+bones/36/rotation = Quaternion(0.707107, -3.82385e-08, 1.45009e-07, 0.707107)
+bones/37/rotation = Quaternion(-0.707107, -7.05285e-08, -7.05285e-08, 0.707107)
+bones/38/position = Vector3(1.94581e-08, 0.287018, 2.42861e-15)
+bones/38/rotation = Quaternion(-5.83589e-09, 6.43837e-10, 0.994809, 0.101756)
+bones/39/rotation = Quaternion(-1.04035e-07, 0.391084, 0.920355, -2.95261e-08)
+bones/43/position = Vector3(0.283462, 0.937636, -0.578685)
+bones/43/rotation = Quaternion(-0.690807, -0.15095, -0.15095, 0.690807)
+bones/44/position = Vector3(0.5698, 0.938714, -0.10605)
+bones/44/rotation = Quaternion(0.857233, 0.466172, 0.132407, -0.17408)
+bones/45/position = Vector3(-0.545165, 0.842777, -0.44822)
+bones/46/position = Vector3(-0.473776, 0.971975, 0.322916)
+bones/46/rotation = Quaternion(-0.64706, 0.28378, 0.608431, -0.361378)
+
+[node name="Spellbook" parent="Rig/Skeleton3D" index="0"]
+transform = Transform3D(0.829287, 0.550034, 0.0987143, -0.283264, 0.261479, 0.922707, 0.481709, -0.793152, 0.372646, 0.734508, 1.09554, 0.066821)
+visible = false
+
+[node name="Spellbook_open" parent="Rig/Skeleton3D" index="1"]
+transform = Transform3D(0.829287, 0.550034, 0.0987143, -0.283264, 0.261479, 0.922707, 0.481709, -0.793152, 0.372646, 0.722627, 0.984493, 0.0219725)
+visible = false
+
+[node name="1H_Wand" parent="Rig/Skeleton3D" index="2"]
+transform = Transform3D(-0.035014, -0.0462027, 0.998318, 0.581228, 0.811674, 0.0579501, -0.812986, 0.582279, -0.00156541, -0.431205, 0.919563, 0.471524)
+
+[node name="2H_Staff" parent="Rig/Skeleton3D" index="3"]
+transform = Transform3D(-0.035014, -0.0462027, 0.998318, 0.581228, 0.811674, 0.0579501, -0.812986, 0.582279, -0.00156541, -0.431205, 0.919563, 0.471524)
+
+[node name="Mage_Hat" parent="Rig/Skeleton3D" index="4"]
+transform = Transform3D(0.996517, 0.0789766, -0.0267685, -0.065078, 0.937247, 0.34254, 0.0521413, -0.339605, 0.939122, 0.0376385, 1.76723, -0.0814918)
+visible = false
+
+[node name="Mage_Cape" parent="Rig/Skeleton3D" index="5"]
+transform = Transform3D(0.940008, -2.12031e-08, 0.341152, 1.90001e-08, 1, 9.79889e-09, -0.341152, -2.72913e-09, 0.940008, -5.72784e-08, 1.20227, -0.0353805)
+
+[node name="Mage_Cape" parent="Rig/Skeleton3D/Mage_Cape" index="0"]
+surface_material_override/0 = SubResource("StandardMaterial3D_v2f3n")
+
+[node name="Mage_ArmLeft" parent="Rig/Skeleton3D" index="6"]
+surface_material_override/0 = ExtResource("2_d4d25")
+
+[node name="Mage_ArmRight" parent="Rig/Skeleton3D" index="7"]
+surface_material_override/0 = ExtResource("2_d4d25")
+
+[node name="Mage_Body" parent="Rig/Skeleton3D" index="8"]
+surface_material_override/0 = ExtResource("2_d4d25")
+
+[node name="Mage_LegLeft" parent="Rig/Skeleton3D" index="10"]
+surface_material_override/0 = ExtResource("2_d4d25")
+
+[node name="Mage_LegRight" parent="Rig/Skeleton3D" index="11"]
+surface_material_override/0 = ExtResource("2_d4d25")

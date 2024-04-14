@@ -1,14 +1,10 @@
-[gd_scene load_steps=8 format=3 uid="uid://dawiq0duv1gfd"]
+[gd_scene load_steps=7 format=3 uid="uid://dawiq0duv1gfd"]
 
 [ext_resource type="Script" path="res://scripts/unit.gd" id="1_3kn2y"]
 [ext_resource type="PackedScene" uid="uid://cmyaotov37g7y" path="res://src/ui/unit_ui.tscn" id="2_54lmw"]
+[ext_resource type="PackedScene" uid="uid://bxuvpcjtywq61" path="res://assets/units/pu_erh_paladin_model.tscn" id="2_rscdc"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_tcrfm"]
-
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_51m0c"]
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7k0wg"]
-albedo_color = Color(0.392279, 0.258915, 0.0859693, 1)
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_vdcr0"]
 viewport_path = NodePath("SubViewport")
@@ -47,6 +43,9 @@ properties/9/replication_mode = 2
 properties/10/path = NodePath(".:visible")
 properties/10/spawn = true
 properties/10/replication_mode = 2
+properties/11/path = NodePath(".:rotation")
+properties/11/spawn = true
+properties/11/replication_mode = 2
 
 [node name="PuErhPaladin" type="CharacterBody3D" node_paths=PackedStringArray("attack_timer")]
 transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, 999, 1, 999)
@@ -62,20 +61,20 @@ script = ExtResource("1_3kn2y")
 image = "res://src/units/4/pu_erh_paladin.png"
 unitName = "Pu Erh Paladin"
 type = 2
-cost = 2
-attackrange = 8.0
-max_health = 550.0
-attack_dmg = 40.0
-armor = 20.0
-attack_speed = 0.7
+cost = 4
+move_speed = 4.0
+attackrange = 2.0
+max_health = 1100.0
+attack_dmg = 60.0
+armor = 60.0
+attack_speed = 0.6
 attack_timer = NodePath("AttackTimer")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("CapsuleShape3D_tcrfm")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-mesh = SubResource("CapsuleMesh_51m0c")
-surface_material_override/0 = SubResource("StandardMaterial3D_7k0wg")
+[node name="Knight" parent="." instance=ExtResource("2_rscdc")]
+transform = Transform3D(-0.9, 0, -7.86805e-08, 0, 0.9, 0, 7.86805e-08, 0, -0.9, 0, -1, 0)
 
 [node name="Sprite3D" type="Sprite3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)

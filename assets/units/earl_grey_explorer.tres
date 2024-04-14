@@ -1,0 +1,8 @@
+[gd_resource type="StandardMaterial3D" load_steps=2 format=3 uid="uid://ubhrl7n8i00q"]
+
+[ext_resource type="Texture2D" uid="uid://dlo1u0wan55md" path="res://assets/KayKit_Skeletons_1.0_FREE/characters/gltf/Skeleton_Rogue_skeleton_texture.png" id="1_vijpf"]
+
+[resource]
+albedo_color = Color(0.419608, 0.419608, 0.419608, 1)
+albedo_texture = ExtResource("1_vijpf")
+disable_receive_shadows = true

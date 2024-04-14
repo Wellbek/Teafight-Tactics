@@ -174,6 +174,7 @@ func reset_combatphase():
 		unit.dead = false
 		
 		if unit.is_multiplayer_authority():
+			unit.rotation = Vector3(0,0,0)
 			unit.curr_health = unit.max_health
 			unit.target = null
 			unit.visible = true

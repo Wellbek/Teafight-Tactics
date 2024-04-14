@@ -1,14 +1,10 @@
-[gd_scene load_steps=8 format=3 uid="uid://bbvjn836rh28f"]
+[gd_scene load_steps=7 format=3 uid="uid://bbvjn836rh28f"]
 
 [ext_resource type="Script" path="res://scripts/unit.gd" id="1_ehkvv"]
 [ext_resource type="PackedScene" uid="uid://cmyaotov37g7y" path="res://src/ui/unit_ui.tscn" id="2_j4jut"]
+[ext_resource type="PackedScene" uid="uid://bmyplv0osh38d" path="res://assets/units/cascara_champion_model.tscn" id="2_v0lme"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_tcrfm"]
-
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_51m0c"]
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7k0wg"]
-albedo_color = Color(0.392279, 0.258915, 0.0859693, 1)
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_vdcr0"]
 viewport_path = NodePath("SubViewport")
@@ -47,6 +43,9 @@ properties/9/replication_mode = 2
 properties/10/path = NodePath(".:visible")
 properties/10/spawn = true
 properties/10/replication_mode = 2
+properties/11/path = NodePath(".:rotation")
+properties/11/spawn = true
+properties/11/replication_mode = 2
 
 [node name="CascaraChampion" type="CharacterBody3D" node_paths=PackedStringArray("attack_timer")]
 transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, 999, 1, 999)
@@ -63,19 +62,19 @@ image = "res://src/units/2/cascara_champion.png"
 unitName = "Cascara Champion"
 type = 6
 cost = 2
-attackrange = 8.0
-max_health = 550.0
-attack_dmg = 40.0
-armor = 20.0
-attack_speed = 0.7
+move_speed = 4.0
+attackrange = 2.0
+max_health = 700.0
+attack_dmg = 55.0
+armor = 45.0
+attack_speed = 0.65
 attack_timer = NodePath("AttackTimer")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("CapsuleShape3D_tcrfm")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-mesh = SubResource("CapsuleMesh_51m0c")
-surface_material_override/0 = SubResource("StandardMaterial3D_7k0wg")
+[node name="Barbarian" parent="." instance=ExtResource("2_v0lme")]
+transform = Transform3D(-0.9, 0, -7.86805e-08, 0, 0.9, 0, 7.86805e-08, 0, -0.9, 0, -1, 0)
 
 [node name="Sprite3D" type="Sprite3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)

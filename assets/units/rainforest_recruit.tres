@@ -1,0 +1,8 @@
+[gd_resource type="StandardMaterial3D" load_steps=2 format=3 uid="uid://bbg7uec0a3l5c"]
+
+[ext_resource type="Texture2D" uid="uid://bnmysgmmxilcv" path="res://assets/KayKit_Skeletons_1.0_FREE/characters/gltf/Skeleton_Minion_skeleton_texture.png" id="1_4tx24"]
+
+[resource]
+albedo_color = Color(1, 0.6, 0.541176, 1)
+albedo_texture = ExtResource("1_4tx24")
+disable_receive_shadows = true

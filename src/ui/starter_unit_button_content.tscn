@@ -3,7 +3,6 @@
 [ext_resource type="Texture2D" uid="uid://bqatgnnesy5ra" path="res://assets/BFSword.png" id="2_xaqfv"]
 
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_222pt"]
-load_path = "res://.godot/imported/tea_bag_slinger.png-481f0f22e4ffa53c4109a55b56bc61df.ctex"
 
 [node name="StarterUnitButtonContent" type="Control"]
 clip_contents = true

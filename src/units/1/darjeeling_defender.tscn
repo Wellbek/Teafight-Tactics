@@ -1,14 +1,10 @@
-[gd_scene load_steps=8 format=3 uid="uid://d1nixaa22ysjl"]
+[gd_scene load_steps=7 format=3 uid="uid://d1nixaa22ysjl"]
 
 [ext_resource type="Script" path="res://scripts/unit.gd" id="1_rjluo"]
 [ext_resource type="PackedScene" uid="uid://cmyaotov37g7y" path="res://src/ui/unit_ui.tscn" id="2_gugvi"]
+[ext_resource type="PackedScene" uid="uid://bstg8sys6ssbe" path="res://assets/units/darjeeling_defender_model.tscn" id="3_tp3jd"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_tcrfm"]
-
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_51m0c"]
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_n23bk"]
-albedo_color = Color(1, 0.843137, 0.172549, 1)
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_7fr4r"]
 viewport_path = NodePath("SubViewport")
@@ -47,6 +43,9 @@ properties/9/replication_mode = 2
 properties/10/path = NodePath(".:visible")
 properties/10/spawn = true
 properties/10/replication_mode = 2
+properties/11/path = NodePath(".:rotation")
+properties/11/spawn = true
+properties/11/replication_mode = 2
 
 [node name="DarjeelingDefender" type="CharacterBody3D" node_paths=PackedStringArray("attack_timer")]
 transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, 999, 1, 999)
@@ -72,9 +71,8 @@ attack_timer = NodePath("AttackTimer")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("CapsuleShape3D_tcrfm")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-mesh = SubResource("CapsuleMesh_51m0c")
-surface_material_override/0 = SubResource("StandardMaterial3D_n23bk")
+[node name="Knight" parent="." instance=ExtResource("3_tp3jd")]
+transform = Transform3D(-0.9, 0, -7.86805e-08, 0, 0.9, 0, 7.86805e-08, 0, -0.9, 0, -1, 0)
 
 [node name="Sprite3D" type="Sprite3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)

@@ -1,0 +1,22 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://c1asy5mtmx7bd"
+path="res://.godot/imported/Chibi_Wings.obj-abe437a38a5156f7d004a42d9499139c.mesh"
+
+[deps]
+
+files=["res://.godot/imported/Chibi_Wings.obj-abe437a38a5156f7d004a42d9499139c.mesh"]
+
+source_file="res://assets/chibi_wings/Chibi_Wings.obj"
+dest_files=["res://.godot/imported/Chibi_Wings.obj-abe437a38a5156f7d004a42d9499139c.mesh", "res://.godot/imported/Chibi_Wings.obj-abe437a38a5156f7d004a42d9499139c.mesh"]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+optimize_mesh=true
+force_disable_mesh_compression=false

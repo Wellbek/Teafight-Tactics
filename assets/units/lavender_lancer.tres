@@ -1,0 +1,7 @@
+[gd_resource type="StandardMaterial3D" load_steps=2 format=3 uid="uid://dwpoeo8681jm0"]
+
+[ext_resource type="Texture2D" uid="uid://bvkjs0y1q66s5" path="res://assets/KayKit_Adventurers_1.0_FREE/Characters/gltf/Knight_knight_texture.png" id="1_prhec"]
+
+[resource]
+albedo_color = Color(1, 0.427451, 0.25098, 1)
+albedo_texture = ExtResource("1_prhec")

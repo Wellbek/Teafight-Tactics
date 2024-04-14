@@ -1,14 +1,10 @@
-[gd_scene load_steps=8 format=3 uid="uid://bcxkjvdmeu8bt"]
+[gd_scene load_steps=7 format=3 uid="uid://bcxkjvdmeu8bt"]
 
 [ext_resource type="Script" path="res://scripts/unit.gd" id="1_eq2fe"]
 [ext_resource type="PackedScene" uid="uid://cmyaotov37g7y" path="res://src/ui/unit_ui.tscn" id="2_13mtb"]
+[ext_resource type="PackedScene" uid="uid://bhiayp72ewhg4" path="res://assets/units/hibiscus_herald_model.tscn" id="2_aohm0"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_tcrfm"]
-
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_51m0c"]
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7k0wg"]
-albedo_color = Color(0.392279, 0.258915, 0.0859693, 1)
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_vdcr0"]
 viewport_path = NodePath("SubViewport")
@@ -47,6 +43,9 @@ properties/9/replication_mode = 2
 properties/10/path = NodePath(".:visible")
 properties/10/spawn = true
 properties/10/replication_mode = 2
+properties/11/path = NodePath(".:rotation")
+properties/11/spawn = true
+properties/11/replication_mode = 2
 
 [node name="HibiscusHerald" type="CharacterBody3D" node_paths=PackedStringArray("attack_timer")]
 transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, 999, 1, 999)
@@ -63,8 +62,9 @@ image = "res://src/units/2/hibiscus_herald.png"
 unitName = "Hibiscus Herald"
 type = 3
 cost = 2
+move_speed = 4.0
 attackrange = 8.0
-max_health = 550.0
+max_health = 600.0
 attack_dmg = 40.0
 armor = 20.0
 attack_speed = 0.7
@@ -73,9 +73,8 @@ attack_timer = NodePath("AttackTimer")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("CapsuleShape3D_tcrfm")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-mesh = SubResource("CapsuleMesh_51m0c")
-surface_material_override/0 = SubResource("StandardMaterial3D_7k0wg")
+[node name="Mage" parent="." instance=ExtResource("2_aohm0")]
+transform = Transform3D(-0.9, 0, -7.86805e-08, 0, 0.9, 0, 7.86805e-08, 0, -0.9, 0, -1, 0)
 
 [node name="Sprite3D" type="Sprite3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)

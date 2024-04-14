@@ -1,0 +1,8 @@
+[gd_resource type="StandardMaterial3D" load_steps=2 format=3 uid="uid://dggamhoe5tmqb"]
+
+[ext_resource type="Texture2D" uid="uid://i0siwrcmk6x6" path="res://assets/KayKit_Adventurers_1.0_FREE/Characters/gltf/Barbarian_barbarian_texture.png" id="1_3m30o"]
+
+[resource]
+albedo_color = Color(0.792157, 0.937255, 0.607843, 1)
+albedo_texture = ExtResource("1_3m30o")
+disable_receive_shadows = true
