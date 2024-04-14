@@ -6,6 +6,7 @@ var current_round = 0 # this is what is visible: [CURRENT_STAGE]-[CURRENT_ROUND]
 var total_round = 0 # this is the overall round counting to infinity
 var current_stage = 1
 const START_GAME_DURATION = 5
+const FIRST_ROUND_DURATION = 15
 const preparationDuration = 30 #30
 const combatDuration = 45 #45
 const transition_time = 5
@@ -131,7 +132,7 @@ func startPreparationPhase():
 	if current_round > 2 or current_stage >= 2:
 		unitShop.visible = true
 		wait_time = preparationDuration
-	else: wait_time = transition_time
+	else: wait_time = FIRST_ROUND_DURATION
 	start()
 
 @rpc("authority", "call_local", "reliable")
@@ -270,7 +271,7 @@ func give_start_unit():
 	
 	var instance_path = folder + "//" + itemFileName + ".tscn"
 	
-	main.getPlayer().spawn_item.rpc_id(multiplayer.get_unique_id(), instance_path)
+	main.getPlayer().spawn_item(instance_path)
 	
 	game_start_label.visible = false
 	main.getUI().get_node("StageInfo").visible = true
@@ -348,6 +349,17 @@ func increment_round():
 			total_round += 1 # exclude pve rounds else matchmaking is messed up
 		
 		if current_round > 2 or current_stage >= 2 and main.getPlayer() != null: main.getPlayer().increase_xp(2)
+		
+		# drop random item every 3 rounds
+		if current_round == 3 and current_stage > 1: 
+			var folder = "res://src/items"
+			var dir = DirAccess.open(folder)
+			var itemArray = dir.get_files()
+			var itemFileName = itemArray[randi() % itemArray.size()].get_slice(".",0)
+	
+			var instance_path = folder + "//" + itemFileName + ".tscn"
+	
+			main.getPlayer().spawn_item(instance_path)
 	
 	stage_label.text = str(current_stage) + "-" + str(current_round)
 		

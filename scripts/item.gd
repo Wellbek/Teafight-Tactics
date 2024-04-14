@@ -8,6 +8,7 @@ extends StaticBody3D
 @export var attack_dmg = 0
 @export var armor = 0
 @export var attack_speed = 0
+@export var crit_chance = 0
 
 var dragging = false
 
@@ -127,4 +128,7 @@ func get_attack_speed():
 	
 func get_texture():
 	return item_texture
+	
+func get_crit_chance():
+	return crit_chance
 

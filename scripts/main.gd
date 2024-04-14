@@ -51,7 +51,9 @@ func unregister_battle():
 func get_num_of_battles():
 	return num_of_battles
 	
-func changeCamera(_index):		
+func changeCamera(_index):
+	if not local_player: return
+			
 	if _index == 0: 
 		local_player.getCamera().change_current(true)
 	else:	
@@ -63,6 +65,8 @@ func changeCamera(_index):
 		peer.getEnemyCam().change_current(true)
 		
 func changeCameraByID(_id):		
+	if not local_player: return
+	
 	if _id == multiplayer.get_unique_id(): 
 		local_player.getCamera().change_current(true)
 	else:	

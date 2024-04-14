@@ -42,7 +42,7 @@ var dead = false
 @export var attack_dmg = 20.0
 @export var armor = 30.0
 @export var attack_speed = 0.8
-@export var crit_change = 0.25
+@export var crit_chance = 0.25
 @export var attack_timer: Timer
 
 const LOCAL_COLOR = Color(0.2, 0.898, 0.243)
@@ -71,10 +71,14 @@ func _enter_tree():
 	multisync = find_child("MultiplayerSynchronizer", false)
 	
 func _process(_delta):
+	if dead: return
+	
 	if mode == BATTLE and target == null and is_multiplayer_authority() and not main.get_timer().is_transitioning():
 		find_target()
 
 func _physics_process(_delta):	
+	if dead: return
+	
 	if target and (not is_instance_valid(target) or target.dead): 
 		target = null
 		
@@ -265,20 +269,30 @@ func toggleSync(value):
 		multisync.replication_config.property_set_watch(prop, value)
 
 func in_attack_range():
+	if dead:
+		attacking = false
+		return
+	
 	attacking = true
 	attack_timer.wait_time = 1/attack_speed
 	attack_timer.start()
 	
-func _on_attack_timer_timeout():
-	if main.get_timer().is_transitioning(): get_node("AttackTimer").stop()
+func _on_attack_timer_timeout():	
+	if main.get_timer().is_transitioning() or dead:
+		attacking = false 
+		get_node("AttackTimer").stop()
 	else: auto_attack(target, targeting_neutral)
 
 func auto_attack(_target, pve = false):
-	if _target == null or (not pve and _target.get_mode() != BATTLE): return
+	if _target == null or (not pve and _target.get_mode() != BATTLE) or dead: return
 
 	var id = get_multiplayer_authority() if pve else _target.get_owner_id() 
 
-	_target.take_dmg.rpc_id(id, attack_dmg)
+	var rng = randf()
+	
+	var damage = attack_dmg if rng > crit_chance else attack_dmg * 1.3
+
+	_target.take_dmg.rpc_id(id, damage)
 
 func change_attack_speed(val):
 	attack_speed = val
@@ -287,7 +301,7 @@ func change_attack_speed(val):
 
 @rpc("any_peer", "call_local", "unreliable")
 func take_dmg(raw_dmg):
-	if mode != BATTLE: return
+	if mode != BATTLE or dead: return
 	
 	var dmg = raw_dmg / (1+armor/100) # https://leagueoflegends.fandom.com/wiki/Armor
 	
@@ -395,6 +409,7 @@ func equip_item(item_path):
 		attack_dmg += item.get_attack_dmg()
 		armor += item.get_armor()
 		attack_speed *= 1+item.get_attack_speed()/100
+		crit_chance = min(1, crit_chance + item.get_crit_chance())
 		
 		item.visible = false
 	
@@ -423,6 +438,7 @@ func unequip_item(index):
 		attack_dmg -= item.get_attack_dmg()
 		armor -= item.get_armor()
 		attack_speed /= 1-item.get_attack_speed()/100
+		crit_chance = max(0, crit_chance - item.get_crit_chance())
 	
 		item.visible = true
 	

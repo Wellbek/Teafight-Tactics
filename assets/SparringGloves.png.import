@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cjrnt4cm5qu4p"
-path.s3tc="res://.godot/imported/lavender_lancer.png-6141368d2713713154199873f03c9240.s3tc.ctex"
+uid="uid://ceaevsqq00d8y"
+path.s3tc="res://.godot/imported/SparringGloves.png-9ff8bac514aaa1335a62a713b0b25775.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://src/units/2/lavender_lancer.png"
-dest_files=["res://.godot/imported/lavender_lancer.png-6141368d2713713154199873f03c9240.s3tc.ctex"]
+source_file="res://assets/SparringGloves.png"
+dest_files=["res://.godot/imported/SparringGloves.png-9ff8bac514aaa1335a62a713b0b25775.s3tc.ctex"]
 
 [params]
 

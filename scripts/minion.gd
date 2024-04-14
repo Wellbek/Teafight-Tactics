@@ -46,10 +46,14 @@ func _enter_tree():
 	player = parent.get_parent().get_parent()
 	
 func _process(delta):
+	if dead: return
+	
 	if parent.visible and not timer.is_transitioning() and not timer.is_preparing():
 		find_target()
 
 func _physics_process(delta):	
+	if dead: return
+	
 	if target and (not is_instance_valid(target) or target.dead): 
 		target = null
 		
@@ -92,13 +96,19 @@ func get_ui():
 	return ui
 
 func in_attack_range():
+	if dead: 
+		attacking = false
+		return
+	
 	if attack_timer == null: attack_timer = $AttackTimer
 	attacking = true
 	attack_timer.wait_time = 1/attack_speed
 	attack_timer.start()
 	
 func _on_attack_timer_timeout():
-	if main.get_timer().is_transitioning(): get_node("AttackTimer").stop()
+	if main.get_timer().is_transitioning() or dead: 
+		attacking = false
+		get_node("AttackTimer").stop()
 	else: auto_attack(target)
 
 func auto_attack(_target):

@@ -590,6 +590,7 @@ offset_left = 0.0620155
 offset_top = 0.0240402
 offset_right = 0.0400162
 offset_bottom = -0.027977
+focus_mode = 0
 theme_override_styles/normal = SubResource("StyleBoxFlat_rplhv")
 theme_override_styles/hover = SubResource("StyleBoxFlat_086ua")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_yopde")
@@ -652,6 +653,7 @@ offset_left = 0.0620003
 offset_top = 0.00395966
 offset_right = 0.0400009
 offset_bottom = -0.0480576
+focus_mode = 0
 theme_override_styles/normal = SubResource("StyleBoxFlat_mtvsp")
 theme_override_styles/hover = SubResource("StyleBoxFlat_gad3u")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_2u7rh")
@@ -769,6 +771,7 @@ offset_left = 32.0
 offset_top = 96.0
 offset_right = 280.0
 offset_bottom = 144.0
+focus_mode = 0
 text = "Host"
 
 [node name="TmpJoin" type="Button" parent="GUI"]
@@ -777,6 +780,7 @@ offset_left = 32.0
 offset_top = 184.0
 offset_right = 280.0
 offset_bottom = 232.0
+focus_mode = 0
 text = "Join"
 
 [node name="TmpStartGame" type="Button" parent="GUI"]
@@ -792,6 +796,7 @@ offset_right = 124.0
 offset_bottom = 24.0
 grow_horizontal = 2
 grow_vertical = 2
+focus_mode = 0
 text = "Start Game"
 
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]

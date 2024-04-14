@@ -62,7 +62,7 @@ unitName = "Krug"
 move_speed = 2.0
 attackrange = 2.0
 max_health = 1200.0
-attack_dmg = 110.0
+attack_dmg = 90.0
 armor = 50.0
 attack_timer = NodePath("AttackTimer")
 

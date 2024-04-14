@@ -59,7 +59,7 @@ script = ExtResource("1_tf5e3")
 unitName = "Ranged Minion"
 attackrange = 6.0
 max_health = 150.0
-attack_dmg = 40.0
+attack_dmg = 30.0
 armor = 0.0
 attack_timer = NodePath("AttackTimer")
 
