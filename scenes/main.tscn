@@ -129,7 +129,7 @@ script = ExtResource("1_35go2")
 timer = NodePath("RoundTimer")
 gui = NodePath("GUI")
 
-[node name="MultiplayerManager" type="Node" parent="." node_paths=PackedStringArray("main", "timer", "startButton", "enable_on_start", "disable_on_start")]
+[node name="MultiplayerManager" type="Node" parent="." node_paths=PackedStringArray("main", "timer", "startButton", "enable_on_start", "disable_on_start", "id_box")]
 script = ExtResource("4_d7qmq")
 player_scene = ExtResource("4_bh7tl")
 player_bar_scene = ExtResource("7_n3kcn")
@@ -137,7 +137,8 @@ main = NodePath("..")
 timer = NodePath("../RoundTimer")
 startButton = NodePath("../GUI/TmpStartGame")
 enable_on_start = [NodePath("../GUI/GameStartLabel")]
-disable_on_start = [NodePath("../GUI/TmpHost"), NodePath("../GUI/TmpJoin"), NodePath("../GUI/TmpStartGame")]
+disable_on_start = [NodePath("../GUI/TmpHost"), NodePath("../GUI/TmpJoin"), NodePath("../GUI/TmpStartGame"), NodePath("../GUI/TextEdit"), NodePath("../GUI/LobbyContainer"), NodePath("../GUI/TmpLobbies")]
+id_box = NodePath("../GUI/TextEdit")
 
 [node name="RoundTimer" type="Timer" parent="."]
 one_shot = true
@@ -765,23 +766,59 @@ label_settings = SubResource("LabelSettings_hw4dh")
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[node name="TextEdit" type="TextEdit" parent="GUI"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.271
+anchor_top = 0.284
+anchor_right = 0.59
+anchor_bottom = 0.358
+offset_left = -0.192017
+offset_top = -0.0320129
+offset_right = 0.319946
+offset_bottom = 0.0159912
+
 [node name="TmpHost" type="Button" parent="GUI"]
-layout_mode = 0
-offset_left = 32.0
-offset_top = 96.0
-offset_right = 280.0
-offset_bottom = 144.0
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.028
+anchor_top = 0.148
+anchor_right = 0.243
+anchor_bottom = 0.222
+offset_left = -0.256001
+offset_top = 0.0960007
+offset_right = 0.0639954
+offset_bottom = 0.143982
 focus_mode = 0
 text = "Host"
 
 [node name="TmpJoin" type="Button" parent="GUI"]
-layout_mode = 0
-offset_left = 32.0
-offset_top = 184.0
-offset_right = 280.0
-offset_bottom = 232.0
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.028
+anchor_top = 0.284
+anchor_right = 0.243
+anchor_bottom = 0.358
+offset_left = -0.256001
+offset_top = -0.0320129
+offset_right = 0.0639954
+offset_bottom = 0.0159912
 focus_mode = 0
 text = "Join"
+
+[node name="TmpLobbies" type="Button" parent="GUI"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.028
+anchor_top = 0.42
+anchor_right = 0.243
+anchor_bottom = 0.494
+offset_left = -0.256001
+offset_top = -0.160004
+offset_right = 0.0639954
+offset_bottom = -0.112
+focus_mode = 0
+text = "Lobbies"
 
 [node name="TmpStartGame" type="Button" parent="GUI"]
 visible = false
@@ -800,6 +837,22 @@ grow_vertical = 2
 focus_mode = 0
 text = "Start Game"
 
+[node name="LobbyContainer" type="ScrollContainer" parent="GUI"]
+visible = false
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.271
+anchor_top = 0.148
+anchor_right = 0.736
+anchor_bottom = 0.963
+offset_left = -0.192017
+offset_top = 0.0960007
+offset_right = 0.12793
+offset_bottom = -0.0240479
+
+[node name="Lobbies" type="VBoxContainer" parent="GUI/LobbyContainer"]
+layout_mode = 2
+
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
 _spawnable_scenes = PackedStringArray("res://src/player.tscn")
 spawn_path = NodePath("../World")
@@ -815,4 +868,5 @@ spawn_limit = 8
 [connection signal="mouse_exited" from="GUI/UnitShop/SellUnit" to="." method="_on_sell_unit_mouse_exited"]
 [connection signal="pressed" from="GUI/TmpHost" to="MultiplayerManager" method="_on_tmp_host_pressed"]
 [connection signal="pressed" from="GUI/TmpJoin" to="MultiplayerManager" method="_on_tmp_join_pressed"]
+[connection signal="pressed" from="GUI/TmpLobbies" to="MultiplayerManager" method="_on_tmp_lobbies_pressed"]
 [connection signal="pressed" from="GUI/TmpStartGame" to="MultiplayerManager" method="_on_tmp_start_game_pressed"]
