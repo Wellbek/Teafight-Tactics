@@ -12,7 +12,7 @@ extends StaticBody3D
 
 var dragging = false
 
-var initialPos: Vector3
+var initial_pos: Vector3
 
 var coll
 
@@ -27,25 +27,25 @@ func _ready():
 	main = get_tree().root.get_child(0)	
 	timer = main.get_timer()
 	
-	set_multiplayer_authority(get_parent().get_parent().getID())
+	set_multiplayer_authority(get_parent().get_parent().get_id())
 	
 	multisync = find_child("MultiplayerSynchronizer", false)
 
 func _input_event(camera, event, position, normal, shape_idx):
 	if not is_multiplayer_authority(): return
 
-	if event is InputEventMouseButton and event.is_pressed() and event.button_index == MOUSE_BUTTON_LEFT and !isDragging():
-		setDragging(true)
-		initialPos = global_transform.origin
+	if event is InputEventMouseButton and event.is_pressed() and event.button_index == MOUSE_BUTTON_LEFT and !is_dragging():
+		set_dragging(true)
+		initial_pos = global_transform.origin
 
 		transform.origin.y += 1
 
 func _input(event):
 	if not is_multiplayer_authority(): return
 	
-	if isDragging():
+	if is_dragging():
 		if event is InputEventMouseButton and event.is_released() and event.button_index == MOUSE_BUTTON_LEFT:
-			placeItem()
+			place_item()
 		elif event is InputEventMouseMotion:
 			var viewport := get_viewport()
 			var mouse_position := viewport.get_mouse_position()
@@ -61,7 +61,7 @@ func _input(event):
 			var query := PhysicsRayQueryParameters3D.create(origin, end, 0b00000000_00000000_00000110_00011111)
 			var result := space_state.intersect_ray(query)
 			if not result.is_empty() and result.collider != null:
-				if (result.collider.get_collision_layer() in [8,24] and result.collider.is_multiplayer_authority()) or result.collider.get_collision_layer() == (512 if main.getPlayer().defender else 1024):
+				if (result.collider.get_collision_layer() in [8,24] and result.collider.is_multiplayer_authority()) or result.collider.get_collision_layer() == (512 if main.get_player().defender else 1024):
 					if result.collider != coll:
 						if coll:
 							# reset highlight of last unit
@@ -72,35 +72,35 @@ func _input(event):
 				else: 
 					coll = null
 					
-				var mouse_position_3D:Vector3 = result.get("position", initialPos if coll == null else coll.global_transform.origin)
+				var mouse_position_3D:Vector3 = result.get("position", initial_pos if coll == null else coll.global_transform.origin)
 
 				global_transform.origin = Vector3(mouse_position_3D.x, global_transform.origin.y, mouse_position_3D.z)
 				
-func setDragging(value):
+func set_dragging(value):
 	dragging = value
-	toggleSync(!value)
+	toggle_sync(!value)
 	
-func isDragging():
+func is_dragging():
 	return dragging
 	
-func toggleSync(value):
+func toggle_sync(value):
 	if not is_multiplayer_authority(): return
 	
 	for prop in multisync.replication_config.get_properties():
 		#print(prop)
 		multisync.replication_config.property_set_watch(prop, value)
 
-func placeItem():
-	if isDragging():
+func place_item():
+	if is_dragging():
 		transform.origin.y -= 1
-		setDragging(false)
+		set_dragging(false)
 		
 		if coll == null:  
-			global_transform.origin = initialPos
+			global_transform.origin = initial_pos
 		elif coll.get_collision_layer() in [8, 24]:
 			if not coll.can_equip_item():
 				coll = null
-				global_transform.origin = initialPos
+				global_transform.origin = initial_pos
 			else:
 				equipped = true
 				coll.equip_item.rpc(get_path())

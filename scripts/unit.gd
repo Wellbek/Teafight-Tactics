@@ -1,8 +1,8 @@
 extends CharacterBody3D
 
 var dragging: bool = false
-@onready var sell_unit_gui = main.getUI().get_node("UnitShop/SellUnit")
-var initialPos: Vector3
+@onready var sell_unit_gui = main.get_ui().get_node("UnitShop/SellUnit")
+var initial_pos: Vector3
 
 var coll
 var tile
@@ -16,7 +16,7 @@ var myid
 var multisync
 
 @export_file("*.png", "*.jpg") var image
-@export var unitName: String
+@export var unit_name: String
 @export_enum("NONE","1", "2", "3") var star: int = 1
 @export_enum("Herbal Heroes", "Green Guardians", "Black Brigade", "Floral Fighters", "Exotic Enchanters", "Fruitful Forces", "Aromatic Avatars") var type: int = 0
 var ui: Control
@@ -58,7 +58,7 @@ func _ready():
 	var viewport = find_child("SubViewport")
 	ui = viewport.get_child(0)
 	find_child("Sprite3D").texture = viewport.get_texture()
-	ui.get_node("HPBar").self_modulate = LOCAL_COLOR if is_multiplayer_authority() else ENEMY_HOST_COLOR	
+	ui.get_node("hp_bar").self_modulate = LOCAL_COLOR if is_multiplayer_authority() else ENEMY_HOST_COLOR	
 	
 func _enter_tree():
 	myid = name.get_slice("#", 0).to_int()
@@ -95,9 +95,9 @@ func _physics_process(_delta):
 		rotation.x = 0
 		rotation.z = 0
 
-func setTile(newTile):
-	tile = newTile
-	change_target_status.rpc(true if tile.get_parent().getType() == HEX else false)
+func set_tile(new_tile):
+	tile = new_tile
+	change_target_status.rpc(true if tile.get_parent().get_type() == HEX else false)
 	
 @rpc("any_peer", "call_local", "reliable")
 func change_target_status(value):
@@ -106,32 +106,32 @@ func change_target_status(value):
 func is_targetable():
 	return targetable
 	
-func getTile():
+func get_tile():
 	return tile
 	
-func getTileType():
-	return tile.get_parent().getType()
+func get_tile_type():
+	return tile.get_parent().get_type()
 
 func _input_event(_camera, event, _position, _normal, _shape_idx):
 	if not is_multiplayer_authority() or not mode == PREP: return
 
-	if event is InputEventMouseButton and event.is_pressed() and event.button_index == MOUSE_BUTTON_LEFT and !isDragging():
-		setDragging(true)
-		toggleGrid(true)
-		changeColor(tile.find_children("MeshInstance3D")[0], Color.WHITE)	
-		initialPos = global_transform.origin
+	if event is InputEventMouseButton and event.is_pressed() and event.button_index == MOUSE_BUTTON_LEFT and !is_dragging():
+		set_dragging(true)
+		toggle_grid(true)
+		change_color(tile.find_children("MeshInstance3D")[0], Color.WHITE)	
+		initial_pos = global_transform.origin
 
 		transform.origin.y += 1
 
 func _input(event):
 	if not is_multiplayer_authority() or not mode == PREP: return
 	
-	if isDragging():
+	if is_dragging():
 		if event is InputEventMouseButton and event.is_released() and event.button_index == MOUSE_BUTTON_LEFT:
 			if main.is_unit_sellable():
 				sell_unit()
 			else:
-				placeUnit()
+				place_unit()
 		elif event is InputEventMouseMotion:
 			var viewport := get_viewport()
 			var mouse_position := viewport.get_mouse_position()
@@ -150,12 +150,12 @@ func _input(event):
 				if result.collider.get_collision_layer() == 2 and result.collider != coll and result.collider.is_multiplayer_authority() and result.collider.get_parent().visible:
 					if coll:
 						# reset highlight of last tile
-						changeColor(coll.find_children("MeshInstance3D")[0], Color.CYAN)
+						change_color(coll.find_children("MeshInstance3D")[0], Color.CYAN)
 					# highlight current tile
 					coll = result.collider
-					changeColor(coll.find_children("MeshInstance3D")[0], Color.WHITE)
+					change_color(coll.find_children("MeshInstance3D")[0], Color.WHITE)
 
-				var mouse_position_3D:Vector3 = result.get("position", initialPos if coll == null else coll.global_transform.origin)
+				var mouse_position_3D:Vector3 = result.get("position", initial_pos if coll == null else coll.global_transform.origin)
 
 				global_transform.origin = Vector3(mouse_position_3D.x, global_transform.origin.y, mouse_position_3D.z)
 
@@ -198,37 +198,37 @@ func find_target():
 	#if multiplayer.is_server():
 	#	if target != null: print(self, " targets ", target)
 
-func changeColor(mesh, color):
+func change_color(mesh, color):
 	var newMaterial = StandardMaterial3D.new()
 	newMaterial.albedo_color = color
 	mesh.set_surface_override_material(0, newMaterial)
 
-func placeUnit(_tile: Node = coll):
-	if isDragging():
+func place_unit(_tile: Node = coll):
+	if is_dragging():
 		transform.origin.y -= 1
-		setDragging(false)
+		set_dragging(false)
 	elif _tile == coll: return
 
-	toggleGrid(false)
+	toggle_grid(false)
 	
 	if _tile == null: _tile = tile # if mouse never passes over a collider coll will be null => precaution against this error
 	
-	changeColor(_tile.find_children("MeshInstance3D")[0], Color.CYAN)
+	change_color(_tile.find_children("MeshInstance3D")[0], Color.CYAN)
 	
 	if tile == _tile: 
 		global_transform.origin = Vector3(tile.global_transform.origin.x, global_transform.origin.y, tile.global_transform.origin.z)
 	elif tile != null: 
-		if _tile.hasUnit(): 
-			tile.swapUnit(_tile)
+		if _tile.has_unit(): 
+			tile.swap_unit(_tile)
 		else:
-			if _tile.get_parent().can_place_unit() or getTileType() == 1:
-				tile.unregisterUnit()
+			if _tile.get_parent().can_place_unit() or get_tile_type() == 1:
+				tile.unregister_unit()
 				tile = _tile
-				tile.registerUnit(self)
+				tile.register_unit(self)
 			else: 
 				global_transform.origin = Vector3(tile.global_transform.origin.x, global_transform.origin.y, tile.global_transform.origin.z)
 
-func levelUp():
+func level_up():
 	if star < 3:
 		star += 1
 		ui.find_child("Star").text = str(star)
@@ -239,29 +239,29 @@ func levelUp():
 		max_health *= 1.8
 		curr_health = max_health
 		
-func toggleUI(value):
+func toggle_ui(value):
 	ui.visible = value
 	
 func get_ui():
 	return ui
 	
-func toggleGrid(value):
-	player.getBoardGrid().visible = value and timer.is_preparing() and not timer.is_transitioning()
-	player.getBenchGrid().visible = value
+func toggle_grid(value):
+	player.get_board_grid().visible = value and timer.is_preparing() and not timer.is_transitioning()
+	player.get_bench_grid().visible = value
 
-func setDragging(value):
+func set_dragging(value):
 	dragging = value
 	sell_unit_gui.visible = dragging
 	sell_unit_gui.get_node("CostLabel").text = "Sell for " + str(cost) + "g"
-	toggleSync(!value)
+	toggle_sync(!value)
 	
-func isDragging():
+func is_dragging():
 	return dragging
 	
 func get_owner_id():
-	return player.getID()
+	return player.get_id()
 
-func toggleSync(value):
+func toggle_sync(value):
 	if not is_multiplayer_authority(): return
 	
 	for prop in multisync.replication_config.get_properties():
@@ -314,7 +314,7 @@ func take_dmg(raw_dmg):
 		
 # synced via multiplayersync
 func refresh_hpbar():
-	ui.get_node("HPBar").value = curr_health/max_health * 100
+	ui.get_node("hp_bar").value = curr_health/max_health * 100
 		
 @rpc("any_peer", "call_local", "reliable")
 func death():
@@ -333,9 +333,9 @@ func death():
 			main.unregister_battle()
 			var enemy = player.get_current_enemy()
 			
-			player.increment_lossstreak.rpc_id(player.getID())
+			player.increment_lossstreak.rpc_id(player.get_id())
 			
-			if enemy: enemy.increment_winstreak.rpc_id(enemy.getID())
+			if enemy: enemy.increment_winstreak.rpc_id(enemy.get_id())
 
 			# https://lolchess.gg/guide/damage?hl=en
 			var stage_damage = 0
@@ -375,17 +375,17 @@ func get_cost():
 	
 func sell_unit():
 	player.increase_gold(get_cost())
-	setDragging(false)
-	toggleGrid(false)
-	tile.unregisterUnit()
+	set_dragging(false)
+	toggle_grid(false)
+	tile.unregister_unit()
 	if coll == null: coll = tile # if mouse never passes over a collider coll will be null => precaution against this error
-	changeColor(coll.find_children("MeshInstance3D")[0], Color.CYAN)
-	player.eraseUnit(self)
+	change_color(coll.find_children("MeshInstance3D")[0], Color.CYAN)
+	player.erase_unit(self)
 	unequip_items()
-	main.freeObject.rpc(get_path())
+	main.free_object.rpc(get_path())
 	
 func set_bar_color(color: Color):
-	ui.get_node("HPBar").self_modulate = color
+	ui.get_node("hp_bar").self_modulate = color
 	
 @rpc("any_peer", "call_local", "reliable")
 func equip_item(item_path):
@@ -458,4 +458,4 @@ func combatphase_setup(host: bool, host_id: int, attacker_id: int = -1):
 			var client_id = multiplayer.get_unique_id()
 			if attacker_id == -1 or client_id != attacker_id and client_id != host_id:
 				set_bar_color(ENEMY_ATTACKER_COLOR)
-	else: toggleUI(false)
+	else: toggle_ui(false)

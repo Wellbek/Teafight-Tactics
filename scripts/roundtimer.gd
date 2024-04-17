@@ -7,9 +7,9 @@ var total_round = 0 # this is the overall round counting to infinity
 var current_stage = 1
 const START_GAME_DURATION = 5
 const FIRST_ROUND_DURATION = 15
-const preparationDuration = 30 #30
-const combatDuration = 45 #45
-const transition_time = 5
+const PREPARATION_DURATION = 30 #30
+const COMBAT_DURATION = 45 #45
+const TRANSITION_TIME = 5
 
 var unitShop: Control
 var game_start_label: Label
@@ -51,7 +51,7 @@ func trigger_overtime():
 	change_timer_color(Color.ORANGE_RED)
 	progressbar.self_modulate = Color.ORANGE_RED
 	
-	for unit in main.getPlayer().get_node("Units").get_children():
+	for unit in main.get_player().get_node("Units").get_children():
 		unit.affected_by_urf = true
 		unit.change_attack_speed(unit.attack_speed*3)
 		unit.move_speed *= 1.5
@@ -63,7 +63,7 @@ func trigger_overtime():
 		# 66% healing and shielding reduction.
 		# 30% increased affection towards maritime mammals.
 		
-	for pve_round in main.getPlayer().get_node("PVERounds").get_children():
+	for pve_round in main.get_player().get_node("PVERounds").get_children():
 		if pve_round.visible == true:
 			for minion in pve_round.get_children():
 				minion.change_attack_speed(minion.attack_speed*3)
@@ -71,9 +71,9 @@ func trigger_overtime():
 		
 func _ready():
 	main = get_tree().root.get_child(0)
-	unitShop = main.getUI().get_node("UnitShop")
-	game_start_label = main.getUI().get_node("GameStartLabel")
-	var stage_info = main.getUI().get_node("StageInfo")
+	unitShop = main.get_ui().get_node("UnitShop")
+	game_start_label = main.get_ui().get_node("GameStartLabel")
+	var stage_info = main.get_ui().get_node("StageInfo")
 	timer_label = stage_info.get_node("TimerLabel")
 	TIMER_DEFAULT_COLOR = timer_label.get_label_settings().get_font_color()
 	stage_label = stage_info.get_node("StageLabel")
@@ -92,7 +92,7 @@ func start_game():
 
 
 @rpc("authority", "call_local", "reliable")
-func startPreparationPhase():		
+func start_preparation_phase():		
 	timer_label.get_label_settings().set_font_color(TIMER_DEFAULT_COLOR)
 
 	increment_round()
@@ -111,14 +111,14 @@ func startPreparationPhase():
 	
 	preparing = true
 	
-	if not main.getPlayer() == null and not main.getPlayer().is_defeated():
-		var buttons = main.getUI().get_node("UnitShop/HBoxContainer").get_children()
+	if not main.get_player() == null and not main.get_player().is_defeated():
+		var buttons = main.get_ui().get_node("UnitShop/HBoxContainer").get_children()
 		for button in buttons:
-			button.generateButton()
+			button.generate_button()
 	#print("Preparation Phase Started for Round: ", current_round)
 	
-	if main.getPlayer():		
-		for unit in main.getPlayer().getUnits():
+	if main.get_player():		
+		for unit in main.get_player().get_units():
 			var button = main.get_node("GUI/UnitShop/HBoxContainer/Button1")
 			var upgradedUnit = button.upgrade(unit)
 
@@ -126,12 +126,12 @@ func startPreparationPhase():
 				while(upgradedUnit):
 					upgradedUnit = button.upgrade(upgradedUnit)
 					
-		if main.getPlayer().getBoardGrid().can_place_unit():
-			main.getPlayer().getBoardGrid().toggle_label(true)
+		if main.get_player().get_board_grid().can_place_unit():
+			main.get_player().get_board_grid().toggle_label(true)
 			
 	if current_round > 2 or current_stage >= 2:
 		unitShop.visible = true
-		wait_time = preparationDuration
+		wait_time = PREPARATION_DURATION
 	else: wait_time = FIRST_ROUND_DURATION
 	start()
 
@@ -143,7 +143,7 @@ func set_pve_round(path, val: bool):
 # https://leagueoflegends.fandom.com/wiki/Gold_(Teamfight_Tactics)
 @rpc("authority", "call_local", "reliable")
 func phase_gold_econ():
-	var player = main.getPlayer()
+	var player = main.get_player()
 	
 	if player.is_defeated(): return
 	
@@ -166,21 +166,21 @@ func phase_gold_econ():
 	player.increase_gold(passive_income + interest + streakgold)
 
 @rpc("authority", "call_local", "reliable")
-func startCombatPhase():
+func start_combat_phase():
 	timer_label.get_label_settings().set_font_color(TIMER_DEFAULT_COLOR)
 	
-	if not main.getPlayer().is_defeated():	
+	if not main.get_player().is_defeated():	
 		# place all units that are currently still being moved AND fill board as much as possible
-		for unit in main.getPlayer().getUnits():
-			if unit.getTileType() == 0 and main.getPlayer().getBoardGrid().can_place_unit():
-				unit.placeUnit(main.getPlayer().getBoardGrid().getFirstFreeTile())
+		for unit in main.get_player().get_units():
+			if unit.get_tile_type() == 0 and main.get_player().get_board_grid().can_place_unit():
+				unit.place_unit(main.get_player().get_board_grid().get_first_free_tile())
 			else:
-				unit.placeUnit()
+				unit.place_unit()
 				
-		for item in main.getPlayer().get_items():
-			if item.is_equipped(): item.placeItem()
+		for item in main.get_player().get_items():
+			if item.is_equipped(): item.place_item()
 			
-		main.getPlayer().getBoardGrid().toggle_label(false)
+		main.get_player().get_board_grid().toggle_label(false)
 	#print("Combat Phase Started for Round: ", current_round)
 	
 	transition()
@@ -195,13 +195,13 @@ func matchmake():
 	if (current_stage == 1 and (current_round == 2 or current_round == 3 or current_round == 4)) or current_round == 6: 
 		for player in main.players:
 			main.register_battle()
-			player.combatphase_setup.rpc_id(player.getID())
+			player.combatphase_setup.rpc_id(player.get_id())
 		return
 	
 	var player_ids = []
 	for player in main.players:
 		if not player.is_defeated():
-			player_ids.append(player.getID())
+			player_ids.append(player.get_id())
 	
 	var game_schedule = round_robin_pairs(player_ids)
 	var round_schedule = game_schedule[total_round % len(game_schedule)]
@@ -210,8 +210,8 @@ func matchmake():
 		var player1 = null
 		var player2 = null
 		for player in main.players:
-			if player.getID() == matchup[0]: player1 = player
-			elif player.getID() == matchup[1]: player2 = player
+			if player.get_id() == matchup[0]: player1 = player
+			elif player.get_id() == matchup[1]: player2 = player
 		
 		if not (player1 and player2): 
 			printerr("ERROR: couldn't matchmake as one of the players is NULL")
@@ -252,7 +252,7 @@ func _on_Timer_timeout():
 	
 	if current_round == 1 and current_stage == 1:
 		give_start_unit.rpc()
-		startPreparationPhase.rpc()
+		start_preparation_phase.rpc()
 		return
 	
 	change_phase()
@@ -261,34 +261,34 @@ func _on_Timer_timeout():
 func give_start_unit():
 	# give random unit (since we only spawn one and shop is not visible during start round just use first shop button)
 	var button1 = main.get_node("GUI/UnitShop/HBoxContainer/Button1")
-	button1.spawnUnit.rpc_id(1, multiplayer.get_unique_id(), main.getPlayer().get_path(), button1.unit_path)
+	button1.spawn_unit.rpc_id(1, multiplayer.get_unique_id(), main.get_player().get_path(), button1.unit_path)
 	
 	# give random item
 	var folder = "res://src/items"
 	var dir = DirAccess.open(folder)
 	var itemArray = dir.get_files()
-	var itemFileName = itemArray[randi() % itemArray.size()].get_slice(".",0)
+	var itemFileName = itemArray[randi() % itemArray.SIZE()].get_slice(".",0)
 	
 	var instance_path = folder + "//" + itemFileName + ".tscn"
 	
-	main.getPlayer().spawn_item(instance_path)
+	main.get_player().spawn_item(instance_path)
 	
 	game_start_label.visible = false
-	main.getUI().get_node("StageInfo").visible = true
-	main.getUI().get_node("PlayerBars").visible = true
+	main.get_ui().get_node("StageInfo").visible = true
+	main.get_ui().get_node("PlayerBars").visible = true
 		
 # server func	
 func change_phase():
 	if is_preparing():
 		if is_transitioning():
 			end_transition.rpc()
-			change_timer.rpc(combatDuration,true)
+			change_timer.rpc(COMBAT_DURATION,true)
 			change_timer_color.rpc(TIMER_DEFAULT_COLOR)
-		else: startCombatPhase.rpc()
+		else: start_combat_phase.rpc()
 	else:
 		if is_transitioning():
 			end_transition.rpc()
-			startPreparationPhase.rpc()
+			start_preparation_phase.rpc()
 		else: transition.rpc()
 	
 @rpc("authority", "call_local", "reliable")
@@ -303,7 +303,7 @@ func change_timer(time, start):
 func transition():
 	if urf_overtime:
 		urf_overtime = false
-		for unit in main.getPlayer().get_node("Units").get_children():
+		for unit in main.get_player().get_node("Units").get_children():
 			if unit.affected_by_urf: 
 				unit.affected_by_urf = false
 				unit.change_attack_speed(unit.attack_speed/3)
@@ -311,7 +311,7 @@ func transition():
 
 	transitioning = true
 	change_timer_color(Color.CRIMSON)
-	wait_time = transition_time
+	wait_time = TRANSITION_TIME
 	start()
 
 # server func sent to all clients
@@ -348,18 +348,18 @@ func increment_round():
 		if not (current_stage == 1 and (current_round == 2 or current_round == 3 or current_round == 4)) and not current_round == 6: 
 			total_round += 1 # exclude pve rounds else matchmaking is messed up
 		
-		if current_round > 2 or current_stage >= 2 and main.getPlayer() != null: main.getPlayer().increase_xp(2)
+		if current_round > 2 or current_stage >= 2 and main.get_player() != null: main.get_player().increase_xp(2)
 		
 		# drop random item every 3 rounds
 		if current_round == 3 and current_stage > 1: 
 			var folder = "res://src/items"
 			var dir = DirAccess.open(folder)
 			var itemArray = dir.get_files()
-			var itemFileName = itemArray[randi() % itemArray.size()].get_slice(".",0)
+			var itemFileName = itemArray[randi() % itemArray.SIZE()].get_slice(".",0)
 	
 			var instance_path = folder + "//" + itemFileName + ".tscn"
 	
-			main.getPlayer().spawn_item(instance_path)
+			main.get_player().spawn_item(instance_path)
 	
 	stage_label.text = str(current_stage) + "-" + str(current_round)
 		

@@ -5,7 +5,7 @@ var player
 var timer: Timer
 var parent
 
-@export var unitName: String
+@export var unit_name: String
 var ui: Control
 
 var target = null
@@ -30,14 +30,14 @@ const BAR_COLOR = Color(0.757, 0.231, 0.259)
 # still here for reference: https://twitter.com/Mortdog/status/1761019549506490633
 
 # [nothing, item component, 2g, 4g, 6g, 8g]
-const drop_rates = [0.6, 0.20, 0.09, 0.06, 0.03, 0.02]
+const DROP_RATES = [0.6, 0.20, 0.09, 0.06, 0.03, 0.02]
 
 func _ready():
 	attack_timer.timeout.connect(_on_attack_timer_timeout)
 	var viewport = find_child("SubViewport")
 	ui = viewport.get_child(0)
 	find_child("Sprite3D").texture = viewport.get_texture()
-	ui.get_node("HPBar").self_modulate = BAR_COLOR	
+	ui.get_node("hp_bar").self_modulate = BAR_COLOR	
 	
 func _enter_tree():	
 	main = get_tree().root.get_child(0)
@@ -89,7 +89,7 @@ func find_target():
 		if not target or global_transform.origin.distance_to(unit.global_transform.origin) < global_transform.origin.distance_to(target.global_transform.origin):
 			target = unit
 		
-func toggleUI(value):
+func toggle_ui(value):
 	ui.visible = value
 	
 func get_ui():
@@ -127,12 +127,12 @@ func take_dmg(raw_dmg):
 	
 	curr_health = 0 if dmg >= curr_health else curr_health-dmg
 	
-	ui.get_node("HPBar").value = curr_health/max_health * 100
+	ui.get_node("hp_bar").value = curr_health/max_health * 100
 	
 	if curr_health <= 0 and not dead: 
 		dead = true
 		death.rpc(get_path())
-		main.freeObject.rpc(get_path())
+		main.free_object.rpc(get_path())
 		
 @rpc("any_peer", "call_local", "reliable")
 func death(_path):
@@ -166,19 +166,19 @@ func _on_visibility_changed():
 func drop():
 	var rarity = randf() # number between 0 and 1
 	var index = 0
-	for i in range(len(drop_rates)):
-		if rarity < drop_rates[i]:
+	for i in range(len(DROP_RATES)):
+		if rarity < DROP_RATES[i]:
 			index = i
 			break
-		rarity -= drop_rates[i]
+		rarity -= DROP_RATES[i]
 		
 	match index:
 		1:
-			#print(player.getID(),": item")
+			#print(player.get_id(),": item")
 			var folder = "res://src/items"
 			var dir = DirAccess.open(folder)
 			var itemArray = dir.get_files()
-			var itemFileName = itemArray[randi() % itemArray.size()].get_slice(".",0)
+			var itemFileName = itemArray[randi() % itemArray.SIZE()].get_slice(".",0)
 			
 			var instance_path = folder + "//" + itemFileName + ".tscn"
 			

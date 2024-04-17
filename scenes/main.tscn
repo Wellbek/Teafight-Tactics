@@ -129,16 +129,14 @@ script = ExtResource("1_35go2")
 timer = NodePath("RoundTimer")
 gui = NodePath("GUI")
 
-[node name="MultiplayerManager" type="Node" parent="." node_paths=PackedStringArray("main", "timer", "startButton", "enable_on_start", "disable_on_start", "id_box")]
+[node name="MultiplayerManager" type="Node" parent="." node_paths=PackedStringArray("main", "timer", "startButton", "id_box")]
 script = ExtResource("4_d7qmq")
 player_scene = ExtResource("4_bh7tl")
 player_bar_scene = ExtResource("7_n3kcn")
-main = NodePath("..")
-timer = NodePath("../RoundTimer")
-startButton = NodePath("../GUI/TmpStartGame")
-enable_on_start = [NodePath("../GUI/GameStartLabel")]
-disable_on_start = [NodePath("../GUI/TmpHost"), NodePath("../GUI/TmpJoin"), NodePath("../GUI/TmpStartGame"), NodePath("../GUI/TextEdit"), NodePath("../GUI/LobbyContainer"), NodePath("../GUI/TmpLobbies")]
-id_box = NodePath("../GUI/TextEdit")
+main = NodePath("")
+timer = NodePath("")
+startButton = NodePath("")
+id_box = NodePath("")
 
 [node name="RoundTimer" type="Timer" parent="."]
 one_shot = true

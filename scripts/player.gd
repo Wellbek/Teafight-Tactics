@@ -22,16 +22,16 @@ var my_bar
 var defender = true
 
 @export_category("Player Stats")
-@export var start_gold: int = 1
+@export var start_gold: int = 0
 var gold = 0
-@onready var gold_label = main.getUI().get_node("UnitShop/Gold/HBoxContainer/GoldLabel")
+@onready var gold_label = main.get_ui().get_node("UnitShop/Gold/HBoxContainer/GoldLabel")
 @export var p_max_health = 100
 var p_curr_health = p_max_health
 var cons_wins = 0
 var cons_loss = 0
 var level = 0
 var current_xp = 0
-var xp_table = [
+var XP_TABLE = [
 	0, # 1
 	0, # 2
 	2, # 3
@@ -64,10 +64,10 @@ func _enter_tree():
 
 func _ready():
 	while not is_instance_valid(my_bar) or my_bar == null:
-		my_bar = main.getUI().get_node("PlayerBars/ColorRect/VBoxContainer").get_node(str(myid))
+		my_bar = main.get_ui().get_node("PlayerBars/ColorRect/VBoxContainer").get_node(str(myid))
 	
 	if (is_multiplayer_authority()):
-		main.setPlayer(self)
+		main.set_player(self)
 	
 		var ids = multiplayer.get_peers()
 		ids.append(myid)
@@ -77,7 +77,7 @@ func _ready():
 		global_transform.origin.x += 500 * i
 		camera.change_current(true)	
 		
-		var sidebar = main.getUI().get_node("UnitShop/Sidebar")
+		var sidebar = main.get_ui().get_node("UnitShop/Sidebar")
 		
 		xp_button = sidebar.get_node("XPButton")
 		xp_button.pressed.connect(buy_xp)
@@ -127,11 +127,11 @@ func combatphase_setup(enemy_path = null, host:bool = true):
 			
 		unit_parent.global_transform.origin = current_enemy.find_child("Units").global_transform.origin
 		unit_parent.rotate_y(deg_to_rad(180))
-		main.changeCameraByID(current_enemy.name.to_int())
+		main.change_camera_by_id(current_enemy.name.to_int())
 				
 	for unit in unit_parent.get_children():
-		var host_id = myid if host else current_enemy.getID()
-		var attacker_id = current_enemy.getID() if host else myid
+		var host_id = myid if host else current_enemy.get_id()
+		var attacker_id = current_enemy.get_id() if host else myid
 		
 		unit.combatphase_setup.rpc(host, host_id, attacker_id)
 
@@ -164,7 +164,7 @@ func reset_combatphase():
 			unit_parent.global_transform.origin = global_transform.origin
 			unit_parent.rotation = Vector3.ZERO
 
-		main.changeCamera(0)
+		main.change_camera(0)
 		
 	current_enemy = null
 	
@@ -179,12 +179,12 @@ func reset_combatphase():
 			unit.target = null
 			unit.visible = true
 			unit.refresh_hpbar()
-			unit.toggleUI(true)
-			var tile_pos = unit.getTile().global_transform.origin
+			unit.toggle_ui(true)
+			var tile_pos = unit.get_tile().global_transform.origin
 			unit.global_transform.origin = Vector3(tile_pos.x, unit.global_transform.origin.y, tile_pos.z)
 
 @rpc("any_peer", "call_local", "reliable")
-func copyUnit(unit_path, parent_path, host: bool, host_id: int, attacker_id: int = -1):
+func copy_unit(unit_path, parent_path, host: bool, host_id: int, attacker_id: int = -1):
 	var unit = get_tree().root.get_node(unit_path)
 	var parent = get_tree().root.get_node(parent_path)
 	var copy = unit.duplicate()
@@ -198,36 +198,36 @@ func copyUnit(unit_path, parent_path, host: bool, host_id: int, attacker_id: int
 			var client_id = multiplayer.get_unique_id()
 			if attacker_id == -1 or client_id != attacker_id and client_id != host_id:
 				copy.set_bar_color(copy.ENEMY_ATTACKER_COLOR)
-	else: copy.toggleUI(false)
+	else: copy.toggle_ui(false)
 
-func appendUnit(unit):
+func append_unit(unit):
 	units.append(unit)
 
-func eraseUnit(unit):
+func erase_unit(unit):
 	units.erase(unit)
 
-func removeUnit(index):
+func remove_unit(index):
 	units.remove(index)
 	
-func getUnits():
+func get_units():
 	return units
 
 func get_items():
 	return get_node("Items").get_children()
 
-func getBenchGrid():
+func get_bench_grid():
 	return benchGrid
 
-func getBoardGrid():
+func get_board_grid():
 	return boardGrid
 	
-func getCamera():
+func get_camera():
 	return camera
 	
-func getEnemyCam():
+func get_enemy_cam():
 	return enemyCam
 	
-func getID():
+func get_id():
 	return myid
 	
 func get_current_enemy():
@@ -251,7 +251,7 @@ func set_gold(val):
 		else:
 			econ_object.visible = false
 	
-	var buttons = main.getUI().get_node("UnitShop/HBoxContainer").get_children()
+	var buttons = main.get_ui().get_node("UnitShop/HBoxContainer").get_children()
 	for button in buttons:
 		button._on_player_gold_changed(gold)
 		
@@ -288,7 +288,7 @@ func lose_health(amt):
 # is called for every player as invoked by lose_health(amt)	
 func defeat():
 	defeated = true
-	for unit in getUnits():
+	for unit in get_units():
 		unit.queue_free()
 		
 	if multiplayer.is_server():
@@ -308,7 +308,7 @@ func trigger_win(id):
 	# just change scene here. Is way easier
 	
 func sort_player_bars():
-	var container = main.getUI().get_node("PlayerBars/ColorRect/VBoxContainer")
+	var container = main.get_ui().get_node("PlayerBars/ColorRect/VBoxContainer")
 	
 	var sorted_bars = container.get_children()
 	
@@ -337,8 +337,8 @@ func increase_level():
 	
 	level_label.text = str(level)
 	
-	var rates = main.drop_rates[level - 1]
-	var labels = main.getUI().get_node("UnitShop/RarityChances/HBoxContainer").get_children()
+	var rates = main.DROP_RATES[level - 1]
+	var labels = main.get_ui().get_node("UnitShop/RarityChances/HBoxContainer").get_children()
 	for i in range(len(rates)):
 		labels[i].text = str(rates[i]*100) + "%"
 		
@@ -346,7 +346,7 @@ func increase_level():
 func increment_winstreak():
 	cons_loss = 0
 	cons_wins += 1
-	var streak = main.getUI().get_node("UnitShop/Streak")
+	var streak = main.get_ui().get_node("UnitShop/Streak")
 	streak.get_node("Label").text = str(cons_wins)
 	streak.modulate = Color(1, 0, 0)
 	increase_gold(1) # win bonus
@@ -355,19 +355,19 @@ func increment_winstreak():
 func increment_lossstreak():
 	cons_wins = 0
 	cons_loss += 1
-	var streak = main.getUI().get_node("UnitShop/Streak")
+	var streak = main.get_ui().get_node("UnitShop/Streak")
 	streak.get_node("Label").text = str(cons_loss)
 	streak.modulate = Color(0, 0.529, 1)
 	
 func increase_xp(amt: int):
 	current_xp += amt
 	
-	if current_xp >= xp_table[level-1]:
-		current_xp = min(xp_table[level-1], current_xp - xp_table[level-1])
+	if current_xp >= XP_TABLE[level-1]:
+		current_xp = min(XP_TABLE[level-1], current_xp - XP_TABLE[level-1])
 		increase_level()
 		
-	xp_label.text = str(current_xp) + "/" + str(xp_table[level-1])
-	xp_bar.value = float(current_xp) / float(max(1,xp_table[level-1])) * 100
+	xp_label.text = str(current_xp) + "/" + str(XP_TABLE[level-1])
+	xp_bar.value = float(current_xp) / float(max(1,XP_TABLE[level-1])) * 100
 
 func buy_xp():
 	if gold < XP_COST: return
@@ -379,9 +379,9 @@ func reroll_shop():
 	
 	decrease_gold(RR_COST)
 	
-	var buttons = main.getUI().get_node("UnitShop/HBoxContainer").get_children()
+	var buttons = main.get_ui().get_node("UnitShop/HBoxContainer").get_children()
 	for button in buttons:
-		button.generateButton()
+		button.generate_button()
 		
 @rpc("any_peer", "call_local", "reliable")
 func spawn_item(path):

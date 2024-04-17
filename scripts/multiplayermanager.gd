@@ -104,7 +104,7 @@ func _on_lobby_match_list(lobbies):
 		
 		var but = Button.new()
 		but.set_text(str(lobby_name) + " | " + str(mem_count) + "/8")
-		but.set_size(Vector2(100,5))
+		but.set_SIZE(Vector2(100,5))
 		
 		but.connect("pressed", Callable(self, "join_lobby").bind(lobby))
 		
