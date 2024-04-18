@@ -22,7 +22,7 @@ properties/1/path = NodePath("Health/HealthLabel:text")
 properties/1/spawn = true
 properties/1/replication_mode = 2
 
-[node name="PlayerBar" type="Control" node_paths=PackedStringArray("name_label", "health_label", "HPBar")]
+[node name="PlayerBar" type="Control" node_paths=PackedStringArray("name_label", "health_label", "hp_bar")]
 custom_minimum_size = Vector2(200, 50)
 layout_mode = 3
 anchor_right = 0.174
@@ -33,7 +33,7 @@ size_flags_horizontal = 8
 script = ExtResource("1_bgs5b")
 name_label = NodePath("Name/Label")
 health_label = NodePath("Health/HealthLabel")
-HPBar = NodePath("HPBar")
+hp_bar = NodePath("HPBar")
 
 [node name="Name" type="ColorRect" parent="."]
 layout_mode = 1

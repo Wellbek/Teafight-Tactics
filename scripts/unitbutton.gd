@@ -93,7 +93,7 @@ func upgrade(_unit):
 	for u in main.get_player().get_units():
 		if u.unit_name == _unit.unit_name and u.star == _unit.star and _unit != u and u.get_mode() != u.BATTLE:
 			sameUnits.append(u)
-			if sameUnits.SIZE() >= 2:
+			if sameUnits.size() >= 2:
 				if _unit.get_tile():
 					_unit.tile.unregister_unit()
 				_unit.transfer_items(sameUnits[0])
@@ -132,7 +132,7 @@ func generate_button():
 	var folder = unit_folder + "//" + str(unit_cost)
 	var dir = DirAccess.open(folder)
 	var unitArray = dir.get_files()
-	var unitFileName = unitArray[randi() % unitArray.SIZE()].get_slice(".",0)
+	var unitFileName = unitArray[randi() % unitArray.size()].get_slice(".",0)
 	unit_path = folder + "//" + unitFileName
 	image.texture = load(unit_path + ".png")
 	cost_label.text = str(unit_cost)

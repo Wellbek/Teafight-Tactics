@@ -58,7 +58,7 @@ func change_camera(_index):
 		local_player.get_camera().change_current(true)
 	else:	
 		var ids = multiplayer.get_peers()
-		if _index-1 >= ids.SIZE(): return
+		if _index-1 >= ids.size(): return
 		ids.sort()
 		var peername = str(ids[_index-1])
 		var peer = get_tree().root.get_child(0).find_child("World").get_node(peername)

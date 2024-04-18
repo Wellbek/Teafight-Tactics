@@ -58,7 +58,7 @@ func _ready():
 	var viewport = find_child("SubViewport")
 	ui = viewport.get_child(0)
 	find_child("Sprite3D").texture = viewport.get_texture()
-	ui.get_node("hp_bar").self_modulate = LOCAL_COLOR if is_multiplayer_authority() else ENEMY_HOST_COLOR	
+	ui.get_node("HPBar").self_modulate = LOCAL_COLOR if is_multiplayer_authority() else ENEMY_HOST_COLOR	
 	
 func _enter_tree():
 	myid = name.get_slice("#", 0).to_int()
@@ -314,7 +314,7 @@ func take_dmg(raw_dmg):
 		
 # synced via multiplayersync
 func refresh_hpbar():
-	ui.get_node("hp_bar").value = curr_health/max_health * 100
+	ui.get_node("HPBar").value = curr_health/max_health * 100
 		
 @rpc("any_peer", "call_local", "reliable")
 func death():
@@ -385,7 +385,7 @@ func sell_unit():
 	main.free_object.rpc(get_path())
 	
 func set_bar_color(color: Color):
-	ui.get_node("hp_bar").self_modulate = color
+	ui.get_node("HPBar").self_modulate = color
 	
 @rpc("any_peer", "call_local", "reliable")
 func equip_item(item_path):

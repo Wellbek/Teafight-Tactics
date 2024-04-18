@@ -22,7 +22,7 @@ texture_hover = SubResource("ViewportTexture_ypxqh")
 ignore_texture_size = true
 stretch_mode = 4
 script = ExtResource("1_3cbhy")
-unitFolder = "res://src/units"
+unit_folder = "res://src/units"
 
 [node name="SubViewport" type="SubViewport" parent="."]
 transparent_bg = true

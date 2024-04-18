@@ -129,14 +129,17 @@ script = ExtResource("1_35go2")
 timer = NodePath("RoundTimer")
 gui = NodePath("GUI")
 
-[node name="MultiplayerManager" type="Node" parent="." node_paths=PackedStringArray("main", "timer", "startButton", "id_box")]
+[node name="MultiplayerManager" type="Node" parent="." node_paths=PackedStringArray("local_test_check", "main", "timer", "startButton", "enable_on_start", "disable_on_start", "id_box")]
 script = ExtResource("4_d7qmq")
 player_scene = ExtResource("4_bh7tl")
 player_bar_scene = ExtResource("7_n3kcn")
-main = NodePath("")
-timer = NodePath("")
-startButton = NodePath("")
-id_box = NodePath("")
+local_test_check = NodePath("../GUI/CheckButton")
+main = NodePath("..")
+timer = NodePath("../RoundTimer")
+startButton = NodePath("../GUI/TmpStartGame")
+enable_on_start = [NodePath("../GUI/GameStartLabel")]
+disable_on_start = [NodePath("../GUI/TmpHost"), NodePath("../GUI/TmpJoin"), NodePath("../GUI/TmpLobbies"), NodePath("../GUI/LobbyContainer"), NodePath("../GUI/CheckButton"), NodePath("../GUI/Label"), NodePath("../GUI/TextEdit")]
+id_box = NodePath("../GUI/TextEdit")
 
 [node name="RoundTimer" type="Timer" parent="."]
 one_shot = true
@@ -835,6 +838,35 @@ grow_vertical = 2
 focus_mode = 0
 text = "Start Game"
 
+[node name="Label" type="Label" parent="GUI"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -144.0
+offset_top = -40.0
+offset_right = -74.0
+offset_bottom = -17.0
+grow_horizontal = 0
+grow_vertical = 0
+text = "local test"
+
+[node name="CheckButton" type="CheckButton" parent="GUI"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -64.0
+offset_top = -40.0
+offset_right = -20.0
+offset_bottom = -16.0
+grow_horizontal = 0
+grow_vertical = 0
+
 [node name="LobbyContainer" type="ScrollContainer" parent="GUI"]
 visible = false
 layout_mode = 1
@@ -868,3 +900,4 @@ spawn_limit = 8
 [connection signal="pressed" from="GUI/TmpJoin" to="MultiplayerManager" method="_on_tmp_join_pressed"]
 [connection signal="pressed" from="GUI/TmpLobbies" to="MultiplayerManager" method="_on_tmp_lobbies_pressed"]
 [connection signal="pressed" from="GUI/TmpStartGame" to="MultiplayerManager" method="_on_tmp_start_game_pressed"]
+[connection signal="toggled" from="GUI/CheckButton" to="MultiplayerManager" method="_on_check_button_toggled"]

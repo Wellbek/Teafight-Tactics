@@ -267,7 +267,7 @@ func give_start_unit():
 	var folder = "res://src/items"
 	var dir = DirAccess.open(folder)
 	var itemArray = dir.get_files()
-	var itemFileName = itemArray[randi() % itemArray.SIZE()].get_slice(".",0)
+	var itemFileName = itemArray[randi() % itemArray.size()].get_slice(".",0)
 	
 	var instance_path = folder + "//" + itemFileName + ".tscn"
 	
@@ -355,7 +355,7 @@ func increment_round():
 			var folder = "res://src/items"
 			var dir = DirAccess.open(folder)
 			var itemArray = dir.get_files()
-			var itemFileName = itemArray[randi() % itemArray.SIZE()].get_slice(".",0)
+			var itemFileName = itemArray[randi() % itemArray.size()].get_slice(".",0)
 	
 			var instance_path = folder + "//" + itemFileName + ".tscn"
 	

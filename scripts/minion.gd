@@ -37,7 +37,7 @@ func _ready():
 	var viewport = find_child("SubViewport")
 	ui = viewport.get_child(0)
 	find_child("Sprite3D").texture = viewport.get_texture()
-	ui.get_node("hp_bar").self_modulate = BAR_COLOR	
+	ui.get_node("HPBar").self_modulate = BAR_COLOR	
 	
 func _enter_tree():	
 	main = get_tree().root.get_child(0)
@@ -127,7 +127,7 @@ func take_dmg(raw_dmg):
 	
 	curr_health = 0 if dmg >= curr_health else curr_health-dmg
 	
-	ui.get_node("hp_bar").value = curr_health/max_health * 100
+	ui.get_node("HPBar").value = curr_health/max_health * 100
 	
 	if curr_health <= 0 and not dead: 
 		dead = true
@@ -178,7 +178,7 @@ func drop():
 			var folder = "res://src/items"
 			var dir = DirAccess.open(folder)
 			var itemArray = dir.get_files()
-			var itemFileName = itemArray[randi() % itemArray.SIZE()].get_slice(".",0)
+			var itemFileName = itemArray[randi() % itemArray.size()].get_slice(".",0)
 			
 			var instance_path = folder + "//" + itemFileName + ".tscn"
 			

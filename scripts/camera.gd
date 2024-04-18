@@ -24,7 +24,7 @@ func _input(event):
 		current_fov = clamp(current_fov, min_fov, max_fov)
 		set_fov(current_fov)
 	elif event is InputEventMouseMotion:
-		var screen_SIZE = Vector2(get_viewport().SIZE)
+		var screen_SIZE = Vector2(get_viewport().size)
 		var pos_ratio = (screen_SIZE - event.position)/screen_SIZE
 		move_vec = Vector2(0,0)
 		if pos_ratio.x > .9 and pos_ratio.x < 1:
