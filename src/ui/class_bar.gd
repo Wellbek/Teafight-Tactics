@@ -9,13 +9,14 @@ var c_name: String
 var count: int = 0
 var steps = []
 
-func init(_c_name, _step1, _step2, _step3, _increment: bool = true):
+func init(_c_name, _step1, _step2, _step3, _tooltip: String, _increment: bool = true):
 	c_name = _c_name
 	steps = [_step1, _step2, _step3]
 	count = 1 if _increment else 0
 	name = c_name
 	class_name_label.text = c_name
 	class_step_label.text = str(_step1) + " > " + str(_step2) + " > " + str(_step3)
+	set_tooltip_text(_tooltip)
 	refresh()
 	
 func refresh():

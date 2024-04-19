@@ -94,10 +94,10 @@ heal % every 4 seconds
 10 %
 20 %
 
-dragonlord (kinda): - exotic
-deal % true dmg every 8 seconds:
-10%
-10%
-18%
+cybernatic (kinda): - exotic
+cybernatic champions with atleast one item gain health and attack dmg:
+200 health 35 attack dmg
+400 health 50 attack dmg
+700 health and 70 attack dmg
 
 
