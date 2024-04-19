@@ -48,6 +48,8 @@ var dead = false
 var dodge_chance = 0.0
 var bonus_attack_speed = 0.0 # in raw (not percent)
 var duelist_counter = 0
+var omnivamp = 0.0 # heal of RAW dmg
+var bonus_dmg = 0.0 # in percent
 
 const LOCAL_COLOR = Color(0.2, 0.898, 0.243)
 const ENEMY_HOST_COLOR = Color(0.757, 0.231, 0.259)
@@ -167,22 +169,44 @@ func change_mode(_mode: int):
 	if mode == _mode: return
 	
 	if _mode == BATTLE:
-		# bastion: - aromatic
-		# all bastion units increased armor and mr (in combat): increased by 100% for first 10 sec
+		# bastion (kinda): - aromatic 
+		# all bastion units increased armor and mr (in combat): increased by 50% for first 10 sec
 		if type == 6:
-			var timer = Timer.new()
-			add_child(timer)
-			timer.name = "aromatic_trait"
-			timer.wait_time = 10.0
-			timer.one_shot = true
-			timer.connect("timeout", _on_aromatic_10sec)
-			# start timer in combat start
-			match main.get_classes().get_class_level(CLASS_NAMES[6]):
-				1: armor += 50
-				2: armor += 100
-				3: armor += 190
-				_: pass
+			var class_level = main.get_classes().get_class_level(CLASS_NAMES[6])
+			if class_level >= 1:
+				var timer = Timer.new()
+				add_child(timer)
+				timer.name = "aromatic_trait"
+				timer.wait_time = 10.0 + main.get_timer().TRANSITION_TIME # not ideal but works for now without needing to change system 
+				timer.one_shot = true
+				timer.connect("timeout", _on_aromatic_10sec)
+				timer.start()
+				match class_level:
+					1: armor += 27.5
+					2: armor += 75
+					3: armor += 142.5
+					_: pass
 			
+		# bruiser: - herbal
+		# 100 max health all, bruisers bonus:
+		# 20% health
+		# 40% health
+		# 65% health
+		match main.get_classes().get_class_level(CLASS_NAMES[0]):
+			1: 
+				max_health += 100
+				if type == 0: max_health *= 1.2
+				curr_health = max_health
+			2: 
+				max_health += 100
+				if type == 0: max_health *= 1.4
+				curr_health = max_health
+			3: 
+				max_health += 100
+				if type == 0: max_health *= 1.65
+				curr_health = max_health
+			_: pass
+		
 		# wing (kinda): - floral
 		# all allies gain dodge chance: 15% -> 25% -> 35%
 		match main.get_classes().get_class_level(CLASS_NAMES[3]):
@@ -190,6 +214,57 @@ func change_mode(_mode: int):
 			2: dodge_chance += .25
 			3: dodge_chance += .35
 			_: pass
+			
+		# slayer: - green
+		# all slayers:
+		#12% omnivamp, bonus dmg (doubled at 66%) - 5% b dmg -> 10% -> 30%
+		if type == 1:
+			match main.get_classes().get_class_level(CLASS_NAMES[1]):
+				1: 
+					omnivamp += .12
+					bonus_dmg += 0.05
+				2: 
+					omnivamp += .12
+					bonus_dmg += 0.1
+				3: 
+					omnivamp += .12
+					bonus_dmg += 0.3
+				_: pass
+				
+		# shurima (kinda): - fruit
+		# heal % every 4 seconds
+		if type == 5:
+			var class_level = main.get_classes().get_class_level(CLASS_NAMES[5])
+			if class_level >= 1:
+				var timer = Timer.new()
+				add_child(timer)
+				timer.name = "fruit_trait"
+				timer.wait_time = 4.0
+				timer.one_shot = false
+				timer.connect("timeout", _on_shurima)
+				timer.start()
+				
+		# cybernatic (kinda): - exotic
+		# cybernatic champions with atleast one item gain health and attack dmg:
+		# 200 health 35 attack dmg
+		# 400 health 50 attack dmg
+		# 700 health and 70 attack dmg
+		if type == 4 and items[0]:
+			match main.get_classes().get_class_level(CLASS_NAMES[4]):
+				1: 
+					max_health += 200
+					curr_health = max_health
+					attack_dmg += 35
+				2: 
+					max_health += 400
+					curr_health = max_health
+					attack_dmg += 50
+				3: 
+					max_health += 700
+					curr_health = max_health
+					attack_dmg += 70
+				_: pass
+	
 		
 		set_collision_layer_value(5, true) # only collide with battling units (hidden prep units should be ignored)
 	else:
@@ -201,6 +276,22 @@ func change_mode(_mode: int):
 				2: armor -= 50
 				3: armor -= 95
 				_: pass
+				
+		# reset bruiser trait
+		match main.get_classes().get_class_level(CLASS_NAMES[0]):
+			1: 
+				if type == 0: max_health /= 1.2
+				max_health -= 100
+				curr_health = max_health
+			2: 
+				if type == 0: max_health /= 1.4
+				max_health -= 100
+				curr_health = max_health
+			3: 
+				if type == 0: max_health /= 1.65
+				max_health -= 100
+				curr_health = max_health
+			_: pass
 		
 		# reset wing trait
 		match main.get_classes().get_class_level(CLASS_NAMES[3]):
@@ -209,10 +300,45 @@ func change_mode(_mode: int):
 			3: dodge_chance -= .35
 			_: pass
 		
+		# reset slayer trait
+		if type == 1:
+			match main.get_classes().get_class_level(CLASS_NAMES[1]):
+				1: 
+					omnivamp -= .12
+					bonus_dmg -= 0.05
+				2: 
+					omnivamp -= .12
+					bonus_dmg -= 0.1
+				3: 
+					omnivamp -= .12
+					bonus_dmg -= 0.3
+				_: pass
+				
+		# reset cybernatic trait
+		if type == 4 and items[0]:
+			match main.get_classes().get_class_level(CLASS_NAMES[4]):
+				1: 
+					max_health -= 200
+					curr_health = max_health
+					attack_dmg -= 35
+				2: 
+					max_health -= 400
+					curr_health = max_health
+					attack_dmg -= 50
+				3: 
+					max_health -= 700
+					curr_health = max_health
+					attack_dmg -= 70
+				_: pass
+		
 		# reset duelist trait
 		attack_speed -= bonus_attack_speed
 		bonus_attack_speed = 0
 		duelist_counter = 0
+		
+		# reset shurima
+		var fruit_timer = get_node_or_null("fruit_trait")
+		if fruit_timer: fruit_timer.queue_free()
 	
 		set_collision_layer_value(5, false)
 		
@@ -225,6 +351,15 @@ func _on_aromatic_10sec():
 		3: armor -= 95
 		_: pass
 	get_node("aromatic_trait").queue_free()
+	
+func _on_shurima():
+	if dead: return
+	
+	match main.get_classes().get_class_level(CLASS_NAMES[5]):
+		1: curr_health = min(max_health, curr_health+(max_health*0.05))
+		2: curr_health = min(max_health, curr_health+(max_health*0.1))
+		3: curr_health = min(max_health, curr_health+(max_health*0.2))
+		_: pass
 
 func get_mode():
 	return mode
@@ -339,7 +474,7 @@ func in_attack_range():
 func _on_attack_timer_timeout():	
 	if main.get_timer().is_transitioning() or dead:
 		attacking = false 
-		get_node("AttackTimer").stop()
+		attack_timer.stop()
 	else: auto_attack(target, targeting_neutral)
 
 func auto_attack(_target, pve = false):
@@ -350,8 +485,12 @@ func auto_attack(_target, pve = false):
 	var rng = randf()
 	
 	var damage = attack_dmg if rng > crit_chance else attack_dmg * 1.3
+	damage *= (1+(bonus_dmg*2)) if (_target.get_curr_health()/_target.get_max_health() < 0.66) and type == 1 else (1+bonus_dmg)
 
-	_target.take_dmg.rpc_id(id, damage)
+	_target.take_dmg.rpc_id(id, damage*(1+bonus_dmg))
+	
+	# omnivamp - (we just do raw dmg here as actual dmg is computed in take_dmg func)
+	curr_health = min(curr_health + damage*omnivamp, max_health)
 	
 	# duelist (kinda): - black 
 	# for duelists: stacking attack speed up to 12; 5% -> 10% -> 15%
@@ -365,6 +504,12 @@ func auto_attack(_target, pve = false):
 				_: pass
 			bonus_attack_speed += attack_speed - tmp
 			duelist_counter += 1
+			
+func get_curr_health():
+	return curr_health
+	
+func get_max_health():
+	return max_health
 
 func change_attack_speed(val):
 	attack_speed = val

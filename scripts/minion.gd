@@ -193,3 +193,9 @@ func drop():
 			player.increase_gold(8)
 		_: 
 			pass
+			
+func get_curr_health():
+	return curr_health
+	
+func get_max_health():
+	return max_health
