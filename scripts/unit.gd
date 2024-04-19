@@ -19,6 +19,7 @@ var multisync
 @export var unit_name: String
 @export_enum("NONE","1", "2", "3") var star: int = 1
 @export_enum("Herbal Heroes", "Green Guardians", "Black Brigade", "Floral Fighters", "Exotic Enchanters", "Fruitful Forces", "Aromatic Avatars") var type: int = 0
+const CLASS_NAMES = ["Herbal Heroes", "Green Guardians", "Black Brigade", "Floral Fighters", "Exotic Enchanters", "Fruitful Forces", "Aromatic Avatars"]
 var ui: Control
 
 enum {SQUARE, HEX}
@@ -459,3 +460,6 @@ func combatphase_setup(host: bool, host_id: int, attacker_id: int = -1):
 			if attacker_id == -1 or client_id != attacker_id and client_id != host_id:
 				set_bar_color(ENEMY_ATTACKER_COLOR)
 	else: toggle_ui(false)
+	
+func get_class_name():
+	return CLASS_NAMES[type]

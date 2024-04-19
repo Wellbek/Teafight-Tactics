@@ -64,7 +64,7 @@ func _enter_tree():
 
 func _ready():
 	while not is_instance_valid(my_bar) or my_bar == null:
-		my_bar = main.get_ui().get_node("PlayerBars/ColorRect/VBoxContainer").get_node(str(myid))
+		my_bar = main.get_ui().get_node("PlayerBars/VBoxContainer").get_node(str(myid))
 	
 	if (is_multiplayer_authority()):
 		main.set_player(self)
@@ -308,7 +308,7 @@ func trigger_win(id):
 	# just change scene here. Is way easier
 	
 func sort_player_bars():
-	var container = main.get_ui().get_node("PlayerBars/ColorRect/VBoxContainer")
+	var container = main.get_ui().get_node("PlayerBars/VBoxContainer")
 	
 	var sorted_bars = container.get_children()
 	

@@ -276,6 +276,7 @@ func give_start_unit():
 	game_start_label.visible = false
 	main.get_ui().get_node("StageInfo").visible = true
 	main.get_ui().get_node("PlayerBars").visible = true
+	main.get_ui().get_node("Classes").visible = true
 		
 # server func	
 func change_phase():

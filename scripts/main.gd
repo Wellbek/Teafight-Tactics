@@ -3,6 +3,7 @@ extends Node
 var local_player
 @export var timer: Timer
 @export var gui: Control
+@export var classes: Control
 
 var players = []
 var num_of_battles = 0 # server var
@@ -88,3 +89,6 @@ func _on_sell_unit_mouse_exited():
 	
 func is_unit_sellable():
 	return unit_sellable
+	
+func get_classes():
+	return classes

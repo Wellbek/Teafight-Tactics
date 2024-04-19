@@ -1,6 +1,7 @@
 extends Node3D
 
 var unit = null
+@onready var main = get_tree().root.get_child(0)
 
 func register_unit(new_unit):
 	if new_unit == null:
@@ -14,12 +15,19 @@ func register_unit(new_unit):
 	unit.global_transform.origin = Vector3(global_transform.origin.x, unit.global_transform.origin.y, global_transform.origin.z)
 	
 	get_parent().increase_number_of_units()
+	
+	if get_parent().type == 1:
+		main.get_classes().increase_count(unit.get_class_name())
 
 func unregister_unit():
 	if unit == null: return
 	
-	unit = null
 	get_parent().decrease_number_of_units()
+	
+	if get_parent().type == 1:
+		main.get_classes().decrease_count(unit.get_class_name())
+		
+	unit = null
 	
 func swap_unit(old_tile):
 	if get_script() != old_tile.get_script(): 

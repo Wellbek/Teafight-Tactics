@@ -1,4 +1,4 @@
-[gd_scene load_steps=44 format=3 uid="uid://cqs5r3b42amb7"]
+[gd_scene load_steps=45 format=3 uid="uid://cqs5r3b42amb7"]
 
 [ext_resource type="Script" path="res://scripts/main.gd" id="1_35go2"]
 [ext_resource type="Script" path="res://scripts/roundtimer.gd" id="2_8mgga"]
@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://dfbxcmkrqggoj" path="res://src/ui/player_bar.tscn" id="7_n3kcn"]
 [ext_resource type="Texture2D" uid="uid://d3ugo452yq2y5" path="res://assets/League_of_Legends_Screenshot_2021.04.26___13.43.59.70.jpeg" id="8_ukdsg"]
 [ext_resource type="Texture2D" uid="uid://isbp8j5mubnq" path="res://assets/images/streak_icon.png" id="9_8icbs"]
+[ext_resource type="Script" path="res://scenes/class_manager.gd" id="10_sbqyv"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_gtjgx"]
 font_size = 17
@@ -124,10 +125,11 @@ font_color = Color(1, 0.925734, 0.427451, 1)
 outline_size = 20
 outline_color = Color(0.152895, 0.172442, 0.188067, 1)
 
-[node name="Main" type="Node" node_paths=PackedStringArray("timer", "gui")]
+[node name="Main" type="Node" node_paths=PackedStringArray("timer", "gui", "classes")]
 script = ExtResource("1_35go2")
 timer = NodePath("RoundTimer")
 gui = NodePath("GUI")
+classes = NodePath("GUI/Classes")
 
 [node name="MultiplayerManager" type="Node" parent="." node_paths=PackedStringArray("local_test_check", "main", "timer", "startButton", "enable_on_start", "disable_on_start", "id_box")]
 script = ExtResource("4_d7qmq")
@@ -175,8 +177,8 @@ anchor_left = 0.876
 anchor_top = 0.16
 anchor_right = 1.0
 anchor_bottom = 0.753
-offset_left = -0.152039
-offset_top = 0.319992
+offset_left = -113.152
+offset_top = 0.32
 offset_bottom = 0.0559998
 grow_horizontal = 0
 grow_vertical = 2
@@ -188,20 +190,18 @@ anchor_left = 1.002
 anchor_right = 1.002
 anchor_bottom = 1.0
 offset_left = -25.368
-offset_right = -0.368011
+offset_right = -0.36795
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(1, 0.890562, 0.647288, 1)
+color = Color(1, 0.890196, 0.647059, 1)
 
-[node name="VBoxContainer" type="VBoxContainer" parent="GUI/PlayerBars/ColorRect"]
+[node name="VBoxContainer" type="VBoxContainer" parent="GUI/PlayerBars"]
 layout_mode = 1
 anchors_preset = -1
-anchor_left = -6.972
-anchor_top = 0.038
+anchor_top = 0.039
 anchor_right = 1.0
 anchor_bottom = 0.958
-offset_left = -0.699997
-offset_top = 0.407999
+offset_top = 0.0240002
 offset_bottom = 0.127991
 grow_horizontal = 2
 grow_vertical = 2
@@ -752,6 +752,42 @@ horizontal_alignment = 1
 vertical_alignment = 1
 clip_text = true
 
+[node name="Classes" type="Control" parent="GUI" node_paths=PackedStringArray("class_bars")]
+visible = false
+layout_mode = 1
+anchor_top = 0.247
+anchor_right = 0.035
+anchor_bottom = 0.728
+offset_top = -0.0559998
+offset_right = 79.68
+offset_bottom = 0.255981
+script = ExtResource("10_sbqyv")
+class_bars = NodePath("VBoxContainer")
+
+[node name="ColorRect" type="ColorRect" parent="GUI/Classes"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 0.133
+anchor_bottom = 1.0
+offset_right = 8.04
+color = Color(1, 0.890196, 0.647059, 1)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="GUI/Classes"]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.026
+anchor_right = 1.067
+anchor_bottom = 0.974
+offset_top = -0.112
+offset_right = -0.0400085
+offset_bottom = 0.112
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MultiplayerSpawner3" type="MultiplayerSpawner" parent="GUI/Classes"]
+_spawnable_scenes = PackedStringArray("res://src/ui/class_bar.tscn")
+spawn_path = NodePath("../VBoxContainer")
+
 [node name="GameStartLabel" type="Label" parent="GUI"]
 visible = false
 layout_mode = 1
@@ -890,7 +926,7 @@ spawn_limit = 8
 
 [node name="MultiplayerSpawner2" type="MultiplayerSpawner" parent="."]
 _spawnable_scenes = PackedStringArray("res://src/ui/player_bar.tscn")
-spawn_path = NodePath("../GUI/PlayerBars/ColorRect/VBoxContainer")
+spawn_path = NodePath("../GUI/PlayerBars/VBoxContainer")
 spawn_limit = 8
 
 [connection signal="timeout" from="RoundTimer" to="RoundTimer" method="_on_Timer_timeout"]
