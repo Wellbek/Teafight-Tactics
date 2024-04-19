@@ -57,7 +57,7 @@ ee:
 
 
 bastion: - aromatic
-armor and mr: in combat: bastion units increased by 100% for first 10 sec
+armor and mr: in combat: bastion units increased by 50% for first 10 sec
 25
 50
 95
@@ -99,5 +99,3 @@ cybernatic champions with atleast one item gain health and attack dmg:
 200 health 35 attack dmg
 400 health 50 attack dmg
 700 health and 70 attack dmg
-
-
