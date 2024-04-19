@@ -45,6 +45,9 @@ var dead = false
 @export var attack_speed = 0.8
 @export var crit_chance = 0.25
 @export var attack_timer: Timer
+var dodge_chance = 0.0
+var bonus_attack_speed = 0.0 # in raw (not percent)
+var duelist_counter = 0
 
 const LOCAL_COLOR = Color(0.2, 0.898, 0.243)
 const ENEMY_HOST_COLOR = Color(0.757, 0.231, 0.259)
@@ -161,13 +164,68 @@ func _input(event):
 				global_transform.origin = Vector3(mouse_position_3D.x, global_transform.origin.y, mouse_position_3D.z)
 
 func change_mode(_mode: int):	
-	mode = _mode
+	if mode == _mode: return
 	
-	if mode == BATTLE:
+	if _mode == BATTLE:
+		# bastion: - aromatic
+		# all bastion units increased armor and mr (in combat): increased by 100% for first 10 sec
+		if type == 6:
+			var timer = Timer.new()
+			add_child(timer)
+			timer.name = "aromatic_trait"
+			timer.wait_time = 10.0
+			timer.one_shot = true
+			timer.connect("timeout", _on_aromatic_10sec)
+			# start timer in combat start
+			match main.get_classes().get_class_level(CLASS_NAMES[6]):
+				1: armor += 50
+				2: armor += 100
+				3: armor += 190
+				_: pass
+			
+		# wing (kinda): - floral
+		# all allies gain dodge chance: 15% -> 25% -> 35%
+		match main.get_classes().get_class_level(CLASS_NAMES[3]):
+			1: dodge_chance += .15
+			2: dodge_chance += .25
+			3: dodge_chance += .35
+			_: pass
+		
 		set_collision_layer_value(5, true) # only collide with battling units (hidden prep units should be ignored)
 	else:
+		# reset bastion trait
+		if type == 6:		
+			if get_node_or_null("aromatic_trait"): _on_aromatic_10sec()
+			match main.get_classes().get_class_level(CLASS_NAMES[6]):
+				1: armor -= 25
+				2: armor -= 50
+				3: armor -= 95
+				_: pass
+		
+		# reset wing trait
+		match main.get_classes().get_class_level(CLASS_NAMES[3]):
+			1: dodge_chance -= .15
+			2: dodge_chance -= .25
+			3: dodge_chance -= .35
+			_: pass
+		
+		# reset duelist trait
+		attack_speed -= bonus_attack_speed
+		bonus_attack_speed = 0
+		duelist_counter = 0
+	
 		set_collision_layer_value(5, false)
-			
+		
+	mode = _mode
+	
+func _on_aromatic_10sec():
+	match main.get_classes().get_class_level(CLASS_NAMES[6]):
+		1: armor -= 25
+		2: armor -= 50
+		3: armor -= 95
+		_: pass
+	get_node("aromatic_trait").queue_free()
+
 func get_mode():
 	return mode
 			
@@ -294,6 +352,19 @@ func auto_attack(_target, pve = false):
 	var damage = attack_dmg if rng > crit_chance else attack_dmg * 1.3
 
 	_target.take_dmg.rpc_id(id, damage)
+	
+	# duelist (kinda): - black 
+	# for duelists: stacking attack speed up to 12; 5% -> 10% -> 15%
+	if type == 2:
+		if duelist_counter < 12:
+			var tmp = attack_speed
+			match main.get_classes().get_class_level(CLASS_NAMES[2]):
+				1: attack_speed *= 1.05
+				2: attack_speed *= 1.10
+				3: attack_speed *= 1.15
+				_: pass
+			bonus_attack_speed += attack_speed - tmp
+			duelist_counter += 1
 
 func change_attack_speed(val):
 	attack_speed = val
@@ -303,6 +374,10 @@ func change_attack_speed(val):
 @rpc("any_peer", "call_local", "unreliable")
 func take_dmg(raw_dmg):
 	if mode != BATTLE or dead: return
+	
+	# dodge
+	var rng = randf()
+	if rng < dodge_chance: return
 	
 	var dmg = raw_dmg / (1+armor/100) # https://leagueoflegends.fandom.com/wiki/Armor
 	

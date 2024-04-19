@@ -51,3 +51,53 @@ green: green
 aromatic: yellow
 floral: soft light colors
 ee: 
+
+
+
+
+
+bastion: - aromatic
+armor and mr: in combat: bastion units increased by 100% for first 10 sec
+25
+50
+95
+
+wing (kinda): - floral
+all allies gain dodge chance:
+15%
+25%
+35%
+
+duelist (kinda): - black
+for duelists:
+stacking attack speed up to 12
+5%
+10%
+15%
+
+bruiser: - herbal
+100 max health all, bruisers bonus:
+20% health
+40% health
+65% health
+
+slayer: - green
+all slayers:
+12% omnivamp, bonus dmg (doubled at 66%)
+5% b dmg
+10% b dmg
+30% b dmg
+
+shurima (kinda): - fruit
+heal % every 4 seconds
+5 %
+10 %
+20 %
+
+dragonlord (kinda): - exotic
+deal % true dmg every 8 seconds:
+10%
+10%
+18%
+
+
