@@ -4,6 +4,7 @@ extends Control
 @export var class_name_label: Label
 @export var curr_count_label: Label
 @export var class_step_label: Label
+@export var icons: Control
 
 var c_name: String
 var count: int = 0
@@ -16,6 +17,8 @@ func init(_c_name, _step1, _step2, _step3, _tooltip: String, _increment: bool = 
 	name = c_name
 	class_name_label.text = c_name
 	class_step_label.text = str(_step1) + " > " + str(_step2) + " > " + str(_step3)
+	var icon = icons.get_node_or_null(c_name)
+	if icon: icon.visible = true
 	set_tooltip_text(_tooltip)
 	refresh()
 	

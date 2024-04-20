@@ -17,7 +17,11 @@ func register_unit(new_unit):
 	get_parent().increase_number_of_units()
 	
 	if get_parent().type == 1:
-		main.get_classes().increase_count(unit.get_class_name())
+		var player = main.get_player()
+		if unit.get_unit_name() not in player.combat_unit_set:
+			player.combat_unit_set[unit.get_unit_name()] = 0
+			main.get_classes().increase_count(unit.get_class_name())
+		player.combat_unit_set[unit.get_unit_name()] += 1
 
 func unregister_unit():
 	if unit == null: return
@@ -25,7 +29,12 @@ func unregister_unit():
 	get_parent().decrease_number_of_units()
 	
 	if get_parent().type == 1:
-		main.get_classes().decrease_count(unit.get_class_name())
+		var player = main.get_player()
+		if unit.get_unit_name() in player.combat_unit_set:
+			player.combat_unit_set[unit.get_unit_name()] -= 1
+			if player.combat_unit_set[unit.get_unit_name()] <= 0:
+				main.get_classes().decrease_count(unit.get_class_name())
+				player.combat_unit_set.erase(unit.get_unit_name())
 		
 	unit = null
 	

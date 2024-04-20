@@ -1,8 +1,16 @@
-[gd_scene load_steps=5 format=3 uid="uid://b6qey8lycnpgo"]
+[gd_scene load_steps=15 format=3 uid="uid://b6qey8lycnpgo"]
 
+[ext_resource type="Texture2D" uid="uid://h454wgvpe3xg" path="res://src/units/2/cascara_champion.png" id="1_2rm75"]
 [ext_resource type="Texture2D" uid="uid://dt00e868xcrql" path="res://assets/images/tft_coin.png" id="2_6yivg"]
-
-[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_62iwh"]
+[ext_resource type="Texture2D" uid="uid://mmrv5abf47td" path="res://assets/images/white_circle.png" id="3_s2dc0"]
+[ext_resource type="Texture2D" uid="uid://c24q0nj8r6ri8" path="res://assets/images/white_circle_small.png" id="4_42so2"]
+[ext_resource type="Texture2D" uid="uid://c6xtqy351huik" path="res://assets/images/bastion_icon.png" id="5_8tp57"]
+[ext_resource type="Texture2D" uid="uid://4tr5gacx05c0" path="res://assets/images/bruiser_icon.png" id="5_jwfaa"]
+[ext_resource type="Texture2D" uid="uid://fygdwhohmlcv" path="res://assets/images/slayer_icon.png" id="6_7v21p"]
+[ext_resource type="Texture2D" uid="uid://ch2skff58lhv7" path="res://assets/images/duelist_icon.png" id="7_xyl1w"]
+[ext_resource type="Texture2D" uid="uid://b1fp6pbc77sip" path="res://assets/images/wind_icon.png" id="8_qnls1"]
+[ext_resource type="Texture2D" uid="uid://cfixm5imne5xe" path="res://assets/images/cybernetic_icon.png" id="9_0uh0o"]
+[ext_resource type="Texture2D" uid="uid://cebwi6nvwmwd4" path="res://assets/images/shurima_icon.png" id="10_gb05b"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_i1nu6"]
 font_size = 100
@@ -13,6 +21,9 @@ shadow_size = 0
 font_size = 100
 font_color = Color(1, 0.98436, 0.827543, 1)
 shadow_size = 0
+
+[sub_resource type="LabelSettings" id="LabelSettings_ut72n"]
+font_size = 70
 
 [node name="ButtonContent" type="Control"]
 layout_mode = 3
@@ -43,7 +54,7 @@ offset_left = 9.99
 offset_top = 0.0879993
 offset_right = 0.312988
 offset_bottom = 0.188965
-texture = SubResource("CompressedTexture2D_62iwh")
+texture = ExtResource("1_2rm75")
 expand_mode = 1
 stretch_mode = 6
 
@@ -93,3 +104,161 @@ offset_right = 0.0289307
 offset_bottom = -0.229004
 texture = ExtResource("2_6yivg")
 stretch_mode = 5
+
+[node name="TraitLabel" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.159
+anchor_top = 0.596
+anchor_right = 0.97
+anchor_bottom = 0.744
+offset_left = 0.0999908
+offset_top = 0.199982
+offset_bottom = -0.200012
+text = "Fruitful Forces"
+label_settings = SubResource("LabelSettings_ut72n")
+vertical_alignment = 1
+
+[node name="TraitIcon" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.032
+anchor_top = 0.589
+anchor_right = 0.148
+anchor_bottom = 0.749
+offset_left = -0.200001
+offset_top = -0.200043
+offset_right = 0.199997
+offset_bottom = -0.200012
+texture = ExtResource("3_s2dc0")
+expand_mode = 1
+
+[node name="Background" type="TextureRect" parent="TraitIcon"]
+self_modulate = Color(0.372549, 0.372549, 0.372549, 1)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("4_42so2")
+expand_mode = 1
+
+[node name="Herbal Heroes" type="TextureRect" parent="TraitIcon"]
+visible = false
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.109
+anchor_top = 0.109
+anchor_right = 0.891
+anchor_bottom = 0.891
+offset_left = 0.0479994
+offset_top = 0.0479994
+offset_right = -0.0480042
+offset_bottom = -0.0480042
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("5_jwfaa")
+expand_mode = 1
+
+[node name="Green Guardians" type="TextureRect" parent="TraitIcon"]
+visible = false
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.109
+anchor_top = 0.109
+anchor_right = 0.891
+anchor_bottom = 0.891
+offset_left = 0.0479994
+offset_top = 0.0479994
+offset_right = -0.0480042
+offset_bottom = -0.0480042
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("6_7v21p")
+expand_mode = 1
+
+[node name="Black Brigade" type="TextureRect" parent="TraitIcon"]
+visible = false
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.109
+anchor_top = 0.109
+anchor_right = 0.891
+anchor_bottom = 0.891
+offset_left = 0.0479994
+offset_top = 0.0479994
+offset_right = -0.0480042
+offset_bottom = -0.0480042
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("7_xyl1w")
+expand_mode = 1
+
+[node name="Floral Fighters" type="TextureRect" parent="TraitIcon"]
+visible = false
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.109
+anchor_top = 0.109
+anchor_right = 0.891
+anchor_bottom = 0.891
+offset_left = 0.0479994
+offset_top = 0.0479994
+offset_right = -0.0480042
+offset_bottom = -0.0480042
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("8_qnls1")
+expand_mode = 1
+
+[node name="Exotic Enchanters" type="TextureRect" parent="TraitIcon"]
+visible = false
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.109
+anchor_top = 0.109
+anchor_right = 0.891
+anchor_bottom = 0.891
+offset_left = 0.0479994
+offset_top = 0.0479994
+offset_right = -0.0480042
+offset_bottom = -0.0480042
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("9_0uh0o")
+expand_mode = 1
+
+[node name="Fruitful Forces" type="TextureRect" parent="TraitIcon"]
+visible = false
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.109
+anchor_top = 0.109
+anchor_right = 0.891
+anchor_bottom = 0.891
+offset_left = 0.0479994
+offset_top = 0.0479994
+offset_right = -0.0480042
+offset_bottom = -0.0480042
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("10_gb05b")
+expand_mode = 1
+
+[node name="Aromatic Avatars" type="TextureRect" parent="TraitIcon"]
+visible = false
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.109
+anchor_top = 0.109
+anchor_right = 0.891
+anchor_bottom = 0.891
+offset_left = 0.0479994
+offset_top = 0.0479994
+offset_right = -0.0480042
+offset_bottom = -0.0480042
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("5_8tp57")
+expand_mode = 1

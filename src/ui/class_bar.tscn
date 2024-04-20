@@ -1,8 +1,15 @@
-[gd_scene load_steps=7 format=3 uid="uid://c5da7e4l60jax"]
+[gd_scene load_steps=14 format=3 uid="uid://c5da7e4l60jax"]
 
 [ext_resource type="Script" path="res://src/ui/class_bar.gd" id="1_6lf0c"]
 [ext_resource type="Texture2D" uid="uid://mmrv5abf47td" path="res://assets/images/white_circle.png" id="1_b06ry"]
 [ext_resource type="Texture2D" uid="uid://c24q0nj8r6ri8" path="res://assets/images/white_circle_small.png" id="2_xhilm"]
+[ext_resource type="Texture2D" uid="uid://4tr5gacx05c0" path="res://assets/images/bruiser_icon.png" id="4_a5ync"]
+[ext_resource type="Texture2D" uid="uid://fygdwhohmlcv" path="res://assets/images/slayer_icon.png" id="5_egs12"]
+[ext_resource type="Texture2D" uid="uid://ch2skff58lhv7" path="res://assets/images/duelist_icon.png" id="6_p83bx"]
+[ext_resource type="Texture2D" uid="uid://b1fp6pbc77sip" path="res://assets/images/wind_icon.png" id="7_cdqd4"]
+[ext_resource type="Texture2D" uid="uid://cfixm5imne5xe" path="res://assets/images/cybernetic_icon.png" id="8_lvggj"]
+[ext_resource type="Texture2D" uid="uid://cebwi6nvwmwd4" path="res://assets/images/shurima_icon.png" id="9_d7qax"]
+[ext_resource type="Texture2D" uid="uid://c6xtqy351huik" path="res://assets/images/bastion_icon.png" id="10_kav4f"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_0rv7a"]
 font_size = 12
@@ -15,7 +22,7 @@ font_color = Color(0.0862745, 0.0862745, 0.0862745, 1)
 font_size = 22
 font_color = Color(0.788235, 0.788235, 0.788235, 1)
 
-[node name="ClassBar" type="Control" node_paths=PackedStringArray("circle", "class_name_label", "curr_count_label", "class_step_label")]
+[node name="ClassBar" type="Control" node_paths=PackedStringArray("circle", "class_name_label", "curr_count_label", "class_step_label", "icons")]
 custom_minimum_size = Vector2(128, 32)
 layout_mode = 3
 anchor_right = 0.111
@@ -27,15 +34,18 @@ circle = NodePath("TextureRect2")
 class_name_label = NodePath("ClassName")
 curr_count_label = NodePath("CurrCount")
 class_step_label = NodePath("ClassStep")
+icons = NodePath("Icons")
 
 [node name="ColorRect" type="ColorRect" parent="."]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.125
-anchor_right = 1.0
+anchor_right = 1.375
 anchor_bottom = 1.0
+offset_right = -1.52588e-05
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 color = Color(0.219608, 0.219608, 0.219608, 0.784314)
 
 [node name="TextureRect" type="TextureRect" parent="."]
@@ -43,6 +53,7 @@ layout_mode = 1
 anchors_preset = -1
 anchor_right = 0.25
 anchor_bottom = 1.0
+mouse_filter = 2
 texture = ExtResource("1_b06ry")
 expand_mode = 1
 
@@ -53,24 +64,150 @@ layout_mode = 1
 anchors_preset = -1
 anchor_right = 0.25
 anchor_bottom = 1.0
+mouse_filter = 2
 texture = ExtResource("2_xhilm")
 expand_mode = 1
 
-[node name="Icon" type="TextureRect" parent="."]
-modulate = Color(0, 0, 0, 0.784314)
+[node name="Icons" type="Control" parent="."]
 layout_mode = 1
-anchors_preset = -1
 anchor_right = 0.25
 anchor_bottom = 1.0
+mouse_filter = 2
+
+[node name="Herbal Heroes" type="TextureRect" parent="Icons"]
+visible = false
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.109
+anchor_top = 0.109
+anchor_right = 0.891
+anchor_bottom = 0.891
+offset_left = 0.0479994
+offset_top = 0.0479994
+offset_right = -0.0480042
+offset_bottom = -0.0480042
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("4_a5ync")
+expand_mode = 1
+
+[node name="Green Guardians" type="TextureRect" parent="Icons"]
+visible = false
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.109
+anchor_top = 0.109
+anchor_right = 0.891
+anchor_bottom = 0.891
+offset_left = 0.0479994
+offset_top = 0.0479994
+offset_right = -0.0480042
+offset_bottom = -0.0480042
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("5_egs12")
+expand_mode = 1
+
+[node name="Black Brigade" type="TextureRect" parent="Icons"]
+visible = false
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.109
+anchor_top = 0.109
+anchor_right = 0.891
+anchor_bottom = 0.891
+offset_left = 0.0479994
+offset_top = 0.0479994
+offset_right = -0.0480042
+offset_bottom = -0.0480042
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("6_p83bx")
+expand_mode = 1
+
+[node name="Floral Fighters" type="TextureRect" parent="Icons"]
+visible = false
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.109
+anchor_top = 0.109
+anchor_right = 0.891
+anchor_bottom = 0.891
+offset_left = 0.0479994
+offset_top = 0.0479994
+offset_right = -0.0480042
+offset_bottom = -0.0480042
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("7_cdqd4")
+expand_mode = 1
+
+[node name="Exotic Enchanters" type="TextureRect" parent="Icons"]
+visible = false
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.109
+anchor_top = 0.109
+anchor_right = 0.891
+anchor_bottom = 0.891
+offset_left = 0.0479994
+offset_top = 0.0479994
+offset_right = -0.0480042
+offset_bottom = -0.0480042
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("8_lvggj")
+expand_mode = 1
+
+[node name="Fruitful Forces" type="TextureRect" parent="Icons"]
+visible = false
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.109
+anchor_top = 0.109
+anchor_right = 0.891
+anchor_bottom = 0.891
+offset_left = 0.0479994
+offset_top = 0.0479994
+offset_right = -0.0480042
+offset_bottom = -0.0480042
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("9_d7qax")
+expand_mode = 1
+
+[node name="Aromatic Avatars" type="TextureRect" parent="Icons"]
+visible = false
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.109
+anchor_top = 0.109
+anchor_right = 0.891
+anchor_bottom = 0.891
+offset_left = 0.0479994
+offset_top = 0.0479994
+offset_right = -0.0480042
+offset_bottom = -0.0480042
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("10_kav4f")
 expand_mode = 1
 
 [node name="ClassName" type="Label" parent="."]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.437
-anchor_right = 1.0
+anchor_right = 1.375
 anchor_bottom = 0.531
 offset_left = 0.0639992
+offset_right = -1.52588e-05
 offset_bottom = 0.00799942
 text = "Test"
 label_settings = SubResource("LabelSettings_0rv7a")
@@ -82,9 +219,10 @@ layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.437
 anchor_top = 0.5
-anchor_right = 1.0
+anchor_right = 1.375
 anchor_bottom = 1.0
 offset_left = 0.0639992
+offset_right = -1.52588e-05
 offset_bottom = 1.0
 text = "2 -> 3 -> 5"
 label_settings = SubResource("LabelSettings_6h867")

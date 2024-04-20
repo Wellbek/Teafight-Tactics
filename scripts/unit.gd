@@ -77,13 +77,13 @@ func _enter_tree():
 	multisync = find_child("MultiplayerSynchronizer", false)
 	
 func _process(_delta):
-	if dead: return
+	if not is_inside_tree() or dead: return
 	
 	if mode == BATTLE and target == null and is_multiplayer_authority() and not main.get_timer().is_transitioning():
 		find_target()
 
 func _physics_process(_delta):	
-	if dead: return
+	if not is_inside_tree() or dead: return
 	
 	if target and (not is_instance_valid(target) or target.dead): 
 		target = null
@@ -182,7 +182,7 @@ func change_mode(_mode: int):
 				timer.connect("timeout", _on_aromatic_10sec)
 				timer.start()
 				match class_level:
-					1: armor += 27.5
+					1: armor += 37.5
 					2: armor += 75
 					3: armor += 142.5
 					_: pass
@@ -346,9 +346,9 @@ func change_mode(_mode: int):
 	
 func _on_aromatic_10sec():
 	match main.get_classes().get_class_level(CLASS_NAMES[6]):
-		1: armor -= 25
-		2: armor -= 50
-		3: armor -= 95
+		1: armor -= 12.5
+		2: armor -= 25
+		3: armor -= 47.5
 		_: pass
 	get_node("aromatic_trait").queue_free()
 	
@@ -683,3 +683,12 @@ func combatphase_setup(host: bool, host_id: int, attacker_id: int = -1):
 	
 func get_class_name():
 	return CLASS_NAMES[type]
+	
+func get_unit_name():
+	return unit_name
+	
+func get_image():
+	return image
+	
+func get_trait():
+	return type

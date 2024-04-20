@@ -7,15 +7,16 @@ extends TextureButton
 @onready var cost_label = button_content.get_node("Cost")
 @onready var background = button_content.get_node("BackgroundColor")
 @onready var image = button_content.get_node("Image")
+@onready var icon_parent = button_content.get_node("TraitIcon")
+@onready var trait_label = button_content.get_node("TraitLabel")
 
 var unit_path: String
+
+var unit_cost = 0
 
 var unit = null
 
 var main
-
-var unit_cost
-var unit_name
 
 var bought = false
 
@@ -128,29 +129,41 @@ func generate_button():
 			unit_cost = i+1
 			break
 		rarity -= drop_table[i]
-	
+			
 	var folder = unit_folder + "//" + str(unit_cost)
 	var dir = DirAccess.open(folder)
 	var unitArray = dir.get_files()
 	var unitFileName = unitArray[randi() % unitArray.size()].get_slice(".",0)
 	unit_path = folder + "//" + unitFileName
-	image.texture = load(unit_path + ".png")
-	cost_label.text = str(unit_cost)
-	unit_name = unitFileName.replacen("_", " ").to_pascal_case()
-	name_label.text = unit_name
-	match unit_cost:
+	
+	var tmp = load(unit_path + ".tscn").instantiate()
+	tmp.name = str(multiplayer.get_unique_id()) + "#" + tmp.name
+	
+	image.texture = load(tmp.get_image())
+	cost_label.text = str(tmp.get_cost())
+	name_label.text = tmp.get_unit_name()
+	trait_label.text = tmp.CLASS_NAMES[tmp.get_trait()]
+	
+	for i in range(1, len(icon_parent.get_children())):
+		icon_parent.get_children()[i].visible = false
+	var icon = icon_parent.get_node_or_null(tmp.CLASS_NAMES[tmp.get_trait()])
+	if icon: icon.visible = true
+
+	match tmp.get_cost():
 		1: background.color = Color(0.561, 0.561, 0.561)
 		2: background.color = Color(0.027, 0.722, 0.161)
 		3: background.color = Color(0.051, 0.671, 0.937)
 		4: background.color = Color(0.623, 0.141, 1)
 		5: background.color = Color(0.957, 0.773, 0.215)
 	
-	if main.get_player() == null or main.get_player().get_gold() < unit_cost:
+	if main.get_player() == null or main.get_player().get_gold() < tmp.get_cost():
 		self_modulate = Color(0.251, 0.251, 0.251, 0.89)
 		disabled = true
 	else: 
 		self_modulate = Color(1, 1, 1, 1)
 		disabled = false
+		
+	tmp.queue_free()
 
 func change_bought(val):
 	bought = val

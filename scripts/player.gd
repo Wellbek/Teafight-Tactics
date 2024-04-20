@@ -12,6 +12,7 @@ var main
 enum {SQUARE, HEX}
 
 var units = []
+var combat_unit_set = {} # for tratis: only increase trait count if not already unit in there
 
 var myid
 

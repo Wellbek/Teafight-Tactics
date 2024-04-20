@@ -55,7 +55,9 @@ func sort_bars():
 	
 	sorted_bars.sort_custom(
 		func(a: Control, b: Control):
-			return a.get_level() > b.get_level()
+			if a.get_level() == b.get_level():
+				return a.get_count() > b.get_count()
+			else: return a.get_level() > b.get_level()
 	)
 	
 	for bar in class_bars.get_children():

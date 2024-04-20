@@ -57,7 +57,7 @@ ee:
 
 
 bastion: - aromatic
-armor and mr: in combat: bastion units increased by 50% for first 10 sec
+armor and mr: in combat: bastion units increased by 100% for first 10 sec
 25
 50
 95
