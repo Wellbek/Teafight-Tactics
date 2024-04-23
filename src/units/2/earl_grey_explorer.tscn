@@ -61,6 +61,7 @@ script = ExtResource("1_cf5p6")
 image = "res://src/units/2/earl_grey_explorer.png"
 unit_name = "Earl Grey Explorer"
 type = 2
+attack_anim1 = 2
 cost = 2
 move_speed = 4.0
 attackrange = 8.0

@@ -22,6 +22,20 @@ var multisync
 const CLASS_NAMES = ["Herbal Heroes", "Green Guardians", "Black Brigade", "Floral Fighters", "Exotic Enchanters", "Fruitful Forces", "Aromatic Avatars"]
 var ui: Control
 
+@export_category("Animations")
+@onready var anim_player:AnimationPlayer = find_child("AnimationPlayer")
+@export_enum("Melee", "Ranged", "Magic") var attack_anim1: int = 0
+@export_enum("1H", "2H") var attack_anim2: int = 0
+@export var one_hand_melee_anim: String = "1H_Melee_Attack_Chop"
+@export var one_hand_ranged_anim: String = "1H_Ranged_Shoot"
+@export var one_hand_magic_anim: String = "Spellcast_Shoot"
+@export var two_hand_melee_anim: String = "2H_Melee_Attack_Chop"
+@export var two_hand_range_anim: String = "2H_Ranged_Shoot"
+@export var two_hand_magic_anim: String = "Spellcast_Shoot"
+@export var idle_anim: String = "Idle"
+@export var walking_anim: String = "Walking_A"
+@export var die_anim: String = "Death_A"
+
 enum {SQUARE, HEX}
 enum {PREP, BATTLE}
 
@@ -77,13 +91,13 @@ func _enter_tree():
 	multisync = find_child("MultiplayerSynchronizer", false)
 	
 func _process(_delta):
-	if not is_inside_tree() or dead: return
+	if not is_inside_tree() or dead or not is_multiplayer_authority(): return
 	
 	if mode == BATTLE and target == null and is_multiplayer_authority() and not main.get_timer().is_transitioning():
 		find_target()
 
 func _physics_process(_delta):	
-	if not is_inside_tree() or dead: return
+	if not is_inside_tree() or dead or not is_multiplayer_authority(): return
 	
 	if target and (not is_instance_valid(target) or target.dead): 
 		target = null
@@ -94,6 +108,7 @@ func _physics_process(_delta):
 		if distance > attackrange:
 			attacking = false
 			velocity = (target.global_transform.origin - global_transform.origin).normalized() * move_speed
+			if anim_player.current_animation != walking_anim: play_animation.rpc(walking_anim)
 			move_and_slide()
 		elif not attacking: in_attack_range()
 		
@@ -168,6 +183,8 @@ func _input(event):
 func change_mode(_mode: int):	
 	if mode == _mode: return
 	
+	play_animation(idle_anim)
+	
 	if _mode == BATTLE:
 		# bastion (kinda): - aromatic 
 		# all bastion units increased armor and mr (in combat): increased by 50% for first 10 sec
@@ -217,17 +234,17 @@ func change_mode(_mode: int):
 			
 		# slayer: - green
 		# all slayers:
-		#12% omnivamp, bonus dmg (doubled at 66%) - 5% b dmg -> 10% -> 30%
+		# 30% omnivamp, bonus dmg (doubled at 66%) - 5% b dmg -> 10% -> 30%
 		if type == 1:
 			match main.get_classes().get_class_level(CLASS_NAMES[1]):
 				1: 
-					omnivamp += .12
+					omnivamp += .3
 					bonus_dmg += 0.05
 				2: 
-					omnivamp += .12
+					omnivamp += .3
 					bonus_dmg += 0.1
 				3: 
-					omnivamp += .12
+					omnivamp += .3
 					bonus_dmg += 0.3
 				_: pass
 				
@@ -304,13 +321,13 @@ func change_mode(_mode: int):
 		if type == 1:
 			match main.get_classes().get_class_level(CLASS_NAMES[1]):
 				1: 
-					omnivamp -= .12
+					omnivamp -= .3
 					bonus_dmg -= 0.05
 				2: 
-					omnivamp -= .12
+					omnivamp -= .3
 					bonus_dmg -= 0.1
 				3: 
-					omnivamp -= .12
+					omnivamp -= .3
 					bonus_dmg -= 0.3
 				_: pass
 				
@@ -466,6 +483,9 @@ func in_attack_range():
 	if dead:
 		attacking = false
 		return
+		
+	if anim_player.current_animation == walking_anim: 
+		play_animation.rpc(idle_anim)
 	
 	attacking = true
 	attack_timer.wait_time = 1/attack_speed
@@ -479,6 +499,17 @@ func _on_attack_timer_timeout():
 
 func auto_attack(_target, pve = false):
 	if _target == null or (not pve and _target.get_mode() != BATTLE) or dead: return
+	
+	match attack_anim1:
+		0:
+			if attack_anim2 == 0: play_animation.rpc(one_hand_melee_anim, -1, attack_speed)
+			else: play_animation.rpc(two_hand_melee_anim, -1, attack_speed)
+		1:
+			if attack_anim2 == 0: play_animation.rpc(one_hand_ranged_anim, -1, attack_speed)
+			else: play_animation.rpc(two_hand_range_anim, -1, attack_speed)
+		2:
+			if attack_anim2 == 0: play_animation.rpc(one_hand_magic_anim, -1, attack_speed)
+			else: play_animation.rpc(two_hand_magic_anim, -1, attack_speed)
 
 	var id = get_multiplayer_authority() if pve else _target.get_owner_id() 
 
@@ -491,6 +522,7 @@ func auto_attack(_target, pve = false):
 	
 	# omnivamp - (we just do raw dmg here as actual dmg is computed in take_dmg func)
 	curr_health = min(curr_health + damage*omnivamp, max_health)
+	refresh_hpbar()
 	
 	# duelist (kinda): - black 
 	# for duelists: stacking attack speed up to 12; 5% -> 10% -> 15%
@@ -692,3 +724,7 @@ func get_image():
 	
 func get_trait():
 	return type
+	
+@rpc("any_peer", "call_local", "unreliable")
+func play_animation(name: StringName = "", custom_blend: float = -1, custom_speed: float = 1.0, from_end: bool = false):
+	anim_player.play(name, custom_blend, custom_speed, from_end)

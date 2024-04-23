@@ -61,6 +61,7 @@ script = ExtResource("1_81tmw")
 image = "res://src/units/4/dragonfruit_druid.png"
 unit_name = "Dragonfruit Druid"
 type = 4
+attack_anim1 = 2
 cost = 4
 attackrange = 8.0
 max_health = 700.0

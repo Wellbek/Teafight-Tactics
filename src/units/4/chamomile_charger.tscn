@@ -60,6 +60,7 @@ safe_margin = 0.5
 script = ExtResource("1_hp7io")
 image = "res://src/units/4/chamomile_charger.png"
 unit_name = "Chamomile Charger"
+attack_anim2 = 1
 cost = 4
 move_speed = 4.0
 attackrange = 2.0

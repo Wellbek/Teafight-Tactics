@@ -61,6 +61,7 @@ script = ExtResource("1_mdvqw")
 image = "res://src/units/4/vanilla_valkyrie.png"
 unit_name = "Vanilla Valkyrie"
 type = 3
+one_hand_melee_anim = "Dualwield_Meele_Attack_Chop"
 cost = 4
 attackrange = 8.0
 max_health = 700.0

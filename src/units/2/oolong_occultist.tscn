@@ -61,6 +61,7 @@ script = ExtResource("1_1rm26")
 image = "res://src/units/2/oolong_occultist.png"
 unit_name = "Oolong Occulist"
 type = 4
+attack_anim1 = 1
 cost = 2
 move_speed = 4.0
 attackrange = 8.0

@@ -61,6 +61,7 @@ script = ExtResource("1_6yytu")
 image = "res://src/units/4/sencha_samurai.png"
 unit_name = "Sencha Samurai"
 type = 1
+attack_anim2 = 1
 cost = 4
 attackrange = 2.0
 max_health = 1000.0

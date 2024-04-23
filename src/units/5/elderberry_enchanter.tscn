@@ -63,6 +63,7 @@ script = ExtResource("1_wnkov")
 image = "res://src/units/5/elderberry_enchanter.png"
 unit_name = "Elderberry Enchanter"
 type = 5
+attack_anim1 = 2
 cost = 5
 attackrange = 8.0
 max_health = 800.0

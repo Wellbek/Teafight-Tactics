@@ -61,6 +61,7 @@ script = ExtResource("1_4wln3")
 image = "res://src/units/2/rooibos_ritter.png"
 unit_name = "Rooibos Ritter"
 type = 5
+attack_anim2 = 1
 cost = 2
 move_speed = 4.0
 attackrange = 2.0

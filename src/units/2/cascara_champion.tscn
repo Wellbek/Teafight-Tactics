@@ -61,6 +61,7 @@ script = ExtResource("1_ehkvv")
 image = "res://src/units/2/cascara_champion.png"
 unit_name = "Cascara Champion"
 type = 6
+one_hand_melee_anim = "Dualwield_Melee_Attack_Chop"
 cost = 2
 move_speed = 4.0
 attackrange = 2.0

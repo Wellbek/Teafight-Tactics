@@ -47,11 +47,11 @@ bones/42/position = Vector3(-0.510844, 0.788312, 0.0597369)
 bones/42/rotation = Quaternion(-0.758253, -1.52737e-07, 0.651961, -1.11759e-08)
 
 [node name="Skeleton_Rogue_Hood" parent="Rig/Skeleton3D" index="0"]
-transform = Transform3D(0.978317, 0.16553, 0.124485, 0.167982, -0.985745, -0.00939307, 0.121155, 0.0301006, -0.992177, 1.89929e-06, 1.20227, -1.82892e-07)
+transform = Transform3D(0.978317, 0.16553, 0.124485, 0.167982, -0.985745, -0.00939307, 0.121156, 0.0301006, -0.992177, 1.89929e-06, 1.20227, -1.82891e-07)
 visible = false
 
 [node name="Skeleton_Rogue_Cape" parent="Rig/Skeleton3D" index="1"]
-transform = Transform3D(0.996275, 0.0330843, 0.0796368, -2.29741e-07, 0.92348, -0.383647, -0.0862356, 0.382218, 0.92004, -1.91598e-06, 1.20227, 3.08702e-08)
+transform = Transform3D(0.996275, 0.0330842, 0.0796366, -2.29741e-07, 0.92348, -0.383647, -0.0862355, 0.382218, 0.92004, -1.91598e-06, 1.20227, 3.08699e-08)
 visible = false
 
 [node name="Skeleton_Rogue_ArmLeft" parent="Rig/Skeleton3D" index="2"]

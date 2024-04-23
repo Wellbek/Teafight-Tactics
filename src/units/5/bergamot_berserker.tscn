@@ -63,6 +63,7 @@ script = ExtResource("1_wxu1l")
 image = "res://src/units/5/bergamot_berserker.png"
 unit_name = "Bergamot Berserker"
 type = 6
+one_hand_melee_anim = "Dualwield_Meele_Attack_Chop"
 cost = 5
 attackrange = 3.0
 max_health = 1300.0

@@ -61,6 +61,7 @@ script = ExtResource("1_78l1q")
 image = "res://src/units/4/ginseng_guardian.png"
 unit_name = "Ginseng Guardian"
 type = 5
+one_hand_melee_anim = "Block_Attack"
 cost = 4
 move_speed = 4.0
 attackrange = 2.0

@@ -61,6 +61,7 @@ script = ExtResource("1_3gbvn")
 image = "res://src/units/3/white_whisperer.png"
 unit_name = "White Whisperer"
 type = 6
+attack_anim1 = 2
 cost = 3
 move_speed = 4.0
 attackrange = 8.0

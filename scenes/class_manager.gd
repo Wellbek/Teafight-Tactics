@@ -14,7 +14,7 @@ const CLASS_DICT = {
 
 const TOOLTIPS = {
 	"Herbal Heroes": "All units on board receive 100 additional max health during combat \n Herbal Heroes additionally get % bonus max health: \n 20% health \n 40% health \n 65% health",
-	"Green Guardians": "All Green Guardians receive 12% omnivamp during combat and deal bonus damage. \n The bonus damage is doubled against units with less than 66% HP \n 5% bonus damage \n 10% bonus damage \n 20% bonus damage",
+	"Green Guardians": "All Green Guardians receive 30% omnivamp during combat and deal bonus damage. \n The bonus damage is doubled against units with less than 66% HP \n 5% bonus damage \n 10% bonus damage \n 20% bonus damage",
 	"Black Brigade": "For Black Brigade units: Each attack stacks up the units attack speed up to 12 \n 5% per stack \n 10% per stack \n 15% per stack",
 	"Floral Fighters": "All units on the board gain chance to dodge attacks \n 15% chance \n 25% chance \n 35% chance",
 	"Exotic Enchanters": "Exotic Enchanters with atleast one item gain health and attack damage: \n 200 health, 35 attack damage \n 400 health, 50 attack damage \n 700 health, 70 attack damage",

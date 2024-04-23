@@ -60,6 +60,7 @@ safe_margin = 0.5
 script = ExtResource("1_b1q2p")
 image = "res://src/units/2/lavender_lancer.png"
 unit_name = "Lavender Lancer"
+attack_anim2 = 1
 cost = 2
 move_speed = 4.0
 attackrange = 2.0

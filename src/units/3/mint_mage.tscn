@@ -61,6 +61,7 @@ script = ExtResource("1_tvx0c")
 image = "res://src/units/3/mint_mage.png"
 unit_name = "Mint Mage"
 type = 1
+attack_anim1 = 2
 cost = 3
 move_speed = 4.0
 attackrange = 8.0
