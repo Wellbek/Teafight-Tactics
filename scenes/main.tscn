@@ -1,4 +1,4 @@
-[gd_scene load_steps=45 format=3 uid="uid://cqs5r3b42amb7"]
+[gd_scene load_steps=62 format=3 uid="uid://cqs5r3b42amb7"]
 
 [ext_resource type="Script" path="res://scripts/main.gd" id="1_35go2"]
 [ext_resource type="Script" path="res://scripts/roundtimer.gd" id="2_8mgga"]
@@ -6,18 +6,37 @@
 [ext_resource type="PackedScene" uid="uid://g18y6a837usc" path="res://src/player.tscn" id="4_bh7tl"]
 [ext_resource type="Script" path="res://scripts/multiplayermanager.gd" id="4_d7qmq"]
 [ext_resource type="Texture2D" uid="uid://dt00e868xcrql" path="res://assets/images/tft_coin.png" id="6_g8e0e"]
+[ext_resource type="Script" path="res://scenes/dynamic_font.gd" id="7_1bn8j"]
+[ext_resource type="Texture2D" uid="uid://slcps076ioqt" path="res://src/units/1/assam_archer.png" id="7_41kj8"]
 [ext_resource type="PackedScene" uid="uid://dfbxcmkrqggoj" path="res://src/ui/player_bar.tscn" id="7_n3kcn"]
+[ext_resource type="Script" path="res://scenes/unit_inspec.gd" id="7_snble"]
+[ext_resource type="Texture2D" uid="uid://bp78gtu6wfxgg" path="res://assets/images/1_Star.webp" id="8_eym16"]
 [ext_resource type="Texture2D" uid="uid://d3ugo452yq2y5" path="res://assets/League_of_Legends_Screenshot_2021.04.26___13.43.59.70.jpeg" id="8_ukdsg"]
 [ext_resource type="Texture2D" uid="uid://isbp8j5mubnq" path="res://assets/images/streak_icon.png" id="9_8icbs"]
+[ext_resource type="Texture2D" uid="uid://c1bapo4gwbicj" path="res://assets/images/2_Star.webp" id="9_mdaou"]
+[ext_resource type="Texture2D" uid="uid://dtm4s2pumnnj3" path="res://assets/images/Attack_damage_colored_icon.webp" id="9_vngjv"]
+[ext_resource type="Texture2D" uid="uid://64gva5g8w1h5" path="res://assets/images/3_Star.webp" id="10_moym5"]
 [ext_resource type="Script" path="res://scenes/class_manager.gd" id="10_sbqyv"]
-
-[sub_resource type="LabelSettings" id="LabelSettings_gtjgx"]
-font_size = 17
-font_color = Color(0.560784, 0.266667, 0.0784314, 1)
-
-[sub_resource type="LabelSettings" id="LabelSettings_kvple"]
-font_size = 17
-font_color = Color(0.560784, 0.266667, 0.0784314, 1)
+[ext_resource type="Texture2D" uid="uid://bljcarwg6tl8o" path="res://assets/images/Ability_power_colored_icon.webp" id="10_x7p4p"]
+[ext_resource type="Texture2D" uid="uid://cfqfb74biflrb" path="res://assets/images/Armor_colored_icon.webp" id="11_du1vp"]
+[ext_resource type="Texture2D" uid="uid://r25dc3g0hak7" path="res://assets/images/Magic_resistance_colored_icon.webp" id="12_tk5u8"]
+[ext_resource type="Texture2D" uid="uid://6fiuk7sj11rn" path="res://assets/Screenshot from 2024-04-24 18-03-58.png" id="13_8oatf"]
+[ext_resource type="Texture2D" uid="uid://caqby16sjsfu6" path="res://assets/images/Attack_speed_colored_icon.webp" id="13_v1h82"]
+[ext_resource type="Texture2D" uid="uid://clrh21l5d68m4" path="res://assets/images/Range_colored_icon.webp" id="14_6tcfb"]
+[ext_resource type="Texture2D" uid="uid://c87vecyslsncu" path="res://assets/images/Critical_strike_chance_colored_icon.webp" id="14_wkvam"]
+[ext_resource type="Texture2D" uid="uid://chat7t8rv4lr0" path="res://assets/images/Omnivamp_colored_icon.webp" id="15_lmjd5"]
+[ext_resource type="Texture2D" uid="uid://b6hq0cbfvhly1" path="res://assets/images/Critical_strike_damage_icon.webp" id="15_y7j3w"]
+[ext_resource type="Texture2D" uid="uid://b1fp6pbc77sip" path="res://assets/images/wind_icon.png" id="16_vdvms"]
+[ext_resource type="Texture2D" uid="uid://mmrv5abf47td" path="res://assets/images/white_circle.png" id="17_qqis7"]
+[ext_resource type="Texture2D" uid="uid://b21ysgr1dsyqx" path="res://assets/images/Movement_speed_icon.webp" id="17_t2pi4"]
+[ext_resource type="Texture2D" uid="uid://c24q0nj8r6ri8" path="res://assets/images/white_circle_small.png" id="18_qvmj7"]
+[ext_resource type="Texture2D" uid="uid://4tr5gacx05c0" path="res://assets/images/bruiser_icon.png" id="19_22j6f"]
+[ext_resource type="Texture2D" uid="uid://fygdwhohmlcv" path="res://assets/images/slayer_icon.png" id="20_wuyq5"]
+[ext_resource type="Texture2D" uid="uid://ch2skff58lhv7" path="res://assets/images/duelist_icon.png" id="21_ij87c"]
+[ext_resource type="Texture2D" uid="uid://cfixm5imne5xe" path="res://assets/images/cybernetic_icon.png" id="23_nfte8"]
+[ext_resource type="Texture2D" uid="uid://cebwi6nvwmwd4" path="res://assets/images/shurima_icon.png" id="24_45hyo"]
+[ext_resource type="Texture2D" uid="uid://c6xtqy351huik" path="res://assets/images/bastion_icon.png" id="25_6up4q"]
+[ext_resource type="Texture2D" uid="uid://cui6trejgtnxa" path="res://assets/images/cross.png" id="28_35puy"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_g6mim"]
 bg_color = Color(0.0977035, 0.0977035, 0.0977035, 1)
@@ -55,35 +74,6 @@ viewport_path = NodePath("SubViewport")
 [sub_resource type="ViewportTexture" id="ViewportTexture_68bnq"]
 viewport_path = NodePath("SubViewport")
 
-[sub_resource type="LabelSettings" id="LabelSettings_w1m2u"]
-font_size = 18
-font_color = Color(1, 0.800183, 0.282353, 1)
-
-[sub_resource type="LabelSettings" id="LabelSettings_r6fw1"]
-font_color = Color(0.560815, 0.266728, 0.0781567, 1)
-
-[sub_resource type="LabelSettings" id="LabelSettings_6r5o2"]
-
-[sub_resource type="LabelSettings" id="LabelSettings_p55q3"]
-font_size = 12
-font_color = Color(0.243137, 0.243137, 0.243137, 1)
-
-[sub_resource type="LabelSettings" id="LabelSettings_3hkcf"]
-font_size = 12
-font_color = Color(0.0784314, 0.584314, 0.211765, 1)
-
-[sub_resource type="LabelSettings" id="LabelSettings_d0yd3"]
-font_size = 12
-font_color = Color(0.0196078, 0.592157, 0.831373, 1)
-
-[sub_resource type="LabelSettings" id="LabelSettings_legmf"]
-font_size = 12
-font_color = Color(0.804089, 0, 0.651194, 1)
-
-[sub_resource type="LabelSettings" id="LabelSettings_cflpm"]
-font_size = 12
-font_color = Color(1, 0.890196, 0, 1)
-
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rplhv"]
 bg_color = Color(0.0507973, 0.670726, 0.937469, 1)
 
@@ -92,9 +82,6 @@ bg_color = Color(0.27454, 0.694179, 1, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yopde"]
 bg_color = Color(0.129458, 0.553002, 0.866621, 1)
-
-[sub_resource type="LabelSettings" id="LabelSettings_7nb4c"]
-font_size = 12
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mtvsp"]
 bg_color = Color(0.623346, 0.443076, 0.207614, 1)
@@ -105,19 +92,20 @@ bg_color = Color(0.392279, 0.258915, 0.0859693, 1)
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2u7rh"]
 bg_color = Color(0.364431, 0.13727, 0.0547036, 1)
 
-[sub_resource type="LabelSettings" id="LabelSettings_ge67w"]
-font_size = 14
-font_color = Color(0.560815, 0.266728, 0.0781567, 1)
-
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kmty1"]
 bg_color = Color(0.0977035, 0.0977035, 0.0977035, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mcxqw"]
 bg_color = Color(0.376471, 0.811765, 1, 1)
 
-[sub_resource type="LabelSettings" id="LabelSettings_odmy1"]
-font_size = 10
-font_color = Color(0.560815, 0.266728, 0.0781567, 1)
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pd56j"]
+bg_color = Color(0.0977035, 0.0977035, 0.0977035, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_v5qo1"]
+bg_color = Color(1, 1, 1, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bc6wn"]
+bg_color = Color(0.129458, 0.553002, 0.866621, 1)
 
 [sub_resource type="LabelSettings" id="LabelSettings_hw4dh"]
 font_size = 50
@@ -131,7 +119,7 @@ timer = NodePath("RoundTimer")
 gui = NodePath("GUI")
 classes = NodePath("GUI/Classes")
 
-[node name="MultiplayerManager" type="Node" parent="." node_paths=PackedStringArray("local_test_check", "main", "timer", "startButton", "enable_on_start", "disable_on_start", "id_box")]
+[node name="MultiplayerManager" type="Node" parent="." node_paths=PackedStringArray("local_test_check", "main", "timer", "startButton", "lobby_id_box", "enable_on_start", "disable_on_start", "id_box")]
 script = ExtResource("4_d7qmq")
 player_scene = ExtResource("4_bh7tl")
 player_bar_scene = ExtResource("7_n3kcn")
@@ -139,8 +127,9 @@ local_test_check = NodePath("../GUI/CheckButton")
 main = NodePath("..")
 timer = NodePath("../RoundTimer")
 startButton = NodePath("../GUI/TmpStartGame")
+lobby_id_box = NodePath("../GUI/LobbyID")
 enable_on_start = [NodePath("../GUI/GameStartLabel")]
-disable_on_start = [NodePath("../GUI/TmpHost"), NodePath("../GUI/TmpJoin"), NodePath("../GUI/TmpLobbies"), NodePath("../GUI/LobbyContainer"), NodePath("../GUI/CheckButton"), NodePath("../GUI/Label"), NodePath("../GUI/TextEdit")]
+disable_on_start = [NodePath("../GUI/TmpHost"), NodePath("../GUI/TmpJoin"), NodePath("../GUI/TmpLobbies"), NodePath("../GUI/Label"), NodePath("../GUI/CheckButton"), NodePath("../GUI/TextEdit"), NodePath("../GUI/LobbyContainer")]
 id_box = NodePath("../GUI/TextEdit")
 
 [node name="RoundTimer" type="Timer" parent="."]
@@ -173,12 +162,12 @@ mouse_filter = 1
 [node name="PlayerBars" type="Control" parent="GUI"]
 visible = false
 layout_mode = 1
-anchor_left = 0.876
+anchor_left = 0.778
 anchor_top = 0.16
 anchor_right = 1.0
 anchor_bottom = 0.753
-offset_left = -113.152
-offset_top = 0.32
+offset_left = -0.256042
+offset_top = 0.319992
 offset_bottom = 0.0559998
 grow_horizontal = 0
 grow_vertical = 2
@@ -211,17 +200,17 @@ visible = false
 layout_mode = 1
 anchor_left = 0.41
 anchor_right = 0.591
-anchor_bottom = 0.049
-offset_left = -0.320038
+anchor_bottom = 0.086
+offset_left = -0.320007
 offset_right = 0.167969
-offset_bottom = 0.247999
+offset_bottom = 0.271999
 
 [node name="ColorRect" type="ColorRect" parent="GUI/StageInfo"]
 layout_mode = 1
 anchors_preset = -1
 anchor_right = 1.0
 anchor_bottom = 0.781
-offset_bottom = 0.00799942
+offset_bottom = -17.736
 color = Color(1, 0.890562, 0.647288, 1)
 
 [node name="TimerLabel" type="Label" parent="GUI/StageInfo"]
@@ -229,56 +218,81 @@ layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.732
 anchor_right = 0.928
-anchor_bottom = 0.75
-offset_left = 0.0119934
+anchor_bottom = 0.464
+offset_left = 0.0120087
 offset_right = 0.0479889
-theme_override_colors/font_color = Color(1, 1, 1, 1)
+offset_bottom = 0.0159988
+theme_override_colors/font_color = Color(0.560815, 0.266728, 0.0781567, 1)
+theme_override_font_sizes/font_size = 17
 text = "000"
-label_settings = SubResource("LabelSettings_gtjgx")
 horizontal_alignment = 1
 vertical_alignment = 1
+script = ExtResource("7_1bn8j")
 
 [node name="StageLabel" type="Label" parent="GUI/StageInfo"]
+clip_contents = true
 layout_mode = 1
 anchors_preset = -1
-anchor_left = 0.12
+anchor_left = 0.115
 anchor_right = 0.306
-anchor_bottom = 0.75
-offset_left = -0.0800018
+anchor_bottom = 0.464
+offset_left = -0.0349998
 offset_right = 0.0459938
-theme_override_colors/font_color = Color(1, 1, 1, 1)
+offset_bottom = 0.0159988
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.560815, 0.266728, 0.0781567, 1)
+theme_override_font_sizes/font_size = 17
 text = "1-1"
-label_settings = SubResource("LabelSettings_kvple")
 horizontal_alignment = 1
 vertical_alignment = 1
-clip_text = true
+script = ExtResource("7_1bn8j")
 
 [node name="ProgressBar" type="ProgressBar" parent="GUI/StageInfo"]
 layout_mode = 1
 anchors_preset = -1
-anchor_left = 0.087
-anchor_top = 0.781
-anchor_right = 0.909
-anchor_bottom = 1.0
-offset_left = -0.183001
-offset_top = 0.00799942
-offset_right = 0.0189972
+anchor_left = 0.091
+anchor_top = 0.464
+anchor_right = 0.914
+anchor_bottom = 0.571
+offset_left = -0.019001
+offset_top = 0.0159988
+offset_right = -0.026001
+offset_bottom = 0.0239983
 theme_override_styles/background = SubResource("StyleBoxFlat_g6mim")
 theme_override_styles/fill = SubResource("StyleBoxFlat_ykaag")
 value = 80.0
 fill_mode = 1
 show_percentage = false
 
+[node name="EnemyLabel" type="Label" parent="GUI/StageInfo"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.115
+anchor_top = 0.571
+anchor_right = 0.88
+anchor_bottom = 1.0
+offset_left = -0.0349998
+offset_top = 0.0239983
+offset_right = 0.0799866
+theme_override_colors/font_color = Color(1, 1, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 6
+theme_override_font_sizes/font_size = 17
+horizontal_alignment = 1
+vertical_alignment = 1
+text_overrun_behavior = 3
+
 [node name="UnitShop" type="Control" parent="GUI"]
 visible = false
 layout_mode = 1
 anchor_left = 0.137
 anchor_top = 0.807
-anchor_right = 0.774
+anchor_right = 0.775
 anchor_bottom = 1.0
 offset_left = 0.175995
-offset_top = 0.0639648
-offset_right = 0.351929
+offset_top = 0.0640259
+offset_right = 0.199951
 grow_horizontal = 2
 grow_vertical = 0
 mouse_filter = 1
@@ -387,10 +401,12 @@ offset_right = 0.207947
 offset_bottom = -0.0320053
 grow_horizontal = 2
 grow_vertical = 0
+theme_override_colors/font_color = Color(1, 0.886656, 0.148989, 1)
+theme_override_font_sizes/font_size = 17
 text = "Sell for 0g"
-label_settings = SubResource("LabelSettings_w1m2u")
 horizontal_alignment = 1
 vertical_alignment = 1
+script = ExtResource("7_1bn8j")
 
 [node name="Gold" type="Control" parent="GUI/UnitShop"]
 layout_mode = 1
@@ -436,9 +452,11 @@ stretch_mode = 3
 
 [node name="GoldLabel" type="Label" parent="GUI/UnitShop/Gold/HBoxContainer"]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.560815, 0.266728, 0.0781567, 1)
+theme_override_font_sizes/font_size = 17
 text = "50
 "
-label_settings = SubResource("LabelSettings_r6fw1")
+script = ExtResource("7_1bn8j")
 
 [node name="Streak" type="Control" parent="GUI/UnitShop"]
 layout_mode = 1
@@ -476,10 +494,11 @@ offset_left = -0.0220013
 offset_right = -2.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_font_sizes/font_size = 17
 text = "0"
-label_settings = SubResource("LabelSettings_6r5o2")
 horizontal_alignment = 1
 vertical_alignment = 1
+script = ExtResource("7_1bn8j")
 
 [node name="TextureRect" type="TextureRect" parent="GUI/UnitShop/Streak"]
 layout_mode = 1
@@ -530,38 +549,48 @@ alignment = 1
 
 [node name="1" type="Label" parent="GUI/UnitShop/RarityChances/HBoxContainer"]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.219608, 0.219608, 0.219608, 1)
+theme_override_font_sizes/font_size = 15
 text = "0%"
-label_settings = SubResource("LabelSettings_p55q3")
 horizontal_alignment = 1
 vertical_alignment = 1
+script = ExtResource("7_1bn8j")
 
 [node name="2" type="Label" parent="GUI/UnitShop/RarityChances/HBoxContainer"]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.117235, 0.659007, 0.13727, 1)
+theme_override_font_sizes/font_size = 15
 text = "0%"
-label_settings = SubResource("LabelSettings_3hkcf")
 horizontal_alignment = 1
 vertical_alignment = 1
+script = ExtResource("7_1bn8j")
 
 [node name="3" type="Label" parent="GUI/UnitShop/RarityChances/HBoxContainer"]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.0507973, 0.670726, 0.937469, 1)
+theme_override_font_sizes/font_size = 15
 text = "0%"
-label_settings = SubResource("LabelSettings_d0yd3")
 horizontal_alignment = 1
 vertical_alignment = 1
+script = ExtResource("7_1bn8j")
 
 [node name="4" type="Label" parent="GUI/UnitShop/RarityChances/HBoxContainer"]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.804089, 0, 0.651194, 1)
+theme_override_font_sizes/font_size = 15
 text = "0%"
-label_settings = SubResource("LabelSettings_legmf")
 horizontal_alignment = 1
 vertical_alignment = 1
+script = ExtResource("7_1bn8j")
 
 [node name="5" type="Label" parent="GUI/UnitShop/RarityChances/HBoxContainer"]
 layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.886656, 0.148989, 1)
+theme_override_font_sizes/font_size = 15
 text = "0%"
-label_settings = SubResource("LabelSettings_cflpm")
 horizontal_alignment = 1
 vertical_alignment = 1
+script = ExtResource("7_1bn8j")
 
 [node name="Sidebar" type="Control" parent="GUI/UnitShop"]
 layout_mode = 1
@@ -609,10 +638,11 @@ offset_left = -0.00598526
 offset_top = 6.10352e-05
 offset_right = 0.00601196
 offset_bottom = 6.10352e-05
+theme_override_font_sizes/font_size = 14
 text = "Buy XP"
-label_settings = SubResource("LabelSettings_7nb4c")
 vertical_alignment = 1
 clip_text = true
+script = ExtResource("7_1bn8j")
 
 [node name="CostLabel" type="Label" parent="GUI/UnitShop/Sidebar/XPButton"]
 layout_mode = 1
@@ -625,10 +655,11 @@ offset_left = 3.03301
 offset_top = 6.10352e-05
 offset_right = 3.00601
 offset_bottom = 5.72205e-05
+theme_override_font_sizes/font_size = 14
 text = "4"
-label_settings = SubResource("LabelSettings_7nb4c")
 vertical_alignment = 1
 clip_text = true
+script = ExtResource("7_1bn8j")
 
 [node name="TextureRect" type="TextureRect" parent="GUI/UnitShop/Sidebar/XPButton"]
 layout_mode = 1
@@ -672,10 +703,11 @@ offset_left = -0.00598526
 offset_top = 6.10352e-05
 offset_right = 0.00601196
 offset_bottom = 6.10352e-05
+theme_override_font_sizes/font_size = 14
 text = "Reroll"
-label_settings = SubResource("LabelSettings_7nb4c")
 vertical_alignment = 1
 clip_text = true
+script = ExtResource("7_1bn8j")
 
 [node name="CostLabel" type="Label" parent="GUI/UnitShop/Sidebar/RerollButton"]
 layout_mode = 1
@@ -688,10 +720,11 @@ offset_left = 3.03301
 offset_top = 6.10352e-05
 offset_right = 3.00601
 offset_bottom = 5.72205e-05
+theme_override_font_sizes/font_size = 14
 text = "2"
-label_settings = SubResource("LabelSettings_7nb4c")
 vertical_alignment = 1
 clip_text = true
+script = ExtResource("7_1bn8j")
 
 [node name="TextureRect" type="TextureRect" parent="GUI/UnitShop/Sidebar/RerollButton"]
 layout_mode = 1
@@ -716,10 +749,12 @@ anchor_bottom = 0.161
 offset_left = 0.0620003
 offset_right = -0.00600052
 offset_bottom = 0.0359879
+theme_override_colors/font_color = Color(0.560815, 0.266728, 0.0781567, 1)
+theme_override_font_sizes/font_size = 15
 text = "Lvl. 0"
-label_settings = SubResource("LabelSettings_ge67w")
 vertical_alignment = 1
 clip_text = true
+script = ExtResource("7_1bn8j")
 
 [node name="XPBar" type="ProgressBar" parent="GUI/UnitShop/Sidebar"]
 layout_mode = 1
@@ -740,36 +775,39 @@ show_percentage = false
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.643
-anchor_right = 0.96
+anchor_right = 0.959
 anchor_bottom = 0.161
-offset_left = -0.0179825
-offset_top = 6.10352e-05
-offset_right = 0.0400162
-offset_bottom = 0.0360489
+offset_left = -0.12796
+offset_right = 0.0019989
+offset_bottom = 0.0359993
+theme_override_colors/font_color = Color(0.560815, 0.266728, 0.0781567, 1)
+theme_override_font_sizes/font_size = 12
 text = "0/0"
-label_settings = SubResource("LabelSettings_odmy1")
 horizontal_alignment = 1
 vertical_alignment = 1
 clip_text = true
+script = ExtResource("7_1bn8j")
 
 [node name="Classes" type="Control" parent="GUI" node_paths=PackedStringArray("class_bars")]
 visible = false
+custom_minimum_size = Vector2(300, 50)
 layout_mode = 1
 anchor_top = 0.247
-anchor_right = 0.035
+anchor_right = 0.156
 anchor_bottom = 0.728
 offset_top = -0.0559998
-offset_right = 79.68
-offset_bottom = 0.255981
+offset_right = 0.47998
+offset_bottom = 0.25592
+mouse_filter = 1
 script = ExtResource("10_sbqyv")
 class_bars = NodePath("VBoxContainer")
 
 [node name="ColorRect" type="ColorRect" parent="GUI/Classes"]
 layout_mode = 1
 anchors_preset = -1
-anchor_right = 0.133
+anchor_right = 0.07
 anchor_bottom = 1.0
-offset_right = 8.04
+offset_bottom = 0.208008
 color = Color(1, 0.890196, 0.647059, 1)
 
 [node name="VBoxContainer" type="VBoxContainer" parent="GUI/Classes"]
@@ -787,6 +825,733 @@ grow_vertical = 2
 [node name="MultiplayerSpawner3" type="MultiplayerSpawner" parent="GUI/Classes"]
 _spawnable_scenes = PackedStringArray("res://src/ui/class_bar.tscn")
 spawn_path = NodePath("../VBoxContainer")
+
+[node name="UnitInspec" type="Control" parent="GUI" node_paths=PackedStringArray("stars", "unit_icon", "name_label", "cost_label", "rarity_rect", "hp_bar", "mana_bar", "ad_label", "ap_label", "armor_label", "mr_label", "as_label", "ar_label", "critc_label", "critd_label", "omnivamp_label", "dodge_label", "movespeed_label", "trait_label", "trait_icons")]
+layout_mode = 1
+anchor_left = 0.853
+anchor_top = 0.16
+anchor_right = 0.977
+anchor_bottom = 0.751
+offset_left = 0.343994
+offset_top = 0.319992
+offset_right = 1.49597
+offset_bottom = 0.351959
+mouse_filter = 1
+script = ExtResource("7_snble")
+stars = NodePath("Star")
+unit_icon = NodePath("UnitIcon")
+name_label = NodePath("RarityBackground/UnitName")
+cost_label = NodePath("RarityBackground/HBoxContainer/GoldLabel")
+rarity_rect = NodePath("RarityBackground")
+hp_bar = NodePath("HPBar")
+mana_bar = NodePath("ManaBar")
+ad_label = NodePath("VBoxContainer/AttackDMG/Value")
+ap_label = NodePath("VBoxContainer/AbilityPower/Value")
+armor_label = NodePath("VBoxContainer/Armor/Value")
+mr_label = NodePath("VBoxContainer/MR/Value")
+as_label = NodePath("VBoxContainer/AttackSpeed/Value")
+ar_label = NodePath("VBoxContainer/AttackRange/Value")
+critc_label = NodePath("VBoxContainer/CritChance/Value")
+critd_label = NodePath("VBoxContainer/CritDamage/Value")
+omnivamp_label = NodePath("VBoxContainer/Omnivamp/Value")
+dodge_label = NodePath("VBoxContainer/DodgeChance/Value")
+movespeed_label = NodePath("VBoxContainer/MoveSpeed/Value")
+trait_label = NodePath("UnitIcon/TraitLabel")
+trait_icons = NodePath("UnitIcon/TraitIcon")
+
+[node name="ColorRect" type="ColorRect" parent="GUI/UnitInspec"]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.033
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 0.0869999
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+color = Color(0.32549, 0.141176, 0.027451, 1)
+
+[node name="Star" type="ColorRect" parent="GUI/UnitInspec"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.292
+anchor_right = 0.736
+anchor_bottom = 0.035
+offset_left = -0.0480042
+offset_right = 0.0159912
+offset_bottom = -0.405
+mouse_filter = 1
+color = Color(0.32549, 0.141176, 0.027451, 1)
+
+[node name="1" type="TextureRect" parent="GUI/UnitInspec/Star"]
+visible = false
+self_modulate = Color(1, 1, 0, 1)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_bottom = 0.274
+texture = ExtResource("8_eym16")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="2" type="TextureRect" parent="GUI/UnitInspec/Star"]
+visible = false
+self_modulate = Color(1, 1, 0, 1)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_bottom = 0.274
+texture = ExtResource("9_mdaou")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="3" type="TextureRect" parent="GUI/UnitInspec/Star"]
+visible = false
+self_modulate = Color(1, 1, 0, 1)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_bottom = 0.274
+texture = ExtResource("10_moym5")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="UnitIcon" type="TextureRect" parent="GUI/UnitInspec"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.049
+anchor_top = 0.05
+anchor_right = 0.958
+anchor_bottom = 0.271
+offset_left = -0.0560026
+offset_top = -0.0500011
+offset_right = 0.0479279
+offset_bottom = 0.168991
+texture = ExtResource("7_41kj8")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="TraitLabel" type="Label" parent="GUI/UnitInspec/UnitIcon"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.16
+anchor_top = 0.79
+anchor_right = 0.969
+anchor_bottom = 0.978
+offset_left = 0.0400085
+offset_top = -0.0409851
+offset_right = 0.0610504
+offset_bottom = 0.00495911
+theme_override_font_sizes/font_size = 11
+text = "Fruitful Forces"
+vertical_alignment = 1
+
+[node name="TraitIcon" type="TextureRect" parent="GUI/UnitInspec/UnitIcon"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.015
+anchor_top = 0.79
+anchor_right = 0.137
+anchor_bottom = 0.978
+offset_left = 0.0350008
+offset_top = -0.0409851
+offset_right = 0.0530071
+offset_bottom = 0.00495911
+texture = ExtResource("17_qqis7")
+expand_mode = 1
+
+[node name="Background" type="TextureRect" parent="GUI/UnitInspec/UnitIcon/TraitIcon"]
+self_modulate = Color(0.111197, 0.111197, 0.111197, 1)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("18_qvmj7")
+expand_mode = 1
+
+[node name="Herbal Heroes" type="TextureRect" parent="GUI/UnitInspec/UnitIcon/TraitIcon"]
+visible = false
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.109
+anchor_top = 0.109
+anchor_right = 0.891
+anchor_bottom = 0.891
+offset_left = 0.0479994
+offset_top = 0.0479994
+offset_right = -0.0480042
+offset_bottom = -0.0480042
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("19_22j6f")
+expand_mode = 1
+
+[node name="Green Guardians" type="TextureRect" parent="GUI/UnitInspec/UnitIcon/TraitIcon"]
+visible = false
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.109
+anchor_top = 0.109
+anchor_right = 0.891
+anchor_bottom = 0.891
+offset_left = 0.0479994
+offset_top = 0.0479994
+offset_right = -0.0480042
+offset_bottom = -0.0480042
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("20_wuyq5")
+expand_mode = 1
+
+[node name="Black Brigade" type="TextureRect" parent="GUI/UnitInspec/UnitIcon/TraitIcon"]
+visible = false
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.109
+anchor_top = 0.109
+anchor_right = 0.891
+anchor_bottom = 0.891
+offset_left = 0.0479994
+offset_top = 0.0479994
+offset_right = -0.0480042
+offset_bottom = -0.0480042
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("21_ij87c")
+expand_mode = 1
+
+[node name="Floral Fighters" type="TextureRect" parent="GUI/UnitInspec/UnitIcon/TraitIcon"]
+visible = false
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.109
+anchor_top = 0.109
+anchor_right = 0.891
+anchor_bottom = 0.891
+offset_left = 0.0479994
+offset_top = 0.0479994
+offset_right = -0.0480042
+offset_bottom = -0.0480042
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("16_vdvms")
+expand_mode = 1
+
+[node name="Exotic Enchanters" type="TextureRect" parent="GUI/UnitInspec/UnitIcon/TraitIcon"]
+visible = false
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.109
+anchor_top = 0.109
+anchor_right = 0.891
+anchor_bottom = 0.891
+offset_left = 0.0479994
+offset_top = 0.0479994
+offset_right = -0.0480042
+offset_bottom = -0.0480042
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("23_nfte8")
+expand_mode = 1
+
+[node name="Fruitful Forces" type="TextureRect" parent="GUI/UnitInspec/UnitIcon/TraitIcon"]
+visible = false
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.109
+anchor_top = 0.109
+anchor_right = 0.891
+anchor_bottom = 0.891
+offset_left = 0.0479994
+offset_top = 0.0479994
+offset_right = -0.0480042
+offset_bottom = -0.0480042
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("24_45hyo")
+expand_mode = 1
+
+[node name="Aromatic Avatars" type="TextureRect" parent="GUI/UnitInspec/UnitIcon/TraitIcon"]
+visible = false
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.109
+anchor_top = 0.109
+anchor_right = 0.891
+anchor_bottom = 0.891
+offset_left = 0.0479994
+offset_top = 0.0479994
+offset_right = -0.0480042
+offset_bottom = -0.0480042
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("25_6up4q")
+expand_mode = 1
+
+[node name="RarityBackground" type="ColorRect" parent="GUI/UnitInspec"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.049
+anchor_top = 0.271
+anchor_right = 0.958
+anchor_bottom = 0.321
+offset_left = -0.0560026
+offset_top = 0.168999
+offset_right = 0.0479279
+offset_bottom = 0.118996
+mouse_filter = 1
+color = Color(0.12549, 0.380392, 0.596078, 1)
+
+[node name="UnitName" type="Label" parent="GUI/UnitInspec/RarityBackground"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 0.748
+anchor_bottom = 1.0
+offset_right = 0.0199966
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+theme_override_font_sizes/font_size = 13
+text = "Unit123"
+vertical_alignment = 1
+text_overrun_behavior = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="GUI/UnitInspec/RarityBackground"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.748
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 0.0199966
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="GoldIcon" type="TextureRect" parent="GUI/UnitInspec/RarityBackground/HBoxContainer"]
+layout_mode = 2
+texture = ExtResource("6_g8e0e")
+expand_mode = 2
+stretch_mode = 3
+
+[node name="GoldLabel" type="Label" parent="GUI/UnitInspec/RarityBackground/HBoxContainer"]
+layout_mode = 2
+mouse_filter = 1
+theme_override_font_sizes/font_size = 13
+text = "3
+"
+
+[node name="HPBar" type="ProgressBar" parent="GUI/UnitInspec"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.049
+anchor_top = 0.321
+anchor_right = 0.958
+anchor_bottom = 0.366
+offset_left = -0.0560026
+offset_top = 0.118996
+offset_right = 0.0479279
+offset_bottom = -0.125992
+mouse_filter = 1
+theme_override_font_sizes/font_size = 4
+theme_override_styles/background = SubResource("StyleBoxFlat_pd56j")
+theme_override_styles/fill = SubResource("StyleBoxFlat_v5qo1")
+value = 50.0
+show_percentage = false
+
+[node name="Label" type="Label" parent="GUI/UnitInspec/HPBar"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+theme_override_font_sizes/font_size = 11
+text = "750/750"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ManaBar" type="ProgressBar" parent="GUI/UnitInspec"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.049
+anchor_top = 0.366
+anchor_right = 0.958
+anchor_bottom = 0.41
+offset_left = -0.0560026
+offset_top = -0.126007
+offset_right = 0.0479279
+offset_bottom = -0.00999451
+mouse_filter = 1
+theme_override_font_sizes/font_size = 4
+theme_override_styles/background = SubResource("StyleBoxFlat_pd56j")
+theme_override_styles/fill = SubResource("StyleBoxFlat_bc6wn")
+value = 100.0
+show_percentage = false
+
+[node name="Label" type="Label" parent="GUI/UnitInspec/ManaBar"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+theme_override_font_sizes/font_size = 11
+text = "50/50"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="GUI/UnitInspec"]
+custom_minimum_size = Vector2(0, 16)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.049
+anchor_top = 0.424
+anchor_right = 0.986
+anchor_bottom = 0.984
+offset_left = -0.0560036
+offset_top = -0.0640106
+offset_right = 0.0159302
+offset_bottom = 13.776
+
+[node name="AttackDMG" type="Control" parent="GUI/UnitInspec/VBoxContainer"]
+custom_minimum_size = Vector2(0, 16)
+layout_mode = 2
+tooltip_text = "Attack Damage"
+
+[node name="Icon" type="TextureRect" parent="GUI/UnitInspec/VBoxContainer/AttackDMG"]
+custom_minimum_size = Vector2(0, 16)
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 0.119
+anchor_bottom = 1.0
+offset_right = -0.0650005
+texture = ExtResource("9_vngjv")
+expand_mode = 1
+
+[node name="Value" type="Label" parent="GUI/UnitInspec/VBoxContainer/AttackDMG"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.193
+anchor_right = 1.0
+anchor_bottom = 1.25
+offset_left = 0.137999
+grow_horizontal = 2
+theme_override_colors/font_color = Color(1, 0.890562, 0.647288, 1)
+theme_override_font_sizes/font_size = 14
+text = "58"
+vertical_alignment = 1
+
+[node name="AbilityPower" type="Control" parent="GUI/UnitInspec/VBoxContainer"]
+custom_minimum_size = Vector2(0, 16)
+layout_mode = 2
+tooltip_text = "Ability Power"
+
+[node name="Icon" type="TextureRect" parent="GUI/UnitInspec/VBoxContainer/AbilityPower"]
+custom_minimum_size = Vector2(0, 16)
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 0.119
+anchor_bottom = 1.0
+offset_right = -0.0650005
+texture = ExtResource("10_x7p4p")
+expand_mode = 1
+
+[node name="Value" type="Label" parent="GUI/UnitInspec/VBoxContainer/AbilityPower"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.193
+anchor_right = 1.0
+anchor_bottom = 1.25
+offset_left = -0.0550003
+grow_horizontal = 2
+theme_override_colors/font_color = Color(1, 0.890562, 0.647288, 1)
+theme_override_font_sizes/font_size = 14
+text = "117
+"
+vertical_alignment = 1
+
+[node name="Armor" type="Control" parent="GUI/UnitInspec/VBoxContainer"]
+custom_minimum_size = Vector2(0, 16)
+layout_mode = 2
+tooltip_text = "Armor"
+
+[node name="Icon" type="TextureRect" parent="GUI/UnitInspec/VBoxContainer/Armor"]
+custom_minimum_size = Vector2(0, 16)
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 0.119
+anchor_bottom = 1.0
+offset_right = -0.0650005
+texture = ExtResource("11_du1vp")
+expand_mode = 1
+
+[node name="Value" type="Label" parent="GUI/UnitInspec/VBoxContainer/Armor"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.194
+anchor_right = 1.0
+anchor_bottom = 1.25
+offset_left = -0.188999
+grow_horizontal = 2
+theme_override_colors/font_color = Color(1, 0.890562, 0.647288, 1)
+theme_override_font_sizes/font_size = 14
+text = "20"
+vertical_alignment = 1
+
+[node name="MR" type="Control" parent="GUI/UnitInspec/VBoxContainer"]
+custom_minimum_size = Vector2(0, 16)
+layout_mode = 2
+tooltip_text = "Magic Resistance"
+
+[node name="Icon" type="TextureRect" parent="GUI/UnitInspec/VBoxContainer/MR"]
+custom_minimum_size = Vector2(0, 16)
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 0.119
+anchor_bottom = 1.0
+offset_right = -0.0650005
+texture = ExtResource("12_tk5u8")
+expand_mode = 1
+
+[node name="Value" type="Label" parent="GUI/UnitInspec/VBoxContainer/MR"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.193
+anchor_right = 1.0
+anchor_bottom = 1.25
+offset_left = -0.0550003
+grow_horizontal = 2
+theme_override_colors/font_color = Color(1, 0.890562, 0.647288, 1)
+theme_override_font_sizes/font_size = 14
+text = "25
+"
+vertical_alignment = 1
+
+[node name="AttackSpeed" type="Control" parent="GUI/UnitInspec/VBoxContainer"]
+custom_minimum_size = Vector2(0, 16)
+layout_mode = 2
+tooltip_text = "Attack Speed"
+
+[node name="Icon" type="TextureRect" parent="GUI/UnitInspec/VBoxContainer/AttackSpeed"]
+custom_minimum_size = Vector2(0, 16)
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 0.119
+anchor_bottom = 1.0
+offset_right = -0.0650005
+texture = ExtResource("13_v1h82")
+expand_mode = 1
+
+[node name="Value" type="Label" parent="GUI/UnitInspec/VBoxContainer/AttackSpeed"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.194
+anchor_right = 1.0
+anchor_bottom = 1.25
+offset_left = -0.188999
+grow_horizontal = 2
+theme_override_colors/font_color = Color(1, 0.890562, 0.647288, 1)
+theme_override_font_sizes/font_size = 14
+text = "1.14
+"
+vertical_alignment = 1
+
+[node name="AttackRange" type="Control" parent="GUI/UnitInspec/VBoxContainer"]
+custom_minimum_size = Vector2(0, 16)
+layout_mode = 2
+tooltip_text = "Attack Range"
+
+[node name="Icon" type="TextureRect" parent="GUI/UnitInspec/VBoxContainer/AttackRange"]
+custom_minimum_size = Vector2(0, 16)
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 0.119
+anchor_bottom = 1.0
+offset_right = -0.0650005
+texture = ExtResource("14_6tcfb")
+expand_mode = 1
+
+[node name="Value" type="Label" parent="GUI/UnitInspec/VBoxContainer/AttackRange"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.193
+anchor_right = 1.0
+anchor_bottom = 1.25
+offset_left = -0.0550003
+grow_horizontal = 2
+theme_override_colors/font_color = Color(1, 0.890562, 0.647288, 1)
+theme_override_font_sizes/font_size = 14
+text = "4 Cells
+"
+vertical_alignment = 1
+
+[node name="CritChance" type="Control" parent="GUI/UnitInspec/VBoxContainer"]
+custom_minimum_size = Vector2(0, 16)
+layout_mode = 2
+tooltip_text = "Critical Hit Chance"
+
+[node name="Icon" type="TextureRect" parent="GUI/UnitInspec/VBoxContainer/CritChance"]
+custom_minimum_size = Vector2(0, 16)
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 0.119
+anchor_bottom = 1.0
+offset_right = -0.0650005
+texture = ExtResource("14_wkvam")
+expand_mode = 1
+
+[node name="Value" type="Label" parent="GUI/UnitInspec/VBoxContainer/CritChance"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.193
+anchor_right = 1.0
+anchor_bottom = 1.25
+offset_left = -0.0550003
+grow_horizontal = 2
+theme_override_colors/font_color = Color(1, 0.890562, 0.647288, 1)
+theme_override_font_sizes/font_size = 14
+text = "15 %
+"
+vertical_alignment = 1
+
+[node name="CritDamage" type="Control" parent="GUI/UnitInspec/VBoxContainer"]
+custom_minimum_size = Vector2(0, 16)
+layout_mode = 2
+tooltip_text = "Critical Hit Damage Amplifier"
+
+[node name="Icon" type="TextureRect" parent="GUI/UnitInspec/VBoxContainer/CritDamage"]
+self_modulate = Color(1, 0.211765, 0.160784, 1)
+custom_minimum_size = Vector2(0, 16)
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 0.119
+anchor_bottom = 1.0
+offset_right = -0.0650005
+texture = ExtResource("15_y7j3w")
+expand_mode = 1
+
+[node name="Value" type="Label" parent="GUI/UnitInspec/VBoxContainer/CritDamage"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.193
+anchor_right = 1.0
+anchor_bottom = 1.25
+offset_left = -0.0550003
+grow_horizontal = 2
+theme_override_colors/font_color = Color(1, 0.890562, 0.647288, 1)
+theme_override_font_sizes/font_size = 14
+text = "140 %"
+vertical_alignment = 1
+
+[node name="Omnivamp" type="Control" parent="GUI/UnitInspec/VBoxContainer"]
+custom_minimum_size = Vector2(0, 16)
+layout_mode = 2
+tooltip_text = "Omnivamp"
+
+[node name="Icon" type="TextureRect" parent="GUI/UnitInspec/VBoxContainer/Omnivamp"]
+custom_minimum_size = Vector2(0, 16)
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 0.119
+anchor_bottom = 1.0
+offset_right = -0.0650005
+texture = ExtResource("15_lmjd5")
+expand_mode = 1
+
+[node name="Value" type="Label" parent="GUI/UnitInspec/VBoxContainer/Omnivamp"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.193
+anchor_right = 1.0
+anchor_bottom = 1.25
+offset_left = -0.0550003
+grow_horizontal = 2
+theme_override_colors/font_color = Color(1, 0.890562, 0.647288, 1)
+theme_override_font_sizes/font_size = 14
+text = "15 %"
+vertical_alignment = 1
+
+[node name="DodgeChance" type="Control" parent="GUI/UnitInspec/VBoxContainer"]
+custom_minimum_size = Vector2(0, 16)
+layout_mode = 2
+tooltip_text = "Dodge Chance"
+
+[node name="Icon" type="TextureRect" parent="GUI/UnitInspec/VBoxContainer/DodgeChance"]
+custom_minimum_size = Vector2(0, 16)
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 0.119
+anchor_bottom = 1.0
+offset_right = -0.0650005
+texture = ExtResource("16_vdvms")
+expand_mode = 1
+
+[node name="Value" type="Label" parent="GUI/UnitInspec/VBoxContainer/DodgeChance"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.193
+anchor_right = 1.0
+anchor_bottom = 1.25
+offset_left = -0.0550003
+grow_horizontal = 2
+theme_override_colors/font_color = Color(1, 0.890562, 0.647288, 1)
+theme_override_font_sizes/font_size = 14
+text = "0 %
+"
+vertical_alignment = 1
+
+[node name="MoveSpeed" type="Control" parent="GUI/UnitInspec/VBoxContainer"]
+custom_minimum_size = Vector2(0, 16)
+layout_mode = 2
+tooltip_text = "Move Speed"
+
+[node name="Icon" type="TextureRect" parent="GUI/UnitInspec/VBoxContainer/MoveSpeed"]
+custom_minimum_size = Vector2(0, 16)
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 0.119
+anchor_bottom = 1.0
+offset_right = -0.0650005
+texture = ExtResource("17_t2pi4")
+expand_mode = 1
+
+[node name="Value" type="Label" parent="GUI/UnitInspec/VBoxContainer/MoveSpeed"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.193
+anchor_right = 1.0
+anchor_bottom = 1.25
+offset_left = -0.0550003
+grow_horizontal = 2
+theme_override_colors/font_color = Color(1, 0.890562, 0.647288, 1)
+theme_override_font_sizes/font_size = 14
+text = "400
+"
+vertical_alignment = 1
+
+[node name="Button" type="Button" parent="GUI/UnitInspec"]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.033
+anchor_bottom = 0.033
+offset_left = -18.0
+offset_top = -18.639
+offset_right = 18.0
+offset_bottom = 17.361
+focus_mode = 1
+theme_override_colors/icon_normal_color = Color(0.941176, 0, 0, 1)
+theme_override_colors/icon_pressed_color = Color(1, 0.247059, 0.188235, 1)
+theme_override_colors/icon_hover_color = Color(0.411765, 0, 0, 1)
+icon = ExtResource("28_35puy")
+flat = true
+icon_alignment = 1
+expand_icon = true
 
 [node name="GameStartLabel" type="Label" parent="GUI"]
 visible = false
@@ -874,6 +1639,20 @@ grow_vertical = 2
 focus_mode = 0
 text = "Start Game"
 
+[node name="LobbyID" type="TextEdit" parent="GUI"]
+visible = false
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.34
+anchor_top = 0.815
+anchor_right = 0.66
+anchor_bottom = 0.889
+offset_left = 0.320007
+offset_top = -0.120056
+offset_right = -0.320007
+offset_bottom = -0.0720215
+editable = false
+
 [node name="Label" type="Label" parent="GUI"]
 layout_mode = 1
 anchors_preset = 3
@@ -929,9 +1708,17 @@ _spawnable_scenes = PackedStringArray("res://src/ui/player_bar.tscn")
 spawn_path = NodePath("../GUI/PlayerBars/VBoxContainer")
 spawn_limit = 8
 
+[node name="ScreenshotFrom2024-04-2418-03-58" type="Sprite2D" parent="."]
+visible = false
+self_modulate = Color(1, 1, 1, 0.407843)
+position = Vector2(1056, 348)
+scale = Vector2(0.856725, 0.856725)
+texture = ExtResource("13_8oatf")
+
 [connection signal="timeout" from="RoundTimer" to="RoundTimer" method="_on_Timer_timeout"]
 [connection signal="mouse_entered" from="GUI/UnitShop/SellUnit" to="." method="_on_sell_unit_mouse_entered"]
 [connection signal="mouse_exited" from="GUI/UnitShop/SellUnit" to="." method="_on_sell_unit_mouse_exited"]
+[connection signal="button_down" from="GUI/UnitInspec/Button" to="GUI/UnitInspec" method="_on_button_button_down"]
 [connection signal="pressed" from="GUI/TmpHost" to="MultiplayerManager" method="_on_tmp_host_pressed"]
 [connection signal="pressed" from="GUI/TmpJoin" to="MultiplayerManager" method="_on_tmp_join_pressed"]
 [connection signal="pressed" from="GUI/TmpLobbies" to="MultiplayerManager" method="_on_tmp_lobbies_pressed"]

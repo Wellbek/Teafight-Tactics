@@ -75,7 +75,7 @@ func _ready():
 	game_start_label = main.get_ui().get_node("GameStartLabel")
 	var stage_info = main.get_ui().get_node("StageInfo")
 	timer_label = stage_info.get_node("TimerLabel")
-	TIMER_DEFAULT_COLOR = timer_label.get_label_settings().get_font_color()
+	TIMER_DEFAULT_COLOR = timer_label.get_theme_color("font_color")
 	stage_label = stage_info.get_node("StageLabel")
 	progressbar = stage_info.get_node("ProgressBar")
 	set_multiplayer_authority(1)
@@ -93,7 +93,7 @@ func start_game():
 
 @rpc("authority", "call_local", "reliable")
 func start_preparation_phase():		
-	timer_label.get_label_settings().set_font_color(TIMER_DEFAULT_COLOR)
+	timer_label.add_theme_color_override("font_color", TIMER_DEFAULT_COLOR)
 
 	increment_round()
 	
@@ -167,7 +167,7 @@ func phase_gold_econ():
 
 @rpc("authority", "call_local", "reliable")
 func start_combat_phase():
-	timer_label.get_label_settings().set_font_color(TIMER_DEFAULT_COLOR)
+	timer_label.add_theme_color_override("font_color", TIMER_DEFAULT_COLOR)
 	
 	if not main.get_player().is_defeated():	
 		# place all units that are currently still being moved AND fill board as much as possible
@@ -274,6 +274,10 @@ func give_start_unit():
 	main.get_player().spawn_item(instance_path)
 	
 	game_start_label.visible = false
+	
+	for bar in main.get_ui().get_node("PlayerBars/VBoxContainer").get_children():
+		bar.init_bar()
+	
 	main.get_ui().get_node("StageInfo").visible = true
 	main.get_ui().get_node("PlayerBars").visible = true
 	main.get_ui().get_node("Classes").visible = true
@@ -366,4 +370,4 @@ func increment_round():
 		
 @rpc("authority","call_local", "unreliable")
 func change_timer_color(color: Color):
-	timer_label.get_label_settings().set_font_color(color)
+	timer_label.add_theme_color_override("font_color", color)

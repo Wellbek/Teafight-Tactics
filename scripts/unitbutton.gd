@@ -92,7 +92,7 @@ func upgrade(_unit):
 	var sameUnits = []
 	# check if there are 2 more units of same name and star
 	for u in main.get_player().get_units():
-		if u.unit_name == _unit.unit_name and u.star == _unit.star and _unit != u and u.get_mode() != u.BATTLE:
+		if u.unit_name == _unit.unit_name and u.star == _unit.star and _unit != u and u.get_mode() != u.BATTLE and main.get_timer().is_preparing():
 			sameUnits.append(u)
 			if sameUnits.size() >= 2:
 				if _unit.get_tile():

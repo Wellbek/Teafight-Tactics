@@ -75,13 +75,13 @@ bones/42/position = Vector3(-0.473776, 0.971975, 0.322916)
 bones/42/rotation = Quaternion(-0.64706, 0.28378, 0.608431, -0.361378)
 
 [node name="Skeleton_Rogue_Hood" parent="Rig/Skeleton3D" index="0"]
-transform = Transform3D(0.996517, 0.0693574, -0.046297, -0.065078, 0.993967, 0.0882909, 0.0521413, -0.0849705, 0.995018, -0.00177035, 1.20243, -0.0332092)
+transform = Transform3D(0.996517, 0.0693575, -0.0462978, -0.065078, 0.993967, 0.088291, 0.0521421, -0.0849705, 0.995018, -0.00177035, 1.20243, -0.0332092)
 
 [node name="Skeleton_Rogue_Hood" parent="Rig/Skeleton3D/Skeleton_Rogue_Hood" index="0"]
 surface_material_override/0 = SubResource("StandardMaterial3D_puc4m")
 
 [node name="Skeleton_Rogue_Cape" parent="Rig/Skeleton3D" index="1"]
-transform = Transform3D(0.940008, -2.12031e-08, 0.341152, 1.90001e-08, 1, 9.79889e-09, -0.341152, -2.72913e-09, 0.940008, -1.86104e-06, 1.20227, -0.0353799)
+transform = Transform3D(0.940008, -2.12031e-08, 0.341152, 1.9e-08, 1, 9.79889e-09, -0.341152, -2.72914e-09, 0.940008, -1.86104e-06, 1.20227, -0.0353799)
 
 [node name="Skeleton_Rogue_Cape" parent="Rig/Skeleton3D/Skeleton_Rogue_Cape" index="0"]
 surface_material_override/0 = SubResource("StandardMaterial3D_kiccx")

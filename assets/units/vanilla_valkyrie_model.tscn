@@ -16,11 +16,13 @@ bones/1/position = Vector3(0, 0.392064, 0)
 bones/1/rotation = Quaternion(-1.11123e-10, 0.0431578, 2.57241e-09, 0.999068)
 bones/2/rotation = Quaternion(-6.93889e-18, 7.10543e-15, 4.93038e-32, 1)
 bones/3/rotation = Quaternion(8.27181e-25, 3.72529e-09, 0, 1)
+bones/4/position = Vector3(0.212007, 0.134132, 7.92996e-08)
 bones/4/rotation = Quaternion(-0.559906, -0.0608803, -0.643974, 0.517779)
 bones/5/rotation = Quaternion(3.65498e-08, -4.88301e-08, -0.494719, 0.869053)
 bones/7/rotation = Quaternion(-0.321065, -0.325319, 0.145726, 0.87741)
-bones/8/rotation = Quaternion(1.60975e-09, 1.60975e-09, -0.707107, 0.707107)
-bones/10/rotation = Quaternion(-0.618244, 0.0807287, 0.618012, 0.478873)
+bones/8/rotation = Quaternion(-3.6586e-09, 6.87811e-09, -0.707107, 0.707107)
+bones/10/position = Vector3(-0.212007, 0.134132, 8.6814e-08)
+bones/10/rotation = Quaternion(-0.618244, 0.0807286, 0.618012, 0.478873)
 bones/11/rotation = Quaternion(2.09853e-08, 5.12855e-08, 0.517939, 0.855417)
 bones/13/rotation = Quaternion(-0.319291, 0.300524, -0.22735, 0.869512)
 bones/14/rotation = Quaternion(-1.02444e-09, -4.24391e-09, 0.707107, 0.707107)
@@ -48,31 +50,31 @@ bones/46/position = Vector3(-0.510844, 0.788312, 0.0597369)
 bones/46/rotation = Quaternion(-0.758253, -1.52737e-07, 0.651961, -1.11759e-08)
 
 [node name="Knife_Offhand" parent="Rig/Skeleton3D" index="0"]
-transform = Transform3D(4.18024e-07, 0.262863, 0.964832, 0.999999, -3.99356e-07, -9.13908e-08, 4.9995e-07, 0.964833, -0.262863, 0.507764, 0.636705, -0.0185362)
+transform = Transform3D(9.17323e-08, 0.262865, 0.964832, 0.999999, -5.48367e-07, 4.74853e-07, 8.68286e-07, 0.964832, -0.262865, 0.507764, 0.636705, -0.0185364)
 
 [node name="Knife_Offhand" parent="Rig/Skeleton3D/Knife_Offhand" index="0"]
 mesh = ExtResource("2_okjqy")
 
 [node name="1H_Crossbow" parent="Rig/Skeleton3D" index="1"]
-transform = Transform3D(0.988701, -0.149894, 4.29265e-07, 8.4854e-08, -3.38927e-07, -0.999999, 0.149895, 0.988701, -6.19239e-07, -0.489506, 0.745658, 0.096339)
+transform = Transform3D(0.988701, -0.149894, -2.68123e-07, -7.79413e-07, -1.2628e-06, -0.999999, 0.149894, 0.988701, -1.63117e-06, -0.489505, 0.745658, 0.0963389)
 visible = false
 
 [node name="2H_Crossbow" parent="Rig/Skeleton3D" index="2"]
-transform = Transform3D(0.988701, -0.149894, 4.29265e-07, 8.4854e-08, -3.38927e-07, -0.999999, 0.149895, 0.988701, -6.19239e-07, -0.489506, 0.745658, 0.096339)
+transform = Transform3D(0.988701, -0.149894, -2.68123e-07, -7.79413e-07, -1.2628e-06, -0.999999, 0.149894, 0.988701, -1.63117e-06, -0.489505, 0.745658, 0.0963389)
 visible = false
 
 [node name="Knife" parent="Rig/Skeleton3D" index="3"]
-transform = Transform3D(-4.25085e-07, -0.149894, 0.988701, 0.999999, -1.9074e-07, 1.03093e-07, 4.69992e-07, 0.988701, 0.149894, -0.491058, 0.64103, 0.10658)
+transform = Transform3D(2.72302e-07, -0.149894, 0.988701, 0.999999, -1.11461e-06, -7.61174e-07, 1.48192e-06, 0.988701, 0.149894, -0.491058, 0.64103, 0.10658)
 
 [node name="Knife" parent="Rig/Skeleton3D/Knife" index="0"]
 mesh = ExtResource("2_okjqy")
 
 [node name="Throwable" parent="Rig/Skeleton3D" index="4"]
-transform = Transform3D(-4.09345e-07, -0.149894, 0.988701, 0.999999, -1.76006e-07, 8.9407e-08, 4.57477e-07, 0.988701, 0.149894, -0.518076, 0.64103, 0.28479)
+transform = Transform3D(2.88042e-07, -0.149894, 0.988701, 0.999999, -1.09988e-06, -7.7486e-07, 1.46941e-06, 0.988701, 0.149894, -0.518076, 0.641029, 0.28479)
 visible = false
 
 [node name="Rogue_Cape" parent="Rig/Skeleton3D" index="5"]
-transform = Transform3D(0.996275, -5.14962e-09, 0.0862353, 5.13043e-09, 1, 4.44077e-10, -0.0862353, 1.88007e-15, 0.996275, -4.17227e-09, 1.20227, 1.52591e-15)
+transform = Transform3D(0.996275, -5.14962e-09, 0.0862354, 5.13044e-09, 1, 4.44078e-10, -0.0862354, 1.46374e-15, 0.996275, -4.17227e-09, 1.20227, 1.18859e-15)
 visible = false
 
 [node name="Rogue_ArmLeft" parent="Rig/Skeleton3D" index="6"]

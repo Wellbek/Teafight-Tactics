@@ -56,6 +56,8 @@ func change_camera(_index):
 	if not local_player: return
 			
 	if _index == 0: 
+		for bar in get_ui().get_node("PlayerBars/VBoxContainer").get_children():
+			bar.hp_bar.set_tint_under(Color(0.169, 0.169, 0.169))
 		local_player.get_camera().change_current(true)
 	else:	
 		var ids = multiplayer.get_peers()
@@ -64,7 +66,14 @@ func change_camera(_index):
 		var peername = str(ids[_index-1])
 		var peer = get_tree().root.get_child(0).find_child("World").get_node(peername)
 		peer.get_enemy_cam().change_current(true)
-		
+	
+		# reset highlight		
+		for bar in get_ui().get_node("PlayerBars/VBoxContainer").get_children():
+			if bar == get_ui().get_node("PlayerBars/VBoxContainer").get_node(str(ids[_index-1])):
+				bar.hp_bar.set_tint_under(Color.YELLOW)
+			else:
+				bar.hp_bar.set_tint_under(Color(0.169, 0.169, 0.169))
+	
 func change_camera_by_id(_id):		
 	if not local_player: return
 	
@@ -74,7 +83,11 @@ func change_camera_by_id(_id):
 		var peer = get_tree().root.get_child(0).find_child("World").get_node(str(_id))
 		if peer:
 			peer.get_enemy_cam().change_current(true)
-			
+	
+	# reset highlight		
+	for bar in get_ui().get_node("PlayerBars/VBoxContainer").get_children():
+		bar.hp_bar.set_tint_under(Color(0.169, 0.169, 0.169))
+	
 @rpc("any_peer", "call_local", "reliable")
 func free_object(_path):
 	var instance = get_tree().root.get_node(_path)

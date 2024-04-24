@@ -64,8 +64,11 @@ attack_anim1 = 2
 move_speed = 4.0
 attackrange = 8.0
 max_health = 500.0
+max_mana = 60.0
 attack_dmg = 30.0
+ability_power = 100.0
 armor = 15.0
+mr = 15.0
 attack_speed = 0.7
 attack_timer = NodePath("AttackTimer")
 

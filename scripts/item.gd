@@ -7,8 +7,8 @@ extends StaticBody3D
 @export var health = 0
 @export var attack_dmg = 0
 @export var armor = 0
-@export var attack_speed = 0
-@export var crit_chance = 0
+@export var attack_speed: float = 0
+@export var crit_chance: float = 0
 
 var dragging = false
 

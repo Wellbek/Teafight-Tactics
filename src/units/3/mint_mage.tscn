@@ -9,7 +9,7 @@
 [sub_resource type="ViewportTexture" id="ViewportTexture_vdcr0"]
 viewport_path = NodePath("SubViewport")
 
-[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_ol1ia"]
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_visct"]
 properties/0/path = NodePath(".:position")
 properties/0/spawn = true
 properties/0/replication_mode = 2
@@ -46,6 +46,33 @@ properties/10/replication_mode = 2
 properties/11/path = NodePath(".:rotation")
 properties/11/spawn = true
 properties/11/replication_mode = 2
+properties/12/path = NodePath(".:cost")
+properties/12/spawn = true
+properties/12/replication_mode = 2
+properties/13/path = NodePath(".:max_mana")
+properties/13/spawn = true
+properties/13/replication_mode = 2
+properties/14/path = NodePath(".:curr_mana")
+properties/14/spawn = true
+properties/14/replication_mode = 2
+properties/15/path = NodePath(".:ability_power")
+properties/15/spawn = true
+properties/15/replication_mode = 2
+properties/16/path = NodePath(".:crit_chance")
+properties/16/spawn = true
+properties/16/replication_mode = 2
+properties/17/path = NodePath(".:crit_damage")
+properties/17/spawn = true
+properties/17/replication_mode = 2
+properties/18/path = NodePath(".:dodge_chance")
+properties/18/spawn = true
+properties/18/replication_mode = 2
+properties/19/path = NodePath(".:omnivamp")
+properties/19/spawn = true
+properties/19/replication_mode = 2
+properties/20/path = NodePath(".:mr")
+properties/20/spawn = true
+properties/20/replication_mode = 2
 
 [node name="MintMage" type="CharacterBody3D" node_paths=PackedStringArray("attack_timer")]
 transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, 999, 1, 999)
@@ -66,8 +93,11 @@ cost = 3
 move_speed = 4.0
 attackrange = 8.0
 max_health = 650.0
+max_mana = 60.0
+curr_mana = 20
 attack_dmg = 45.0
 armor = 25.0
+mr = 25.0
 attack_speed = 0.75
 attack_timer = NodePath("AttackTimer")
 
@@ -92,4 +122,4 @@ size = Vector2i(150, 69)
 [node name="UnitUI" parent="SubViewport" instance=ExtResource("2_3ynlx")]
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
-replication_config = SubResource("SceneReplicationConfig_ol1ia")
+replication_config = SubResource("SceneReplicationConfig_visct")

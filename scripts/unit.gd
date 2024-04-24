@@ -50,14 +50,20 @@ var dead = false
 
 @export_category("Stats")
 @export var cost = 1
+var rarity = cost
 @export var move_speed = 5.0
 @export var attackrange = 4.0
 @export var max_health = 100.0
 @onready var curr_health = max_health
+@export var max_mana = 100.0
+@export var curr_mana = 0
 @export var attack_dmg = 20.0
+@export var ability_power = 100.0
 @export var armor = 30.0
+@export var mr = 30.0
 @export var attack_speed = 0.8
-@export var crit_chance = 0.25
+var crit_chance = 0.25
+var crit_damage = 0.3
 @export var attack_timer: Timer
 var dodge_chance = 0.0
 var bonus_attack_speed = 0.0 # in raw (not percent)
@@ -131,10 +137,14 @@ func get_tile():
 	return tile
 	
 func get_tile_type():
+	if not tile: return -1
 	return tile.get_parent().get_type()
 
 func _input_event(_camera, event, _position, _normal, _shape_idx):
-	if not is_multiplayer_authority() or not mode == PREP: return
+	if event is InputEventMouseButton and event.is_pressed() and event.button_index == MOUSE_BUTTON_RIGHT and !is_dragging() and not dead and visible:
+		main.get_ui().get_node("UnitInspec").set_unit(self)
+
+	if not is_multiplayer_authority() or not mode == PREP or (get_tile_type() == HEX and not timer.is_preparing()): return
 
 	if event is InputEventMouseButton and event.is_pressed() and event.button_index == MOUSE_BUTTON_LEFT and !is_dragging():
 		set_dragging(true)
@@ -145,7 +155,7 @@ func _input_event(_camera, event, _position, _normal, _shape_idx):
 		transform.origin.y += 1
 
 func _input(event):
-	if not is_multiplayer_authority() or not mode == PREP: return
+	if not is_multiplayer_authority() or not mode == PREP or (get_tile_type() == HEX and not timer.is_preparing()): return
 	
 	if is_dragging():
 		if event is InputEventMouseButton and event.is_released() and event.button_index == MOUSE_BUTTON_LEFT:
@@ -180,14 +190,14 @@ func _input(event):
 
 				global_transform.origin = Vector3(mouse_position_3D.x, global_transform.origin.y, mouse_position_3D.z)
 
-func change_mode(_mode: int):	
+func change_mode(_mode: int):
 	if mode == _mode: return
 	
 	play_animation(idle_anim)
 	
 	if _mode == BATTLE:
 		# bastion (kinda): - aromatic 
-		# all bastion units increased armor and mr (in combat): increased by 50% for first 10 sec
+		# all bastion units increased armor and mr (in combat): increased by 100% for first 10 sec
 		if type == 6:
 			var class_level = main.get_classes().get_class_level(CLASS_NAMES[6])
 			if class_level >= 1:
@@ -199,9 +209,15 @@ func change_mode(_mode: int):
 				timer.connect("timeout", _on_aromatic_10sec)
 				timer.start()
 				match class_level:
-					1: armor += 37.5
-					2: armor += 75
-					3: armor += 142.5
+					1: 
+						armor += 50
+						mr += 50
+					2: 
+						armor += 100
+						mr += 100
+					3: 
+						armor += 190
+						mr += 190
 					_: pass
 			
 		# bruiser: - herbal
@@ -234,17 +250,17 @@ func change_mode(_mode: int):
 			
 		# slayer: - green
 		# all slayers:
-		# 30% omnivamp, bonus dmg (doubled at 66%) - 5% b dmg -> 10% -> 30%
+		# 15% omnivamp, bonus dmg (doubled at 66%) - 5% b dmg -> 10% -> 30%
 		if type == 1:
 			match main.get_classes().get_class_level(CLASS_NAMES[1]):
 				1: 
-					omnivamp += .3
+					omnivamp += .15
 					bonus_dmg += 0.05
 				2: 
-					omnivamp += .3
+					omnivamp += .15
 					bonus_dmg += 0.1
 				3: 
-					omnivamp += .3
+					omnivamp += .15
 					bonus_dmg += 0.3
 				_: pass
 				
@@ -289,9 +305,15 @@ func change_mode(_mode: int):
 		if type == 6:		
 			if get_node_or_null("aromatic_trait"): _on_aromatic_10sec()
 			match main.get_classes().get_class_level(CLASS_NAMES[6]):
-				1: armor -= 25
-				2: armor -= 50
-				3: armor -= 95
+				1: 
+					armor -= 25
+					mr -= 25
+				2: 
+					armor -= 50
+					mr -= 50
+				3: 
+					armor -= 95
+					mr -= 95
 				_: pass
 				
 		# reset bruiser trait
@@ -321,13 +343,13 @@ func change_mode(_mode: int):
 		if type == 1:
 			match main.get_classes().get_class_level(CLASS_NAMES[1]):
 				1: 
-					omnivamp -= .3
+					omnivamp -= .15
 					bonus_dmg -= 0.05
 				2: 
-					omnivamp -= .3
+					omnivamp -= .15
 					bonus_dmg -= 0.1
 				3: 
-					omnivamp -= .3
+					omnivamp -= .15
 					bonus_dmg -= 0.3
 				_: pass
 				
@@ -359,13 +381,22 @@ func change_mode(_mode: int):
 	
 		set_collision_layer_value(5, false)
 		
+		if not is_multiplayer_authority():
+			set_bar_color(ENEMY_HOST_COLOR)
+		
 	mode = _mode
 	
 func _on_aromatic_10sec():
 	match main.get_classes().get_class_level(CLASS_NAMES[6]):
-		1: armor -= 12.5
-		2: armor -= 25
-		3: armor -= 47.5
+		1: 
+			armor -= 25
+			mr -= 25
+		2: 
+			armor -= 50
+			mr -= 50
+		3: 
+			armor -= 95
+			mr -= 95
 		_: pass
 	get_node("aromatic_trait").queue_free()
 	
@@ -515,7 +546,7 @@ func auto_attack(_target, pve = false):
 
 	var rng = randf()
 	
-	var damage = attack_dmg if rng > crit_chance else attack_dmg * 1.3
+	var damage = attack_dmg if rng > crit_chance else attack_dmg * (1+crit_damage)
 	damage *= (1+(bonus_dmg*2)) if (_target.get_curr_health()/_target.get_max_health() < 0.66) and type == 1 else (1+bonus_dmg)
 
 	_target.take_dmg.rpc_id(id, damage*(1+bonus_dmg))
@@ -661,7 +692,7 @@ func equip_item(item_path):
 		max_health += item.get_health()
 		attack_dmg += item.get_attack_dmg()
 		armor += item.get_armor()
-		attack_speed *= 1+item.get_attack_speed()/100
+		attack_speed *= 1+item.get_attack_speed()
 		crit_chance = min(1, crit_chance + item.get_crit_chance())
 		
 		item.visible = false

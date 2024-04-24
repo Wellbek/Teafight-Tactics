@@ -83,7 +83,7 @@ bruiser: - herbal
 
 slayer: - green
 all slayers:
-12% omnivamp, bonus dmg (doubled at 66%)
+15% omnivamp, bonus dmg (doubled at 66%)
 5% b dmg
 10% b dmg
 30% b dmg

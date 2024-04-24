@@ -14,12 +14,16 @@ var test: bool = false
 
 @export_subgroup("Temporary GUI Stuff")
 @export var startButton: Button
+@export var lobby_id_box: TextEdit
 @export var enable_on_start: Array[Control]
 @export var disable_on_start: Array[Control]
 @export var id_box: TextEdit
 
 var lobby_id = 0
 var peer = SteamMultiplayerPeer.new()
+
+@onready var steam_username: String = Steam.getPersonaName()
+@onready var steam_id: int = Steam.getSteamID()
 
 func _init() -> void:
 	# Set your game's Steam app ID here
@@ -79,6 +83,7 @@ func start_game():
 	if not multiplayer.is_server(): return
 	
 	startButton.visible = false
+	lobby_id_box.visible = false
 	
 	for id in multiplayer.get_peers():
 		add_player(id)
@@ -94,7 +99,9 @@ func disable_enable():
 	for c in disable_on_start:
 		c.visible = false
 	
-	if multiplayer.is_server(): startButton.visible = true
+	if multiplayer.is_server(): 
+		startButton.visible = true
+		lobby_id_box.visible = true
 	
 func join_lobby(id):
 	if test: return
@@ -135,6 +142,7 @@ func _on_lobby_created(connect, id):
 		Steam.setLobbyData(lobby_id, "name", str(Steam.getPersonaName()+ "'s Lobby"))
 		Steam.setLobbyJoinable(lobby_id, true)
 		print("lobby created with id " + str(lobby_id))
+		lobby_id_box.text = str(lobby_id)
 	
 func _on_peer_connected():
 	print("someone connected")
@@ -155,3 +163,6 @@ func _on_tmp_lobbies_pressed():
 
 func _on_check_button_toggled(toggled_on):
 	test = toggled_on
+
+func _on_button_button_down():
+	$"../GUI/Button".hide()

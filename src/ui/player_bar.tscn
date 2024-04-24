@@ -1,18 +1,9 @@
-[gd_scene load_steps=7 format=3 uid="uid://dfbxcmkrqggoj"]
+[gd_scene load_steps=6 format=3 uid="uid://dfbxcmkrqggoj"]
 
 [ext_resource type="Texture2D" uid="uid://mmrv5abf47td" path="res://assets/images/white_circle.png" id="1_84dmm"]
 [ext_resource type="Script" path="res://scripts/player_bar.gd" id="1_bgs5b"]
+[ext_resource type="Script" path="res://scenes/dynamic_font.gd" id="2_wab65"]
 [ext_resource type="Texture2D" uid="uid://c24q0nj8r6ri8" path="res://assets/images/white_circle_small.png" id="2_xwc4t"]
-
-[sub_resource type="LabelSettings" id="LabelSettings_r7awo"]
-font_size = 17
-shadow_size = 0
-shadow_color = Color(0, 0, 0, 1)
-
-[sub_resource type="LabelSettings" id="LabelSettings_nkqc3"]
-font_size = 21
-shadow_size = 0
-shadow_color = Color(0, 0, 0, 1)
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_m0m4m"]
 properties/0/path = NodePath("HPBar:value")
@@ -54,11 +45,12 @@ anchor_right = 0.678
 anchor_bottom = 1.0
 offset_left = 0.0479999
 offset_right = -0.0240021
+theme_override_font_sizes/font_size = 17
 text = "PlayerXYZ"
-label_settings = SubResource("LabelSettings_r7awo")
 horizontal_alignment = 1
 vertical_alignment = 1
 text_overrun_behavior = 3
+script = ExtResource("2_wab65")
 
 [node name="Health" type="ColorRect" parent="."]
 layout_mode = 1
@@ -79,10 +71,11 @@ anchor_right = 0.88
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_font_sizes/font_size = 17
 text = "100"
-label_settings = SubResource("LabelSettings_nkqc3")
 horizontal_alignment = 1
 vertical_alignment = 1
+script = ExtResource("2_wab65")
 
 [node name="HPBar" type="TextureProgressBar" parent="."]
 layout_mode = 1

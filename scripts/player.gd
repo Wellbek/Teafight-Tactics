@@ -23,6 +23,7 @@ var my_bar
 var defender = true
 
 @export_category("Player Stats")
+var steam_name = ""
 @export var start_gold: int = 0
 var gold = 0
 @onready var gold_label = main.get_ui().get_node("UnitShop/Gold/HBoxContainer/GoldLabel")
@@ -34,15 +35,15 @@ var level = 0
 var current_xp = 0
 var XP_TABLE = [
 	0, # 1
-	0, # 2
-	2, # 3
-	6, # 4
-	10, # 5
-	20, # 6
-	36, # 7
-	48, # 8
-	72, # 9
-	84 # 10
+	2, # 2
+	6, # 3
+	10, # 4
+	20, # 5
+	36, # 6
+	48, # 7
+	72, # 8
+	84, # 9
+	9999 # 10
 ]
 
 var defeated = false
@@ -89,6 +90,8 @@ func _ready():
 		xp_bar = sidebar.get_node("XPBar")
 		xp_label = sidebar.get_node("XPLabel")
 		
+		steam_name = main.get_node("MultiplayerManager").steam_username
+		
 		set_gold(start_gold)
 	
 		increase_level()
@@ -108,9 +111,13 @@ func combatphase_setup(enemy_path = null, host:bool = true):
 			unit.combatphase_setup.rpc(host, myid)
 		return
 
-	current_enemy = get_tree().root.get_node(enemy_path)
+	current_enemy = get_tree().root.get_node_or_null(enemy_path)
+	
+	if current_enemy: 
+		var enemy_steam_name = current_enemy.get_steam_name()
+		main.get_ui().get_node("StageInfo/EnemyLabel").text = "Enemy: " + (enemy_steam_name if (enemy_steam_name != "" and not main.get_node("MultiplayerManager").test) else "Player" + current_enemy.name)
 
-	if not host:
+	if not host and current_enemy:
 		var item_parent = find_child("Items")
 		var econ_parent = find_child("Econ")
 		
@@ -148,8 +155,10 @@ func reset_combatphase():
 	var item_parent = find_child("Items")
 	var econ_parent = find_child("Econ")
 	
+	main.get_ui().get_node("StageInfo/EnemyLabel").text = ""
+	
 	if is_multiplayer_authority():
-		if not defender:
+		if not defender and current_enemy:
 			econ_parent.position = Vector3(-econ_parent.position.x, econ_parent.position.y, -econ_parent.position.z)
 			econ_parent.global_transform.origin += current_enemy.global_transform.origin - global_transform.origin
 			econ_parent.rotation = Vector3.ZERO
@@ -392,3 +401,6 @@ func spawn_item(path):
 	
 	if is_multiplayer_authority():
 		instance.position += Vector3(randf_range(-1, 1), 0, randf_range(-1, 1))
+		
+func get_steam_name():
+	return steam_name
