@@ -122,7 +122,7 @@ func change_attack_speed(val):
 	if attacking == true: attack_timer.start()
 
 @rpc("any_peer", "call_local", "unreliable")
-func take_dmg(raw_dmg):
+func take_dmg(raw_dmg, dmg_type = 0, dodgeable = true):
 	var dmg = raw_dmg / (1+armor/100) # https://leagueoflegends.fandom.com/wiki/Armor
 	
 	curr_health = 0 if dmg >= curr_health else curr_health-dmg

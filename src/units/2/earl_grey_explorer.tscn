@@ -102,6 +102,7 @@ attack_timer = NodePath("AttackTimer")
 scaling1 = 4.1
 scaling2 = 6.15
 scaling3 = 9.75
+magic_ability_anim = "Throw"
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("CapsuleShape3D_tcrfm")

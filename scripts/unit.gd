@@ -80,6 +80,9 @@ const ABILITY_DMG_TYPES = ["AD", "AP", "TrueDMG"]
 @export var scaling1: float = 1.0
 @export var scaling2: float = 1.5
 @export var scaling3: float = 2.25
+@export var melee_ability_anim: String = "2H_Melee_Attack_Spin"
+@export var ranged_ability_anim: String = "2H_Ranged_Shoot"
+@export var magic_ability_anim: String = "Spellcast_Raise"
 var ability_crit = false
 const MANA_PER_ATTACK = 10
 
@@ -99,6 +102,9 @@ func _ready():
 	ui.get_node("HPBar").self_modulate = LOCAL_COLOR if is_multiplayer_authority() else ENEMY_HOST_COLOR
 	
 	refresh_manabar()
+	
+	anim_player.get_animation(idle_anim).loop_mode = (Animation.LOOP_LINEAR)
+	play_animation(idle_anim, false)
 	
 func _enter_tree():
 	myid = name.get_slice("#", 0).to_int()
@@ -128,7 +134,7 @@ func _physics_process(_delta):
 		if distance > attackrange:
 			attacking = false
 			velocity = (target.global_transform.origin - global_transform.origin).normalized() * move_speed
-			if anim_player.current_animation != walking_anim: play_animation.rpc(walking_anim)
+			if anim_player.current_animation != walking_anim: play_animation.rpc(walking_anim, false)
 			move_and_slide()
 		elif not attacking: in_attack_range()
 		
@@ -207,7 +213,7 @@ func _input(event):
 func change_mode(_mode: int):
 	if mode == _mode: return
 	
-	play_animation(idle_anim)
+	play_animation(idle_anim, false)
 	
 	if _mode == BATTLE:
 		# bastion (kinda): - aromatic 
@@ -547,7 +553,7 @@ func in_attack_range():
 		return
 		
 	if anim_player.current_animation == walking_anim: 
-		play_animation.rpc(idle_anim)
+		play_animation.rpc(idle_anim, false)
 	
 	attacking = true
 	attack_timer.wait_time = 1/attack_speed
@@ -564,14 +570,14 @@ func auto_attack(_target, pve = false):
 	
 	match attack_anim1:
 		0:
-			if attack_anim2 == 0: play_animation.rpc(one_hand_melee_anim, -1, attack_speed)
-			else: play_animation.rpc(two_hand_melee_anim, -1, attack_speed)
+			if attack_anim2 == 0: play_animation.rpc(one_hand_melee_anim, true, -1, attack_speed)
+			else: play_animation.rpc(two_hand_melee_anim, true, -1, attack_speed)
 		1:
-			if attack_anim2 == 0: play_animation.rpc(one_hand_ranged_anim, -1, attack_speed)
-			else: play_animation.rpc(two_hand_range_anim, -1, attack_speed)
+			if attack_anim2 == 0: play_animation.rpc(one_hand_ranged_anim, true, -1, attack_speed)
+			else: play_animation.rpc(two_hand_range_anim, true, -1, attack_speed)
 		2:
-			if attack_anim2 == 0: play_animation.rpc(one_hand_magic_anim, -1, attack_speed)
-			else: play_animation.rpc(two_hand_magic_anim, -1, attack_speed)
+			if attack_anim2 == 0: play_animation.rpc(one_hand_magic_anim, true, -1, attack_speed)
+			else: play_animation.rpc(two_hand_magic_anim, true, -1, attack_speed)
 
 	var id = get_multiplayer_authority() if pve else _target.get_owner_id() 
 
@@ -636,12 +642,18 @@ func change_attack_speed(val):
 	if attacking == true: attack_timer.start()
 
 @rpc("any_peer", "call_local", "unreliable")
-func take_dmg(raw_dmg, dmg_type = 0):
+func take_dmg(raw_dmg, dmg_type = 0, dodgeable = true):
 	if mode != BATTLE or dead: return
 	
 	# dodge
 	var rng = randf()
-	if rng < dodge_chance: return
+	if rng < dodge_chance and dodgeable: 
+		var dodge_popup = preload("res://src/damage_popup.tscn").instantiate()
+		dodge_popup.modulate = Color.DIM_GRAY
+		dodge_popup.text = "Dodged"
+		add_child(dodge_popup)
+		dodge_popup.global_transform.origin += Vector3(randf_range(-.5,.5), randf_range(0,1), 0.5)
+		return
 	
 	# https://leagueoflegends.fandom.com/wiki/Armor
 	var dmg = raw_dmg / (1+armor/100) if dmg_type == 0 else raw_dmg / (1+mr/100)
@@ -842,7 +854,8 @@ func get_trait():
 	return type
 	
 @rpc("any_peer", "call_local", "unreliable")
-func play_animation(name: StringName = "", custom_blend: float = -1, custom_speed: float = 1.0, from_end: bool = false):
+func play_animation(name: StringName = "", force = true, custom_blend: float = -1, custom_speed: float = 1.0, from_end: bool = false):
+	if force: anim_player.stop()
 	anim_player.play(name, custom_blend, custom_speed, from_end)
 	
 func ability(_target, pve = false):	
@@ -855,15 +868,9 @@ func ability(_target, pve = false):
 			if _target == null or (not pve and _target.get_mode() != BATTLE) or dead: return
 	
 			match attack_anim1:
-				0:
-					if attack_anim2 == 0: play_animation.rpc(one_hand_melee_anim, -1, attack_speed)
-					else: play_animation.rpc(two_hand_melee_anim, -1, attack_speed)
-				1:
-					if attack_anim2 == 0: play_animation.rpc(one_hand_ranged_anim, -1, attack_speed)
-					else: play_animation.rpc(two_hand_range_anim, -1, attack_speed)
-				2:
-					if attack_anim2 == 0: play_animation.rpc(one_hand_magic_anim, -1, attack_speed)
-					else: play_animation.rpc(two_hand_magic_anim, -1, attack_speed)
+				0: play_animation.rpc(melee_ability_anim)
+				1: play_animation.rpc(ranged_ability_anim)
+				2: play_animation.rpc(magic_ability_anim)
 
 			var id = get_multiplayer_authority() if pve else _target.get_owner_id() 
 
@@ -878,7 +885,7 @@ func ability(_target, pve = false):
 			damage *= (1+(bonus_dmg*2)) if (_target.get_curr_health()/_target.get_max_health() < 0.66) and type == 1 else (1+bonus_dmg)
 			
 			var dmg_popup = preload("res://src/damage_popup.tscn").instantiate()
-			dmg_popup.modulate = Color.CRIMSON if type == 0 else Color.DODGER_BLUE
+			dmg_popup.modulate = Color.CRIMSON if ability_dmg_type == 0 else Color.DODGER_BLUE
 			if crit: 
 				dmg_popup.modulate = Color.BLUE
 				dmg_popup.scale *= 1.5
@@ -886,7 +893,7 @@ func ability(_target, pve = false):
 			add_child(dmg_popup)
 			dmg_popup.global_transform.origin = _target.global_transform.origin + Vector3(randf_range(-.5,.5), randf_range(0,1), 0.5)
 			
-			_target.take_dmg.rpc_id(id, damage, ability_dmg_type)
+			_target.take_dmg.rpc_id(id, damage, ability_dmg_type, false) # can't dodge attack
 			
 			# omnivamp - (we just do raw dmg here as actual dmg is computed in take_dmg func)
 			if omnivamp > 0:

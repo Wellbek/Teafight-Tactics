@@ -43,7 +43,6 @@ bones/19/rotation = Quaternion(0.0854265, 0.130441, 0.00470451, 0.987758)
 bones/22/rotation = Quaternion(0.993728, 0.0733767, 0.0391868, 0.0747389)
 bones/23/rotation = Quaternion(0.350238, 6.5134e-08, -2.45306e-07, 0.936661)
 bones/24/rotation = Quaternion(-0.592131, -0.213501, 0.0538368, 0.775177)
-bones/25/rotation = Quaternion(-3.71812e-08, 0.920355, -0.391084, 6.66379e-08)
 bones/26/rotation = Quaternion(0.991183, -0.0392424, -0.0117463, 0.126008)
 bones/27/rotation = Quaternion(0.389035, -6.29368e-08, 2.68502e-07, 0.921223)
 bones/28/rotation = Quaternion(-0.602857, 0.112087, -0.0280757, 0.789437)
@@ -66,19 +65,19 @@ bones/47/position = Vector3(-0.335004, 0.82588, 0.274458)
 bones/47/rotation = Quaternion(-0.330753, 0.224688, 0.90319, -0.156094)
 
 [node name="1H_Axe_Offhand" parent="Rig/Skeleton3D" index="0"]
-transform = Transform3D(0.513883, 0.55879, 0.650905, 0.181718, 0.670631, -0.719188, -0.838392, 0.48786, 0.243084, 0.261194, 0.842999, 0.565513)
+transform = Transform3D(0.513884, 0.558788, 0.650905, 0.181718, 0.670632, -0.719188, -0.838391, 0.48786, 0.243085, 0.261194, 0.842999, 0.565513)
 visible = false
 
 [node name="Barbarian_Round_Shield" parent="Rig/Skeleton3D" index="1"]
-transform = Transform3D(0.513884, 0.558788, 0.650906, 0.18172, 0.670631, -0.719188, -0.838391, 0.487862, 0.243083, 0.353553, 0.719958, 0.595455)
+transform = Transform3D(0.513885, 0.558787, 0.650906, 0.18172, 0.670631, -0.719187, -0.83839, 0.487862, 0.243085, 0.353553, 0.719959, 0.595455)
 visible = false
 
 [node name="1H_Axe" parent="Rig/Skeleton3D" index="2"]
-transform = Transform3D(0.220919, 0.761972, 0.608763, 0.617506, 0.373857, -0.692038, -0.754904, 0.5288, -0.387931, -0.251925, 0.703766, 0.366367)
+transform = Transform3D(0.22092, 0.761971, 0.608764, 0.617507, 0.373857, -0.692037, -0.754903, 0.528801, -0.38793, -0.251925, 0.703766, 0.366367)
 visible = false
 
 [node name="2H_Axe" parent="Rig/Skeleton3D" index="3"]
-transform = Transform3D(0.220919, 0.761972, 0.608763, 0.617506, 0.373857, -0.692038, -0.754904, 0.5288, -0.387931, -0.251925, 0.703766, 0.366367)
+transform = Transform3D(0.22092, 0.761971, 0.608764, 0.617507, 0.373857, -0.692037, -0.754903, 0.528801, -0.38793, -0.251925, 0.703766, 0.366367)
 
 [node name="2H_Axe" parent="Rig/Skeleton3D/2H_Axe" index="0"]
 transform = Transform3D(0.006, 4.26326e-17, 1.10852e-17, -6.39488e-17, 0.004, 1.02318e-15, -1.10852e-17, -6.82121e-16, 0.006, 1.64, 0.175, -1.66)
@@ -86,11 +85,11 @@ mesh = ExtResource("2_8r6i7")
 surface_material_override/0 = SubResource("StandardMaterial3D_1sjpx")
 
 [node name="Mug" parent="Rig/Skeleton3D" index="4"]
-transform = Transform3D(0.220919, 0.761972, 0.608763, 0.617506, 0.373857, -0.692038, -0.754904, 0.5288, -0.387931, -0.355622, 0.499866, 0.567383)
+transform = Transform3D(0.22092, 0.761971, 0.608764, 0.617507, 0.373857, -0.692037, -0.754903, 0.528801, -0.38793, -0.355621, 0.499866, 0.567382)
 visible = false
 
 [node name="Barbarian_Hat" parent="Rig/Skeleton3D" index="5"]
-transform = Transform3D(1, -1.49012e-08, 4.47035e-08, 1.11759e-08, 0.998739, -0.0501992, -5.96046e-08, 0.0501992, 0.998739, 0.0287416, 1.18348, -0.0771583)
+transform = Transform3D(1, -2.98023e-08, -5.81145e-07, -1.49012e-08, 0.998739, -0.050199, 5.66244e-07, 0.050199, 0.998739, 0.0287416, 1.18348, -0.0771584)
 
 [node name="Barbarian_Hat" parent="Rig/Skeleton3D/Barbarian_Hat" index="0"]
 transform = Transform3D(1, 4.0766e-17, 0, -2.1658e-15, 1, 0, 0, 2.77556e-16, 1, 1.29356e-09, 0.928333, 3.30076e-10)
@@ -98,7 +97,7 @@ mesh = SubResource("CylinderMesh_pcqqd")
 surface_material_override/0 = SubResource("StandardMaterial3D_y6bdr")
 
 [node name="Barbarian_Cape" parent="Rig/Skeleton3D" index="6"]
-transform = Transform3D(0.965926, 0.0315801, -0.256885, -1.64585e-08, 0.992528, 0.122016, 0.258819, -0.117859, 0.958709, 0.0279328, 1.18364, -0.0728647)
+transform = Transform3D(0.965926, 0.0315801, -0.256885, -2.3909e-08, 0.992528, 0.122016, 0.258819, -0.117859, 0.958709, 0.0279328, 1.18364, -0.0728647)
 
 [node name="Barbarian_Cape" parent="Rig/Skeleton3D/Barbarian_Cape" index="0"]
 surface_material_override/0 = SubResource("StandardMaterial3D_23p68")

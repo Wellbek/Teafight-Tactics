@@ -37,7 +37,7 @@ func _ready():
 func _input_event(camera, event, position, normal, shape_idx):
 	if not is_multiplayer_authority(): return
 
-	if event is InputEventMouseButton and event.is_pressed() and event.button_index == MOUSE_BUTTON_LEFT and !is_dragging():
+	if event is InputEventMouseButton and event.is_pressed() and event.button_index == MOUSE_BUTTON_LEFT and !is_dragging() and not main.get_player().is_defeated():
 		set_dragging(true)
 		initial_pos = global_transform.origin
 
@@ -47,7 +47,7 @@ func _input(event):
 	if not is_multiplayer_authority(): return
 	
 	if is_dragging():
-		if event is InputEventMouseButton and event.is_released() and event.button_index == MOUSE_BUTTON_LEFT:
+		if (event is InputEventMouseButton and event.is_released() and event.button_index == MOUSE_BUTTON_LEFT) or main.get_player().is_defeated():
 			place_item()
 		elif event is InputEventMouseMotion:
 			var viewport := get_viewport()

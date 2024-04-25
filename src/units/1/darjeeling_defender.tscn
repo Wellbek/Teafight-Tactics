@@ -100,6 +100,7 @@ attack_speed = 0.55
 attack_timer = NodePath("AttackTimer")
 scaling2 = 1.35
 scaling3 = 1.8
+melee_ability_anim = "Dualwield_Melee_Attack_Slice"
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("CapsuleShape3D_tcrfm")

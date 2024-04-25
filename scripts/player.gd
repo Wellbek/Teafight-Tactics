@@ -297,9 +297,15 @@ func lose_health(amt):
 	
 # is called for every player as invoked by lose_health(amt)	
 func defeat():
+	if defeated: return
+	
 	defeated = true
-	for unit in get_units():
-		unit.queue_free()
+	
+	if is_multiplayer_authority():
+		for unit in find_child("Units").get_children():
+			unit.sell_unit() # free all and return units back to pool
+	
+	main.get_ui().get_node("UnitShop").visible = false
 		
 	if multiplayer.is_server():
 		var players_left = main.players
@@ -326,8 +332,11 @@ func sort_player_bars():
 		func(a: Control, b: Control):
 			var player_a = main.find_child("World").get_node(str(a.name))
 			var player_b = main.find_child("World").get_node(str(b.name))
+			
+			if player_a.is_defeated() and not player_b.is_defeated(): return false # if player a is defeated but b not, b is always on top
+			elif player_b.is_defeated(): return true # if player_b is already defeated then regardless if a is or not, keep order
 		
-			return player_a.get_health() > player_b.get_health()
+			return player_a.get_health() > player_b.get_health() # when both alive order based on hp
 	)
 	
 	for bar in container.get_children():
@@ -343,6 +352,8 @@ func get_level():
 	return level
 	
 func increase_level():
+	if defeated: return
+	
 	level += 1
 	
 	level_label.text = str(level)
@@ -352,8 +363,12 @@ func increase_level():
 	for i in range(len(rates)):
 		labels[i].text = str(rates[i]*100) + "%"
 		
+	get_board_grid().toggle_label(true)
+		
 @rpc("any_peer", "call_local", "unreliable")
 func increment_winstreak():
+	if defeated: return
+	
 	cons_loss = 0
 	cons_wins += 1
 	var streak = main.get_ui().get_node("UnitShop/Streak")
@@ -363,6 +378,8 @@ func increment_winstreak():
 
 @rpc("any_peer", "call_local", "unreliable")
 func increment_lossstreak():
+	if defeated: return
+	
 	cons_wins = 0
 	cons_loss += 1
 	var streak = main.get_ui().get_node("UnitShop/Streak")
@@ -370,6 +387,8 @@ func increment_lossstreak():
 	streak.modulate = Color(0, 0.529, 1)
 	
 func increase_xp(amt: int):
+	if defeated: return
+	
 	current_xp += amt
 	
 	if current_xp >= XP_TABLE[level-1]:
@@ -380,12 +399,12 @@ func increase_xp(amt: int):
 	xp_bar.value = float(current_xp) / float(max(1,XP_TABLE[level-1])) * 100
 
 func buy_xp():
-	if gold < XP_COST: return
+	if gold < XP_COST or is_defeated(): return
 	increase_xp(4)
 	decrease_gold(XP_COST)
 	
 func reroll_shop():
-	if gold < RR_COST: return
+	if gold < RR_COST or is_defeated(): return
 	
 	decrease_gold(RR_COST)
 	
@@ -395,6 +414,8 @@ func reroll_shop():
 		
 @rpc("any_peer", "call_local", "reliable")
 func spawn_item(path):
+	if defeated: return
+	
 	var instance = load(path).instantiate()
 
 	get_node("Items").call("add_child", instance, true)

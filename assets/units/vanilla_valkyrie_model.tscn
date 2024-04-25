@@ -22,7 +22,7 @@ bones/5/rotation = Quaternion(3.65498e-08, -4.88301e-08, -0.494719, 0.869053)
 bones/7/rotation = Quaternion(-0.321065, -0.325319, 0.145726, 0.87741)
 bones/8/rotation = Quaternion(-3.6586e-09, 6.87811e-09, -0.707107, 0.707107)
 bones/10/position = Vector3(-0.212007, 0.134132, 8.6814e-08)
-bones/10/rotation = Quaternion(-0.618244, 0.0807286, 0.618012, 0.478873)
+bones/10/rotation = Quaternion(-0.618244, 0.0807287, 0.618012, 0.478873)
 bones/11/rotation = Quaternion(2.09853e-08, 5.12855e-08, 0.517939, 0.855417)
 bones/13/rotation = Quaternion(-0.319291, 0.300524, -0.22735, 0.869512)
 bones/14/rotation = Quaternion(-1.02444e-09, -4.24391e-09, 0.707107, 0.707107)
@@ -56,21 +56,21 @@ transform = Transform3D(9.17323e-08, 0.262865, 0.964832, 0.999999, -5.48367e-07,
 mesh = ExtResource("2_okjqy")
 
 [node name="1H_Crossbow" parent="Rig/Skeleton3D" index="1"]
-transform = Transform3D(0.988701, -0.149894, -2.68123e-07, -7.79413e-07, -1.2628e-06, -0.999999, 0.149894, 0.988701, -1.63117e-06, -0.489505, 0.745658, 0.0963389)
+transform = Transform3D(0.988701, -0.149894, -4.17134e-07, -8.6882e-07, -1.08398e-06, -0.999999, 0.149894, 0.988702, -1.49706e-06, -0.489505, 0.745658, 0.096339)
 visible = false
 
 [node name="2H_Crossbow" parent="Rig/Skeleton3D" index="2"]
-transform = Transform3D(0.988701, -0.149894, -2.68123e-07, -7.79413e-07, -1.2628e-06, -0.999999, 0.149894, 0.988701, -1.63117e-06, -0.489505, 0.745658, 0.0963389)
+transform = Transform3D(0.988701, -0.149894, -4.17134e-07, -8.6882e-07, -1.08398e-06, -0.999999, 0.149894, 0.988702, -1.49706e-06, -0.489505, 0.745658, 0.096339)
 visible = false
 
 [node name="Knife" parent="Rig/Skeleton3D" index="3"]
-transform = Transform3D(2.72302e-07, -0.149894, 0.988701, 0.999999, -1.11461e-06, -7.61174e-07, 1.48192e-06, 0.988701, 0.149894, -0.491058, 0.64103, 0.10658)
+transform = Transform3D(4.21314e-07, -0.149893, 0.988701, 0.999999, -9.35798e-07, -8.50581e-07, 1.34781e-06, 0.988702, 0.149894, -0.491058, 0.64103, 0.10658)
 
 [node name="Knife" parent="Rig/Skeleton3D/Knife" index="0"]
 mesh = ExtResource("2_okjqy")
 
 [node name="Throwable" parent="Rig/Skeleton3D" index="4"]
-transform = Transform3D(2.88042e-07, -0.149894, 0.988701, 0.999999, -1.09988e-06, -7.7486e-07, 1.46941e-06, 0.988701, 0.149894, -0.518076, 0.641029, 0.28479)
+transform = Transform3D(4.37053e-07, -0.149894, 0.988701, 0.999999, -9.21064e-07, -8.64267e-07, 1.3353e-06, 0.988702, 0.149894, -0.518076, 0.641029, 0.28479)
 visible = false
 
 [node name="Rogue_Cape" parent="Rig/Skeleton3D" index="5"]

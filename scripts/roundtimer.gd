@@ -107,17 +107,17 @@ func start_preparation_phase():
 			for player in main.players:
 				for pve_round in player.get_node("PVERounds").get_children():
 					set_pve_round.rpc(pve_round.get_path(), false)
-				set_pve_round.rpc(player.get_node("PVERounds/" + str(current_stage) + "-" + str(current_round)).get_path(), true)
+				if not player.is_defeated():
+					set_pve_round.rpc(player.get_node("PVERounds/" + str(current_stage) + "-" + str(current_round)).get_path(), true)
 	
 	preparing = true
 	
-	if not main.get_player() == null and not main.get_player().is_defeated():
+	if main.get_player() and not main.get_player().is_defeated():
 		var buttons = main.get_ui().get_node("UnitShop/HBoxContainer").get_children()
 		for button in buttons:
 			button.generate_button()
 	#print("Preparation Phase Started for Round: ", current_round)
 	
-	if main.get_player():		
 		for unit in main.get_player().get_units():
 			var button = main.get_node("GUI/UnitShop/HBoxContainer/Button1")
 			var upgradedUnit = button.upgrade(unit)
@@ -130,7 +130,7 @@ func start_preparation_phase():
 			main.get_player().get_board_grid().toggle_label(true)
 			
 	if current_round > 2 or current_stage >= 2:
-		unitShop.visible = true
+		if main.get_player() and not main.get_player().is_defeated(): unitShop.visible = true
 		wait_time = PREPARATION_DURATION
 	else: wait_time = FIRST_ROUND_DURATION
 	start()
@@ -169,7 +169,7 @@ func phase_gold_econ():
 func start_combat_phase():
 	timer_label.add_theme_color_override("font_color", TIMER_DEFAULT_COLOR)
 	
-	if not main.get_player().is_defeated():	
+	if main.get_player() and not main.get_player().is_defeated():	
 		# place all units that are currently still being moved AND fill board as much as possible
 		for unit in main.get_player().get_units():
 			if unit.get_tile_type() == 0 and main.get_player().get_board_grid().can_place_unit():
@@ -194,6 +194,7 @@ func matchmake():
 	# pve rounds
 	if (current_stage == 1 and (current_round == 2 or current_round == 3 or current_round == 4)) or current_round == 6: 
 		for player in main.players:
+			if player.is_defeated(): continue
 			main.register_battle()
 			player.combatphase_setup.rpc_id(player.get_id())
 		return
@@ -349,11 +350,12 @@ func increment_round():
 			current_round = 1
 		else: current_round += 1
 	
-	if not (current_stage == 1 and current_round == 1):
+	if not (current_stage == 1 and current_round == 1) and main.get_player() and not main.get_player().is_defeated():
 		if not (current_stage == 1 and (current_round == 2 or current_round == 3 or current_round == 4)) and not current_round == 6: 
 			total_round += 1 # exclude pve rounds else matchmaking is messed up
 		
-		if current_round > 2 or current_stage >= 2 and main.get_player() != null: main.get_player().increase_xp(2)
+		if current_round > 2 or current_stage >= 2: 
+			main.get_player().increase_xp(2)
 		
 		# drop random item every 3 rounds
 		if current_round == 3 and current_stage > 1: 

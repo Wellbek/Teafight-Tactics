@@ -77,16 +77,18 @@ func increase_number_of_units():
 	
 func decrease_number_of_units():
 	num_units -= 1
-	var player_level = get_parent().get_parent().get_level()
+	var player = get_parent().get_parent()
 	if amount_label != null: 
-		amount_label.text = str(num_units) + "/" + str(get_parent().get_parent().get_level())
-		if num_units < player_level:
+		amount_label.text = str(num_units) + "/" + str(player.get_level())
+		if num_units < player.get_level() and not player.is_defeated():
 			toggle_label(true)
 	
 func can_place_unit():
-	if level_restricted and get_parent().get_parent().get_level() <= num_units: return false
+	if (level_restricted and get_parent().get_parent().get_level() <= num_units) or get_parent().get_parent().is_defeated(): return false
 	return true
 
 func toggle_label(val: bool):
+	if not can_place_unit(): amount_label.visible = false
+	
 	amount_label.text = str(num_units) + "/" + str(get_parent().get_parent().get_level())
 	amount_label.visible = val

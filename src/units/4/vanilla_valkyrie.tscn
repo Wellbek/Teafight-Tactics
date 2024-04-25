@@ -88,7 +88,8 @@ script = ExtResource("1_mdvqw")
 image = "res://src/units/4/vanilla_valkyrie.png"
 unit_name = "Vanilla Valkyrie"
 type = 3
-one_hand_melee_anim = "Dualwield_Melee_Attack_Stab"
+attack_anim1 = 1
+one_hand_ranged_anim = "Throw"
 cost = 4
 attackrange = 8.0
 max_health = 700.0
@@ -100,6 +101,7 @@ ability_dmg_type = 0
 scaling1 = 0.6
 scaling2 = 0.6
 scaling3 = 1.2
+ranged_ability_anim = "Dualwield_Melee_Attack_Stab"
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("CapsuleShape3D_tcrfm")

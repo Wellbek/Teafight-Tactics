@@ -35,7 +35,7 @@ func _on_player_gold_changed(new_amount):
 		disabled = false
 
 func _on_pressed():		
-	if bought: return
+	if bought or (main.get_player() and main.get_player().is_defeated()): return
 	
 	change_bought(true)
 	spawn_unit.rpc_id(1, multiplayer.get_unique_id(), main.get_player().get_path(), unit_path) # tell server to spawn unit
