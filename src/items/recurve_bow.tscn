@@ -1,7 +1,7 @@
 [gd_scene load_steps=7 format=3 uid="uid://ch0qvy4gwd6dh"]
 
 [ext_resource type="Script" path="res://scripts/item.gd" id="1_vf0pa"]
-[ext_resource type="Texture2D" uid="uid://bqfytdo3c8en4" path="res://assets/RecurveBow.png" id="2_vgpfr"]
+[ext_resource type="Texture2D" uid="uid://bqfytdo3c8en4" path="res://assets/images/items/RecurveBow.png" id="2_vgpfr"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_b61h1"]
 size = Vector3(0.5, 0.5, 0.5)

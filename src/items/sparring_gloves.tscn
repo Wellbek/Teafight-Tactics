@@ -1,7 +1,7 @@
 [gd_scene load_steps=7 format=3 uid="uid://djy582r05m0s3"]
 
 [ext_resource type="Script" path="res://scripts/item.gd" id="1_2bmmk"]
-[ext_resource type="Texture2D" uid="uid://ceaevsqq00d8y" path="res://assets/SparringGloves.png" id="2_knmjy"]
+[ext_resource type="Texture2D" uid="uid://ceaevsqq00d8y" path="res://assets/images/items/SparringGloves.png" id="2_knmjy"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_b61h1"]
 size = Vector3(0.5, 0.5, 0.5)

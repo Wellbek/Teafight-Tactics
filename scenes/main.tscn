@@ -1,4 +1,4 @@
-[gd_scene load_steps=62 format=3 uid="uid://cqs5r3b42amb7"]
+[gd_scene load_steps=63 format=3 uid="uid://cqs5r3b42amb7"]
 
 [ext_resource type="Script" path="res://scripts/main.gd" id="1_35go2"]
 [ext_resource type="Script" path="res://scripts/roundtimer.gd" id="2_8mgga"]
@@ -37,6 +37,7 @@
 [ext_resource type="Texture2D" uid="uid://cebwi6nvwmwd4" path="res://assets/images/shurima_icon.png" id="24_45hyo"]
 [ext_resource type="Texture2D" uid="uid://c6xtqy351huik" path="res://assets/images/bastion_icon.png" id="25_6up4q"]
 [ext_resource type="Texture2D" uid="uid://cui6trejgtnxa" path="res://assets/images/cross.png" id="28_35puy"]
+[ext_resource type="Texture2D" uid="uid://ctae0ph8pywk4" path="res://assets/images/Dodge_icon.webp" id="35_jd6yr"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_g6mim"]
 bg_color = Color(0.0977035, 0.0977035, 0.0977035, 1)
@@ -826,7 +827,8 @@ grow_vertical = 2
 _spawnable_scenes = PackedStringArray("res://src/ui/class_bar.tscn")
 spawn_path = NodePath("../VBoxContainer")
 
-[node name="UnitInspec" type="Control" parent="GUI" node_paths=PackedStringArray("stars", "unit_icon", "name_label", "cost_label", "rarity_rect", "hp_bar", "mana_bar", "ad_label", "ap_label", "armor_label", "mr_label", "as_label", "ar_label", "critc_label", "critd_label", "omnivamp_label", "dodge_label", "movespeed_label", "trait_label", "trait_icons")]
+[node name="UnitInspec" type="Control" parent="GUI" node_paths=PackedStringArray("stars", "unit_icon", "name_label", "cost_label", "rarity_rect", "hp_bar", "mana_bar", "ad_label", "ap_label", "armor_label", "mr_label", "as_label", "ar_label", "critc_label", "critd_label", "omnivamp_label", "dodge_label", "movespeed_label", "trait_label", "trait_icons", "ability_control")]
+visible = false
 layout_mode = 1
 anchor_left = 0.853
 anchor_top = 0.16
@@ -858,6 +860,7 @@ dodge_label = NodePath("VBoxContainer/DodgeChance/Value")
 movespeed_label = NodePath("VBoxContainer/MoveSpeed/Value")
 trait_label = NodePath("UnitIcon/TraitLabel")
 trait_icons = NodePath("UnitIcon/TraitIcon")
+ability_control = NodePath("Ability")
 
 [node name="ColorRect" type="ColorRect" parent="GUI/UnitInspec"]
 layout_mode = 1
@@ -891,6 +894,8 @@ anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_bottom = 0.274
+grow_horizontal = 2
+grow_vertical = 2
 texture = ExtResource("8_eym16")
 expand_mode = 1
 stretch_mode = 5
@@ -903,6 +908,8 @@ anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_bottom = 0.274
+grow_horizontal = 2
+grow_vertical = 2
 texture = ExtResource("9_mdaou")
 expand_mode = 1
 stretch_mode = 5
@@ -915,6 +922,8 @@ anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_bottom = 0.274
+grow_horizontal = 2
+grow_vertical = 2
 texture = ExtResource("10_moym5")
 expand_mode = 1
 stretch_mode = 5
@@ -1105,7 +1114,6 @@ offset_top = 0.168999
 offset_right = 0.0479279
 offset_bottom = 0.118996
 mouse_filter = 1
-color = Color(0.12549, 0.380392, 0.596078, 1)
 
 [node name="UnitName" type="Label" parent="GUI/UnitInspec/RarityBackground"]
 layout_mode = 1
@@ -1206,21 +1214,48 @@ text = "50/50"
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[node name="Ability" type="Control" parent="GUI/UnitInspec"]
+layout_mode = 1
+anchor_left = 0.049
+anchor_top = 0.414
+anchor_right = 0.958
+anchor_bottom = 0.5
+offset_left = -0.0560002
+offset_top = -1.56198
+offset_right = 0.0479889
+offset_bottom = -0.499969
+
+[node name="Scaling" type="Label" parent="GUI/UnitInspec/Ability"]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.044
+anchor_right = 1.0
+anchor_bottom = 1.074
+offset_top = 0.00399983
+offset_bottom = -0.0159988
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 11
+text = "Ability: Enhanced Autoattack
+100% / 150% / 200% AD"
+vertical_alignment = 1
+clip_text = true
+
 [node name="VBoxContainer" type="VBoxContainer" parent="GUI/UnitInspec"]
-custom_minimum_size = Vector2(0, 16)
+custom_minimum_size = Vector2(0, 12)
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.049
-anchor_top = 0.424
+anchor_top = 0.512
 anchor_right = 0.986
 anchor_bottom = 0.984
-offset_left = -0.0560036
-offset_top = -0.0640106
-offset_right = 0.0159302
-offset_bottom = 13.776
+offset_left = -0.0559998
+offset_top = -0.0959778
+offset_right = 0.0159912
+offset_bottom = 1.12805
 
 [node name="AttackDMG" type="Control" parent="GUI/UnitInspec/VBoxContainer"]
-custom_minimum_size = Vector2(0, 16)
+custom_minimum_size = Vector2(0, 12)
 layout_mode = 2
 tooltip_text = "Attack Damage"
 
@@ -1232,7 +1267,8 @@ anchor_right = 0.119
 anchor_bottom = 1.0
 offset_right = -0.0650005
 texture = ExtResource("9_vngjv")
-expand_mode = 1
+expand_mode = 3
+stretch_mode = 5
 
 [node name="Value" type="Label" parent="GUI/UnitInspec/VBoxContainer/AttackDMG"]
 layout_mode = 1
@@ -1243,12 +1279,12 @@ anchor_bottom = 1.25
 offset_left = 0.137999
 grow_horizontal = 2
 theme_override_colors/font_color = Color(1, 0.890562, 0.647288, 1)
-theme_override_font_sizes/font_size = 14
+theme_override_font_sizes/font_size = 11
 text = "58"
 vertical_alignment = 1
 
 [node name="AbilityPower" type="Control" parent="GUI/UnitInspec/VBoxContainer"]
-custom_minimum_size = Vector2(0, 16)
+custom_minimum_size = Vector2(0, 12)
 layout_mode = 2
 tooltip_text = "Ability Power"
 
@@ -1260,7 +1296,8 @@ anchor_right = 0.119
 anchor_bottom = 1.0
 offset_right = -0.0650005
 texture = ExtResource("10_x7p4p")
-expand_mode = 1
+expand_mode = 3
+stretch_mode = 5
 
 [node name="Value" type="Label" parent="GUI/UnitInspec/VBoxContainer/AbilityPower"]
 layout_mode = 1
@@ -1271,13 +1308,13 @@ anchor_bottom = 1.25
 offset_left = -0.0550003
 grow_horizontal = 2
 theme_override_colors/font_color = Color(1, 0.890562, 0.647288, 1)
-theme_override_font_sizes/font_size = 14
+theme_override_font_sizes/font_size = 11
 text = "117
 "
 vertical_alignment = 1
 
 [node name="Armor" type="Control" parent="GUI/UnitInspec/VBoxContainer"]
-custom_minimum_size = Vector2(0, 16)
+custom_minimum_size = Vector2(0, 12)
 layout_mode = 2
 tooltip_text = "Armor"
 
@@ -1289,7 +1326,8 @@ anchor_right = 0.119
 anchor_bottom = 1.0
 offset_right = -0.0650005
 texture = ExtResource("11_du1vp")
-expand_mode = 1
+expand_mode = 3
+stretch_mode = 5
 
 [node name="Value" type="Label" parent="GUI/UnitInspec/VBoxContainer/Armor"]
 layout_mode = 1
@@ -1300,12 +1338,12 @@ anchor_bottom = 1.25
 offset_left = -0.188999
 grow_horizontal = 2
 theme_override_colors/font_color = Color(1, 0.890562, 0.647288, 1)
-theme_override_font_sizes/font_size = 14
+theme_override_font_sizes/font_size = 11
 text = "20"
 vertical_alignment = 1
 
 [node name="MR" type="Control" parent="GUI/UnitInspec/VBoxContainer"]
-custom_minimum_size = Vector2(0, 16)
+custom_minimum_size = Vector2(0, 12)
 layout_mode = 2
 tooltip_text = "Magic Resistance"
 
@@ -1317,7 +1355,8 @@ anchor_right = 0.119
 anchor_bottom = 1.0
 offset_right = -0.0650005
 texture = ExtResource("12_tk5u8")
-expand_mode = 1
+expand_mode = 3
+stretch_mode = 5
 
 [node name="Value" type="Label" parent="GUI/UnitInspec/VBoxContainer/MR"]
 layout_mode = 1
@@ -1328,13 +1367,13 @@ anchor_bottom = 1.25
 offset_left = -0.0550003
 grow_horizontal = 2
 theme_override_colors/font_color = Color(1, 0.890562, 0.647288, 1)
-theme_override_font_sizes/font_size = 14
+theme_override_font_sizes/font_size = 11
 text = "25
 "
 vertical_alignment = 1
 
 [node name="AttackSpeed" type="Control" parent="GUI/UnitInspec/VBoxContainer"]
-custom_minimum_size = Vector2(0, 16)
+custom_minimum_size = Vector2(0, 12)
 layout_mode = 2
 tooltip_text = "Attack Speed"
 
@@ -1346,7 +1385,8 @@ anchor_right = 0.119
 anchor_bottom = 1.0
 offset_right = -0.0650005
 texture = ExtResource("13_v1h82")
-expand_mode = 1
+expand_mode = 3
+stretch_mode = 5
 
 [node name="Value" type="Label" parent="GUI/UnitInspec/VBoxContainer/AttackSpeed"]
 layout_mode = 1
@@ -1357,13 +1397,13 @@ anchor_bottom = 1.25
 offset_left = -0.188999
 grow_horizontal = 2
 theme_override_colors/font_color = Color(1, 0.890562, 0.647288, 1)
-theme_override_font_sizes/font_size = 14
+theme_override_font_sizes/font_size = 11
 text = "1.14
 "
 vertical_alignment = 1
 
 [node name="AttackRange" type="Control" parent="GUI/UnitInspec/VBoxContainer"]
-custom_minimum_size = Vector2(0, 16)
+custom_minimum_size = Vector2(0, 12)
 layout_mode = 2
 tooltip_text = "Attack Range"
 
@@ -1375,7 +1415,8 @@ anchor_right = 0.119
 anchor_bottom = 1.0
 offset_right = -0.0650005
 texture = ExtResource("14_6tcfb")
-expand_mode = 1
+expand_mode = 3
+stretch_mode = 5
 
 [node name="Value" type="Label" parent="GUI/UnitInspec/VBoxContainer/AttackRange"]
 layout_mode = 1
@@ -1386,13 +1427,13 @@ anchor_bottom = 1.25
 offset_left = -0.0550003
 grow_horizontal = 2
 theme_override_colors/font_color = Color(1, 0.890562, 0.647288, 1)
-theme_override_font_sizes/font_size = 14
+theme_override_font_sizes/font_size = 11
 text = "4 Cells
 "
 vertical_alignment = 1
 
 [node name="CritChance" type="Control" parent="GUI/UnitInspec/VBoxContainer"]
-custom_minimum_size = Vector2(0, 16)
+custom_minimum_size = Vector2(0, 12)
 layout_mode = 2
 tooltip_text = "Critical Hit Chance"
 
@@ -1404,7 +1445,8 @@ anchor_right = 0.119
 anchor_bottom = 1.0
 offset_right = -0.0650005
 texture = ExtResource("14_wkvam")
-expand_mode = 1
+expand_mode = 3
+stretch_mode = 5
 
 [node name="Value" type="Label" parent="GUI/UnitInspec/VBoxContainer/CritChance"]
 layout_mode = 1
@@ -1415,13 +1457,13 @@ anchor_bottom = 1.25
 offset_left = -0.0550003
 grow_horizontal = 2
 theme_override_colors/font_color = Color(1, 0.890562, 0.647288, 1)
-theme_override_font_sizes/font_size = 14
+theme_override_font_sizes/font_size = 11
 text = "15 %
 "
 vertical_alignment = 1
 
 [node name="CritDamage" type="Control" parent="GUI/UnitInspec/VBoxContainer"]
-custom_minimum_size = Vector2(0, 16)
+custom_minimum_size = Vector2(0, 12)
 layout_mode = 2
 tooltip_text = "Critical Hit Damage Amplifier"
 
@@ -1434,7 +1476,8 @@ anchor_right = 0.119
 anchor_bottom = 1.0
 offset_right = -0.0650005
 texture = ExtResource("15_y7j3w")
-expand_mode = 1
+expand_mode = 3
+stretch_mode = 5
 
 [node name="Value" type="Label" parent="GUI/UnitInspec/VBoxContainer/CritDamage"]
 layout_mode = 1
@@ -1445,12 +1488,12 @@ anchor_bottom = 1.25
 offset_left = -0.0550003
 grow_horizontal = 2
 theme_override_colors/font_color = Color(1, 0.890562, 0.647288, 1)
-theme_override_font_sizes/font_size = 14
+theme_override_font_sizes/font_size = 11
 text = "140 %"
 vertical_alignment = 1
 
 [node name="Omnivamp" type="Control" parent="GUI/UnitInspec/VBoxContainer"]
-custom_minimum_size = Vector2(0, 16)
+custom_minimum_size = Vector2(0, 12)
 layout_mode = 2
 tooltip_text = "Omnivamp"
 
@@ -1462,7 +1505,8 @@ anchor_right = 0.119
 anchor_bottom = 1.0
 offset_right = -0.0650005
 texture = ExtResource("15_lmjd5")
-expand_mode = 1
+expand_mode = 3
+stretch_mode = 5
 
 [node name="Value" type="Label" parent="GUI/UnitInspec/VBoxContainer/Omnivamp"]
 layout_mode = 1
@@ -1473,12 +1517,12 @@ anchor_bottom = 1.25
 offset_left = -0.0550003
 grow_horizontal = 2
 theme_override_colors/font_color = Color(1, 0.890562, 0.647288, 1)
-theme_override_font_sizes/font_size = 14
+theme_override_font_sizes/font_size = 11
 text = "15 %"
 vertical_alignment = 1
 
 [node name="DodgeChance" type="Control" parent="GUI/UnitInspec/VBoxContainer"]
-custom_minimum_size = Vector2(0, 16)
+custom_minimum_size = Vector2(0, 12)
 layout_mode = 2
 tooltip_text = "Dodge Chance"
 
@@ -1489,8 +1533,9 @@ anchors_preset = -1
 anchor_right = 0.119
 anchor_bottom = 1.0
 offset_right = -0.0650005
-texture = ExtResource("16_vdvms")
-expand_mode = 1
+texture = ExtResource("35_jd6yr")
+expand_mode = 3
+stretch_mode = 5
 
 [node name="Value" type="Label" parent="GUI/UnitInspec/VBoxContainer/DodgeChance"]
 layout_mode = 1
@@ -1501,13 +1546,13 @@ anchor_bottom = 1.25
 offset_left = -0.0550003
 grow_horizontal = 2
 theme_override_colors/font_color = Color(1, 0.890562, 0.647288, 1)
-theme_override_font_sizes/font_size = 14
+theme_override_font_sizes/font_size = 11
 text = "0 %
 "
 vertical_alignment = 1
 
 [node name="MoveSpeed" type="Control" parent="GUI/UnitInspec/VBoxContainer"]
-custom_minimum_size = Vector2(0, 16)
+custom_minimum_size = Vector2(0, 12)
 layout_mode = 2
 tooltip_text = "Move Speed"
 
@@ -1519,7 +1564,8 @@ anchor_right = 0.119
 anchor_bottom = 1.0
 offset_right = -0.0650005
 texture = ExtResource("17_t2pi4")
-expand_mode = 1
+expand_mode = 3
+stretch_mode = 5
 
 [node name="Value" type="Label" parent="GUI/UnitInspec/VBoxContainer/MoveSpeed"]
 layout_mode = 1
@@ -1530,7 +1576,7 @@ anchor_bottom = 1.25
 offset_left = -0.0550003
 grow_horizontal = 2
 theme_override_colors/font_color = Color(1, 0.890562, 0.647288, 1)
-theme_override_font_sizes/font_size = 14
+theme_override_font_sizes/font_size = 11
 text = "400
 "
 vertical_alignment = 1

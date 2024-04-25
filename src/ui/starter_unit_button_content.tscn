@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://bkx13o256c58q"]
 
-[ext_resource type="Texture2D" uid="uid://bqatgnnesy5ra" path="res://assets/BFSword.png" id="2_xaqfv"]
+[ext_resource type="Texture2D" uid="uid://bqatgnnesy5ra" path="res://assets/images/items/BFSword.png" id="2_xaqfv"]
 
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_222pt"]
 

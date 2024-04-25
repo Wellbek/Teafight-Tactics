@@ -30,7 +30,7 @@ const BAR_COLOR = Color(0.757, 0.231, 0.259)
 # still here for reference: https://twitter.com/Mortdog/status/1761019549506490633
 
 # [nothing, item component, 2g, 4g, 6g, 8g]
-const DROP_RATES = [0.6, 0.20, 0.09, 0.06, 0.03, 0.02]
+const DROP_RATES = [0.55, 0.25, 0.09, 0.06, 0.03, 0.02]
 
 func _ready():
 	attack_timer.timeout.connect(_on_attack_timer_timeout)

@@ -50,13 +50,14 @@ var dead = false
 
 @export_category("Stats")
 @export var cost = 1
-var rarity = cost
+@onready var rarity = cost
 @export var move_speed = 5.0
 @export var attackrange = 4.0
 @export var max_health = 100.0
 @onready var curr_health = max_health
 @export var max_mana = 100.0
-@export var curr_mana = 0
+@export var start_mana = 0
+@onready var curr_mana = start_mana
 @export var attack_dmg = 20.0
 @export var ability_power = 100.0
 @export var armor = 30.0
@@ -71,6 +72,17 @@ var duelist_counter = 0
 var omnivamp = 0.0 # heal of RAW dmg
 var bonus_dmg = 0.0 # in percent
 
+@export_category("Ability")
+@export_enum("Enhanced Auto") var ability_id = 0
+const ABILITY_TYPES = ["Enhanced AA"]
+@export_enum("AD", "AP", "True") var ability_dmg_type = 1
+const ABILITY_DMG_TYPES = ["AD", "AP", "TrueDMG"]
+@export var scaling1: float = 1.0
+@export var scaling2: float = 1.5
+@export var scaling3: float = 2.25
+var ability_crit = false
+const MANA_PER_ATTACK = 10
+
 const LOCAL_COLOR = Color(0.2, 0.898, 0.243)
 const ENEMY_HOST_COLOR = Color(0.757, 0.231, 0.259)
 const ENEMY_ATTACKER_COLOR = Color(0.918, 0.498, 0.176)
@@ -84,7 +96,9 @@ func _ready():
 	var viewport = find_child("SubViewport")
 	ui = viewport.get_child(0)
 	find_child("Sprite3D").texture = viewport.get_texture()
-	ui.get_node("HPBar").self_modulate = LOCAL_COLOR if is_multiplayer_authority() else ENEMY_HOST_COLOR	
+	ui.get_node("HPBar").self_modulate = LOCAL_COLOR if is_multiplayer_authority() else ENEMY_HOST_COLOR
+	
+	refresh_manabar()
 	
 func _enter_tree():
 	myid = name.get_slice("#", 0).to_int()
@@ -383,6 +397,10 @@ func change_mode(_mode: int):
 		
 		if not is_multiplayer_authority():
 			set_bar_color(ENEMY_HOST_COLOR)
+			
+		curr_mana = start_mana
+		
+		refresh_manabar()
 		
 	mode = _mode
 	
@@ -403,11 +421,24 @@ func _on_aromatic_10sec():
 func _on_shurima():
 	if dead: return
 	
+	var heal = 0
+	
 	match main.get_classes().get_class_level(CLASS_NAMES[5]):
-		1: curr_health = min(max_health, curr_health+(max_health*0.05))
-		2: curr_health = min(max_health, curr_health+(max_health*0.1))
-		3: curr_health = min(max_health, curr_health+(max_health*0.2))
+		1: heal = min(max_health*0.05, max_health-curr_health)
+		2: heal = min(max_health*0.1, max_health-curr_health)
+		3: heal = min(max_health*0.2, max_health-curr_health)
 		_: pass
+		
+	curr_health += heal
+		
+	if heal > 0:	
+		refresh_hpbar()
+		
+		var heal_popup = preload("res://src/damage_popup.tscn").instantiate()
+		heal_popup.modulate = Color.LIME_GREEN
+		heal_popup.text = str(int(heal))
+		add_child(heal_popup)
+		heal_popup.global_transform.origin += Vector3(randf_range(-.5,.5), randf_range(0,1), 0.5)
 
 func get_mode():
 	return mode
@@ -548,12 +579,30 @@ func auto_attack(_target, pve = false):
 	
 	var damage = attack_dmg if rng > crit_chance else attack_dmg * (1+crit_damage)
 	damage *= (1+(bonus_dmg*2)) if (_target.get_curr_health()/_target.get_max_health() < 0.66) and type == 1 else (1+bonus_dmg)
-
-	_target.take_dmg.rpc_id(id, damage*(1+bonus_dmg))
+	
+	var dmg_popup = preload("res://src/damage_popup.tscn").instantiate()
+	dmg_popup.modulate = Color.CRIMSON
+	if rng <= crit_chance: 
+		dmg_popup.modulate = Color.RED
+		dmg_popup.scale *= 1.5
+	dmg_popup.text = str(int(damage))
+	add_child(dmg_popup)
+	dmg_popup.global_transform.origin = _target.global_transform.origin + Vector3(randf_range(-.5,.5), randf_range(0,1), 0.5)
+	
+	_target.take_dmg.rpc_id(id, damage)
 	
 	# omnivamp - (we just do raw dmg here as actual dmg is computed in take_dmg func)
-	curr_health = min(curr_health + damage*omnivamp, max_health)
-	refresh_hpbar()
+	if omnivamp > 0:
+		var heal = min(damage*omnivamp, max_health-curr_health)
+		curr_health += heal
+		if heal > 0:	
+			refresh_hpbar()
+			
+			var heal_popup = preload("res://src/damage_popup.tscn").instantiate()
+			heal_popup.modulate = Color.LIME_GREEN
+			heal_popup.text = str(int(heal))
+			add_child(heal_popup)
+			heal_popup.global_transform.origin += Vector3(randf_range(-.5,.5), randf_range(0,1), 0.5)
 	
 	# duelist (kinda): - black 
 	# for duelists: stacking attack speed up to 12; 5% -> 10% -> 15%
@@ -568,6 +617,13 @@ func auto_attack(_target, pve = false):
 			bonus_attack_speed += attack_speed - tmp
 			duelist_counter += 1
 			
+	# mana
+	curr_mana = min(max_mana, curr_mana + MANA_PER_ATTACK)
+	
+	refresh_manabar()
+	
+	if curr_mana >= max_mana: ability(target, pve)
+			
 func get_curr_health():
 	return curr_health
 	
@@ -580,14 +636,24 @@ func change_attack_speed(val):
 	if attacking == true: attack_timer.start()
 
 @rpc("any_peer", "call_local", "unreliable")
-func take_dmg(raw_dmg):
+func take_dmg(raw_dmg, dmg_type = 0):
 	if mode != BATTLE or dead: return
 	
 	# dodge
 	var rng = randf()
 	if rng < dodge_chance: return
 	
-	var dmg = raw_dmg / (1+armor/100) # https://leagueoflegends.fandom.com/wiki/Armor
+	# https://leagueoflegends.fandom.com/wiki/Armor
+	var dmg = raw_dmg / (1+armor/100) if dmg_type == 0 else raw_dmg / (1+mr/100)
+	
+	# and taking damage generates (1% of pre-mitigation damage taken and 7% of post-mitigation damage taken) mana, up to 42.5 Mana[1][2], depending on the pre-mitigated damage.
+	var mana_increase = min(42.5, (.01 * raw_dmg) + (.07 * dmg))
+	
+	curr_mana = min(max_mana, curr_mana+mana_increase)
+		
+	refresh_manabar()
+	
+	if curr_mana >= max_mana: ability(target, targeting_neutral)
 	
 	curr_health = 0 if dmg >= curr_health else curr_health-dmg
 	
@@ -599,6 +665,10 @@ func take_dmg(raw_dmg):
 # synced via multiplayersync
 func refresh_hpbar():
 	ui.get_node("HPBar").value = curr_health/max_health * 100
+	
+# synced via multiplayersync
+func refresh_manabar():
+	ui.get_node("MPBar").value = curr_mana/max_mana * 100
 		
 @rpc("any_peer", "call_local", "reliable")
 func death():
@@ -686,14 +756,21 @@ func equip_item(item_path):
 	var sprite = get_node("Sprite3D")
 	if sprite.position.y == 1: sprite.position.y += 0.5
 	
-	
 	if is_multiplayer_authority() and item:	
 		attackrange += item.get_attack_range()
 		max_health += item.get_health()
 		attack_dmg += item.get_attack_dmg()
+		ability_power += item.get_ability_power()
 		armor += item.get_armor()
+		mr += item.get_mr()
 		attack_speed *= 1+item.get_attack_speed()
 		crit_chance = min(1, crit_chance + item.get_crit_chance())
+		start_mana = min(max_mana, start_mana + item.get_mana())
+		if mode == PREP: 
+			curr_mana = start_mana
+			refresh_manabar()
+			curr_health = max_health
+			refresh_hpbar()
 		
 		item.visible = false
 	
@@ -720,9 +797,17 @@ func unequip_item(index):
 		attackrange -= item.get_attack_range()
 		max_health -= item.get_health()
 		attack_dmg -= item.get_attack_dmg()
+		ability_power -= item.get_ability_power()
 		armor -= item.get_armor()
+		mr -= item.get_mr()
 		attack_speed /= 1-item.get_attack_speed()/100
 		crit_chance = max(0, crit_chance - item.get_crit_chance())
+		start_mana = max(0, start_mana - item.get_mana()) # NOTE: this can cause issues if item mana was constrained when equipping (rarely happens as there is no feature yet to unequip items except upgrading and selling)
+		if mode == PREP: 
+			curr_mana = start_mana
+			refresh_manabar()
+			curr_health = max_health
+			refresh_hpbar()
 	
 		item.visible = true
 	
@@ -759,3 +844,60 @@ func get_trait():
 @rpc("any_peer", "call_local", "unreliable")
 func play_animation(name: StringName = "", custom_blend: float = -1, custom_speed: float = 1.0, from_end: bool = false):
 	anim_player.play(name, custom_blend, custom_speed, from_end)
+	
+func ability(_target, pve = false):	
+	curr_mana = 0
+	
+	refresh_manabar()
+	
+	match ability_id:
+		0: 
+			if _target == null or (not pve and _target.get_mode() != BATTLE) or dead: return
+	
+			match attack_anim1:
+				0:
+					if attack_anim2 == 0: play_animation.rpc(one_hand_melee_anim, -1, attack_speed)
+					else: play_animation.rpc(two_hand_melee_anim, -1, attack_speed)
+				1:
+					if attack_anim2 == 0: play_animation.rpc(one_hand_ranged_anim, -1, attack_speed)
+					else: play_animation.rpc(two_hand_range_anim, -1, attack_speed)
+				2:
+					if attack_anim2 == 0: play_animation.rpc(one_hand_magic_anim, -1, attack_speed)
+					else: play_animation.rpc(two_hand_magic_anim, -1, attack_speed)
+
+			var id = get_multiplayer_authority() if pve else _target.get_owner_id() 
+
+			var damage = ability_power * scaling1 if ability_dmg_type == 1 else attack_dmg * scaling1
+			var crit = false
+			if ability_crit:
+				var rng = randf()
+			
+				damage = damage if rng > crit_chance else damage * (1+crit_damage)
+				if rng <= crit_chance: crit = true
+			
+			damage *= (1+(bonus_dmg*2)) if (_target.get_curr_health()/_target.get_max_health() < 0.66) and type == 1 else (1+bonus_dmg)
+			
+			var dmg_popup = preload("res://src/damage_popup.tscn").instantiate()
+			dmg_popup.modulate = Color.CRIMSON if type == 0 else Color.DODGER_BLUE
+			if crit: 
+				dmg_popup.modulate = Color.BLUE
+				dmg_popup.scale *= 1.5
+			dmg_popup.text = str(int(damage))
+			add_child(dmg_popup)
+			dmg_popup.global_transform.origin = _target.global_transform.origin + Vector3(randf_range(-.5,.5), randf_range(0,1), 0.5)
+			
+			_target.take_dmg.rpc_id(id, damage, ability_dmg_type)
+			
+			# omnivamp - (we just do raw dmg here as actual dmg is computed in take_dmg func)
+			if omnivamp > 0:
+				var heal = min(damage*omnivamp, max_health-curr_health)
+				curr_health += heal
+				if heal > 0:	
+					refresh_hpbar()
+					
+					var heal_popup = preload("res://src/damage_popup.tscn").instantiate()
+					heal_popup.modulate = Color.LIME_GREEN
+					heal_popup.text = str(int(heal))
+					add_child(heal_popup)
+					heal_popup.global_transform.origin += Vector3(randf_range(-.5,.5), randf_range(0,1), 0.5)
+		_: pass

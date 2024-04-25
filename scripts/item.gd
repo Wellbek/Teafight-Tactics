@@ -9,6 +9,9 @@ extends StaticBody3D
 @export var armor = 0
 @export var attack_speed: float = 0
 @export var crit_chance: float = 0
+@export var ability_power = 0
+@export var magic_resist = 0
+@export var mana = 0
 
 var dragging = false
 
@@ -132,3 +135,11 @@ func get_texture():
 func get_crit_chance():
 	return crit_chance
 
+func get_mana():
+	return mana
+	
+func get_ability_power():
+	return ability_power
+	
+func get_mr():
+	return magic_resist

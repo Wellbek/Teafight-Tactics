@@ -96,6 +96,9 @@ max_mana = 50.0
 attack_dmg = 45.0
 attack_speed = 0.75
 attack_timer = NodePath("AttackTimer")
+scaling1 = 2.0
+scaling2 = 3.0
+scaling3 = 9.0
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("CapsuleShape3D_tcrfm")

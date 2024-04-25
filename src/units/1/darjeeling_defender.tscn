@@ -92,13 +92,14 @@ move_speed = 4.0
 attackrange = 2.0
 max_health = 650.0
 max_mana = 80.0
-curr_mana = 40
+start_mana = 40
 attack_dmg = 50.0
-ability_power = 100.0
 armor = 40.0
 mr = 40.0
 attack_speed = 0.55
 attack_timer = NodePath("AttackTimer")
+scaling2 = 1.35
+scaling3 = 1.8
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("CapsuleShape3D_tcrfm")

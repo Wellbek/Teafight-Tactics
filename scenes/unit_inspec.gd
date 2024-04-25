@@ -22,6 +22,7 @@ var unit = null
 @export var movespeed_label: Label
 @export var trait_label: Label
 @export var trait_icons: Control
+@export var ability_control: Control
 
 func set_unit(_unit):
 	if unit == _unit and unit != null: 
@@ -49,6 +50,7 @@ func set_unit(_unit):
 	for t_icon in trait_icons.get_children():
 		if t_icon.name == "Background": continue
 		t_icon.visible = (t_icon.name == trait_label.text)
+	ability_control.get_node("Scaling").text = "Ability: " + unit.ABILITY_TYPES[unit.ability_id] + "\n" + str(int(unit.scaling1*100)) + "% / " + str(int(unit.scaling2*100)) + "% / " + str(int(unit.scaling3*100)) + "% " + unit.ABILITY_DMG_TYPES[unit.ability_dmg_type]
 	
 	visible = true
 

@@ -101,6 +101,9 @@ armor = 15.0
 mr = 15.0
 attack_speed = 0.7
 attack_timer = NodePath("AttackTimer")
+scaling1 = 1.5
+scaling2 = 2.25
+scaling3 = 3.4
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("CapsuleShape3D_tcrfm")

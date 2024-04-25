@@ -403,7 +403,7 @@ _spawnable_scenes = PackedStringArray("res://src/units/1/assam_archer.tscn", "re
 spawn_path = NodePath("../Units")
 
 [node name="MultiplayerItemSpawner" type="MultiplayerSpawner" parent="."]
-_spawnable_scenes = PackedStringArray("res://src/items/bf_sword.tscn", "res://src/items/chain_vest.tscn", "res://src/items/giants_belt.tscn", "res://src/items/recurve_bow.tscn", "res://src/items/sparring_gloves.tscn")
+_spawnable_scenes = PackedStringArray("res://src/items/bf_sword.tscn", "res://src/items/chain_vest.tscn", "res://src/items/giants_belt.tscn", "res://src/items/recurve_bow.tscn", "res://src/items/sparring_gloves.tscn", "res://src/items/needlessly_large_rod.tscn", "res://src/items/negatron_cloak.tscn", "res://src/items/tear_of_the_goddess.tscn")
 spawn_path = NodePath("../Items")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]

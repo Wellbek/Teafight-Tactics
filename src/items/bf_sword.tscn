@@ -1,6 +1,6 @@
 [gd_scene load_steps=7 format=3 uid="uid://djrfrm48n2r7h"]
 
-[ext_resource type="Texture2D" uid="uid://bqatgnnesy5ra" path="res://assets/BFSword.png" id="1_f7jxe"]
+[ext_resource type="Texture2D" uid="uid://bqatgnnesy5ra" path="res://assets/images/items/BFSword.png" id="1_f7jxe"]
 [ext_resource type="Script" path="res://scripts/item.gd" id="1_u75n8"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_b61h1"]

@@ -95,12 +95,15 @@ cost = 5
 attackrange = 3.0
 max_health = 1300.0
 max_mana = 90.0
-curr_mana = 30
+start_mana = 30
 attack_dmg = 50.0
 armor = 50.0
 mr = 50.0
 attack_speed = 1.0
 attack_timer = NodePath("AttackTimer")
+scaling1 = 3.0
+scaling2 = 4.5
+scaling3 = 55.55
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0)
