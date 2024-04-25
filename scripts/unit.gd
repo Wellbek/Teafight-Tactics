@@ -9,7 +9,7 @@ var tile
 
 var main
 var player
-var timer: Timer
+var round_timer: Timer
 
 var myid
 
@@ -73,8 +73,12 @@ var omnivamp = 0.0 # heal of RAW dmg
 var bonus_dmg = 0.0 # in percent
 
 @export_category("Ability")
-@export_enum("Enhanced Auto") var ability_id = 0
-const ABILITY_TYPES = ["Enhanced AA"]
+@export_enum("Enhanced Auto", "Poison Bomb") var ability_id = 0
+const ABILITY_TYPES = ["Enhanced AA", "Poison Bomb"]
+@onready var ABILITY_TT = [
+	"Enhanced Autoattack (ACTIVE): \nStrike the current target with " + str(int(scaling1*100)) + "% / " + str(int(scaling2*100)) + "% / " + str(int(scaling3*100)) + "% " + ABILITY_DMG_TYPES[ability_dmg_type] + " damage.",
+	"Poison Bomb (ACTIVE): \n Throw a bag of spoiled tea ingredients at the current target, poisoning them for \n" + str(int(scaling1*100)) + "% / " + str(int(scaling2*100)) + "% / " + str(int(scaling3*100)) + "% " + ABILITY_DMG_TYPES[ability_dmg_type] + " damage over 10 seconds. \nPoison Bomb cannot be stacked on one target by the same unit."
+]
 @export_enum("AD", "AP", "True") var ability_dmg_type = 1
 const ABILITY_DMG_TYPES = ["AD", "AP", "TrueDMG"]
 @export var scaling1: float = 1.0
@@ -85,6 +89,7 @@ const ABILITY_DMG_TYPES = ["AD", "AP", "TrueDMG"]
 @export var magic_ability_anim: String = "Spellcast_Raise"
 var ability_crit = false
 const MANA_PER_ATTACK = 10
+var poisoned_enemies = {} # unit: counter
 
 const LOCAL_COLOR = Color(0.2, 0.898, 0.243)
 const ENEMY_HOST_COLOR = Color(0.757, 0.231, 0.259)
@@ -112,7 +117,7 @@ func _enter_tree():
 	#print(str(multiplayer.get_unique_id()) + ": " + str(get_multiplayer_authority()))
 	
 	main = get_tree().root.get_child(0)
-	timer = main.get_timer()
+	round_timer = main.get_timer()
 	player = main.find_child("World").get_node(str(myid))
 	multisync = find_child("MultiplayerSynchronizer", false)
 	
@@ -164,7 +169,7 @@ func _input_event(_camera, event, _position, _normal, _shape_idx):
 	if event is InputEventMouseButton and event.is_pressed() and event.button_index == MOUSE_BUTTON_RIGHT and !is_dragging() and not dead and visible:
 		main.get_ui().get_node("UnitInspec").set_unit(self)
 
-	if not is_multiplayer_authority() or not mode == PREP or (get_tile_type() == HEX and not timer.is_preparing()): return
+	if not is_multiplayer_authority() or not mode == PREP or (get_tile_type() == HEX and not round_timer.is_preparing()): return
 
 	if event is InputEventMouseButton and event.is_pressed() and event.button_index == MOUSE_BUTTON_LEFT and !is_dragging():
 		set_dragging(true)
@@ -175,7 +180,7 @@ func _input_event(_camera, event, _position, _normal, _shape_idx):
 		transform.origin.y += 1
 
 func _input(event):
-	if not is_multiplayer_authority() or not mode == PREP or (get_tile_type() == HEX and not timer.is_preparing()): return
+	if not is_multiplayer_authority() or not mode == PREP or (get_tile_type() == HEX and not round_timer.is_preparing()): return
 	
 	if is_dragging():
 		if event is InputEventMouseButton and event.is_released() and event.button_index == MOUSE_BUTTON_LEFT:
@@ -525,7 +530,7 @@ func get_ui():
 	return ui
 	
 func toggle_grid(value):
-	player.get_board_grid().visible = value and timer.is_preparing() and not timer.is_transitioning()
+	player.get_board_grid().visible = value and round_timer.is_preparing() and not round_timer.is_transitioning()
 	player.get_bench_grid().visible = value
 
 func set_dragging(value):
@@ -566,7 +571,7 @@ func _on_attack_timer_timeout():
 	else: auto_attack(target, targeting_neutral)
 
 func auto_attack(_target, pve = false):
-	if _target == null or (not pve and _target.get_mode() != BATTLE) or dead: return
+	if _target == null or (not pve and _target.get_mode() != BATTLE) or _target.dead or dead: return
 	
 	match attack_anim1:
 		0:
@@ -754,16 +759,23 @@ func set_bar_color(color: Color):
 	ui.get_node("HPBar").self_modulate = color
 	
 @rpc("any_peer", "call_local", "reliable")
-func equip_item(item_path):
-	if not can_equip_item(): return
-	
+func equip_item(item_path):	
 	var item = get_node(item_path)
+	
+	if item.is_component():
+		if not can_equip_component(): return
+	elif not can_equip_item(): return
 	
 	for i in range(len(items)):
 		if items[i] == null:
 			items[i] = item 
 			ui.get_node("HBoxContainer/" + str(i)).set_texture(item.get_texture() if item else null) 
 			break
+		elif item.is_component() and items[i].is_component():
+			var curr_item = items[i]
+			unequip_item(i)
+			item.upgrade(curr_item)
+			return
 		
 	var sprite = get_node("Sprite3D")
 	if sprite.position.y == 1: sprite.position.y += 0.5
@@ -778,6 +790,9 @@ func equip_item(item_path):
 		attack_speed *= 1+item.get_attack_speed()
 		crit_chance = min(1, crit_chance + item.get_crit_chance())
 		start_mana = min(max_mana, start_mana + item.get_mana())
+		if item.get_ability_crit():
+			ability_crit = true
+		omnivamp += item.get_omnivamp()
 		if mode == PREP: 
 			curr_mana = start_mana
 			refresh_manabar()
@@ -789,6 +804,12 @@ func equip_item(item_path):
 func can_equip_item():
 	for item in items:
 		if item == null: return true 
+	
+	return false
+	
+func can_equip_component():
+	for item in items:
+		if item == null or item.is_component(): return true 
 	
 	return false
 	
@@ -815,6 +836,9 @@ func unequip_item(index):
 		attack_speed /= 1-item.get_attack_speed()/100
 		crit_chance = max(0, crit_chance - item.get_crit_chance())
 		start_mana = max(0, start_mana - item.get_mana()) # NOTE: this can cause issues if item mana was constrained when equipping (rarely happens as there is no feature yet to unequip items except upgrading and selling)
+		if item.get_ability_crit(): # not optimal but w.e
+			ability_crit = false
+		omnivamp -= item.get_omnivamp()
 		if mode == PREP: 
 			curr_mana = start_mana
 			refresh_manabar()
@@ -828,7 +852,10 @@ func transfer_items(to_unit):
 		var item = items[i]
 		if item == null: continue
 		unequip_item.rpc(i)
-		if to_unit.can_equip_item():
+		if item.is_component():
+			if to_unit.can_equip_component():
+				to_unit.equip_item.rpc(item.get_path())
+		elif to_unit.can_equip_item():
 			to_unit.equip_item.rpc(item.get_path())
 				
 @rpc("any_peer", "call_local", "reliable")
@@ -859,21 +886,21 @@ func play_animation(name: StringName = "", force = true, custom_blend: float = -
 	anim_player.play(name, custom_blend, custom_speed, from_end)
 	
 func ability(_target, pve = false):	
+	if _target == null or (not pve and _target.get_mode() != BATTLE) or _target.dead or dead: return
+	
 	curr_mana = 0
 	
 	refresh_manabar()
+
+	match attack_anim1:
+		0: play_animation.rpc(melee_ability_anim)
+		1: play_animation.rpc(ranged_ability_anim)
+		2: play_animation.rpc(magic_ability_anim)
+
+	var id = get_multiplayer_authority() if pve else _target.get_owner_id() 
 	
 	match ability_id:
 		0: 
-			if _target == null or (not pve and _target.get_mode() != BATTLE) or dead: return
-	
-			match attack_anim1:
-				0: play_animation.rpc(melee_ability_anim)
-				1: play_animation.rpc(ranged_ability_anim)
-				2: play_animation.rpc(magic_ability_anim)
-
-			var id = get_multiplayer_authority() if pve else _target.get_owner_id() 
-
 			var damage = ability_power * scaling1 if ability_dmg_type == 1 else attack_dmg * scaling1
 			var crit = false
 			if ability_crit:
@@ -907,4 +934,64 @@ func ability(_target, pve = false):
 					heal_popup.text = str(int(heal))
 					add_child(heal_popup)
 					heal_popup.global_transform.origin += Vector3(randf_range(-.5,.5), randf_range(0,1), 0.5)
+		1:
+			var timer = get_node_or_null("poison_bomb")
+			if not timer:
+				timer = Timer.new()
+				add_child(timer)
+				timer.name = "poison_bomb"
+			timer.wait_time = 1.0
+			timer.one_shot = false
+			timer.connect("timeout", _on_poison_bomb_timeout)
+			timer.start()
+			poisoned_enemies[_target] = 10
 		_: pass
+	
+func _on_poison_bomb_timeout():	
+	if not poisoned_enemies:
+		var timer = get_node_or_null("poison_bomb")
+		if timer: timer.queue_free()
+	else:
+		for _target in poisoned_enemies:
+			if _target == null or (not targeting_neutral and _target.get_mode() != BATTLE) or _target.dead or poisoned_enemies[target] <= 0:
+				poisoned_enemies.erase(_target)
+				continue
+				
+			poisoned_enemies[_target] -= 1
+			
+			var id = get_multiplayer_authority() if targeting_neutral else _target.get_owner_id() 
+			
+			var damage = ability_power * scaling1 if ability_dmg_type == 1 else attack_dmg * scaling1
+			damage /= 10 # to equally spread damage
+			var crit = false
+			if ability_crit:
+				var rng = randf()
+			
+				damage = damage if rng > crit_chance else damage * (1+crit_damage)
+				if rng <= crit_chance: crit = true
+			
+			damage *= (1+(bonus_dmg*2)) if (_target.get_curr_health()/_target.get_max_health() < 0.66) and type == 1 else (1+bonus_dmg)
+			
+			var dmg_popup = preload("res://src/damage_popup.tscn").instantiate()
+			dmg_popup.modulate = Color.CRIMSON if ability_dmg_type == 0 else Color.DODGER_BLUE
+			if crit: 
+				dmg_popup.modulate = Color.BLUE
+				dmg_popup.scale *= 1.5
+			dmg_popup.text = str(int(damage))
+			add_child(dmg_popup)
+			dmg_popup.global_transform.origin = _target.global_transform.origin + Vector3(randf_range(-.5,.5), randf_range(0,1), 0.5)
+			
+			_target.take_dmg.rpc_id(id, damage, ability_dmg_type, false) # can't dodge attack
+			
+			# omnivamp - (we just do raw dmg here as actual dmg is computed in take_dmg func)
+			if omnivamp > 0:
+				var heal = min(damage*omnivamp, max_health-curr_health)
+				curr_health += heal
+				if heal > 0:	
+					refresh_hpbar()
+					
+					var heal_popup = preload("res://src/damage_popup.tscn").instantiate()
+					heal_popup.modulate = Color.LIME_GREEN
+					heal_popup.text = str(int(heal))
+					add_child(heal_popup)
+					heal_popup.global_transform.origin += Vector3(randf_range(-.5,.5), randf_range(0,1), 0.5)

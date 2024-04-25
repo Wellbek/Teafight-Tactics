@@ -99,6 +99,7 @@ armor = 20.0
 mr = 20.0
 attack_speed = 0.7
 attack_timer = NodePath("AttackTimer")
+ability_id = 1
 scaling1 = 4.1
 scaling2 = 6.15
 scaling3 = 9.75

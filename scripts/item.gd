@@ -3,6 +3,7 @@ extends StaticBody3D
 @export var item_texture: Texture
 
 @export_category("Stats")
+@export var item_name = ""
 @export var attackrange = 0
 @export var health = 0
 @export var attack_dmg = 0
@@ -12,6 +13,20 @@ extends StaticBody3D
 @export var ability_power = 0
 @export var magic_resist = 0
 @export var mana = 0
+@export var omnivamp: float = 0
+@export var ability_crit: bool = false
+@export var component = false
+
+const RECIPES = {
+	"BF Sword": {"BF Sword": "Deathblade", "Chain Vest": "Edge of Night", "Giants Belt": "Sterak's Gage", "Needlessly Large Rod": "Hextech Gunblade", "Negatron Cloak": "Bloodthirster", "Sparring Gloves": "Infinity Edge", "Recurve Bow": "Giant Slayer", "Tear of the Goddess": "Spear of Shojin"},
+	"Chain Vest": {"BF Sword": "Edge of Night", "Chain Vest": "Bramble Vest", "Giants Belt": "Sunfire Cape", "Needlessly Large Rod": "", "Negatron Cloak": "Gargoyle Stoneplate", "Sparring Gloves": "Steadfast Heart", "Recurve Bow": "Titan's Resolve", "Tear of the Goddess": "Protector's Vow"},
+	"Giants Belt": {"BF Sword": "Sterak's Gage", "Chain Vest": "Sunfire Cape", "Giants Belt": "Warmog's Armor", "Needlessly Large Rod": "Morellonomicon", "Negatron Cloak": "Evenshroud", "Sparring Gloves": "Guardbreaker", "Recurve Bow": "Nashor's Tooth", "Tear of the Goddess": "Redemption"},
+	"Needlessly Large Rod": {"BF Sword": "Hextech Gunblade", "Chain Vest": "Crownguard", "Giants Belt": "Morellonomicon", "Needlessly Large Rod": "Rabadon's Deathcap", "Negatron Cloak": "Ionic Spark", "Sparring Gloves": "Jeweled Gauntlet", "Recurve Bow": "Guinsoo's Rageblade", "Tear of the Goddess": "Archangel's Staff"},
+	"Negatron Cloak": {"BF Sword": "Bloodthirster", "Chain Vest": "Gargoyle Sto20neplate", "Giants Belt": "Evenshroud", "Needlessly Large Rod": "Ionic Spark", "Negatron Cloak": "Dragon's Claw", "Sparring Gloves": "Quicksilver", "Recurve Bow": "Runaan's Hurricane", "Tear of the Goddess": "Adaptive Helm"},
+	"Sparring Gloves": {"BF Sword": "Infinity Edge", "Chain Vest": "Steadfast Heart", "Giants Belt": "Guardbreaker", "Needlessly Large Rod": "Jeweled Gauntlet", "Negatron Cloak": "Quicksilver", "Sparring Gloves": "Thief's Gloves", "Recurve Bow": "Last Whisper", "Tear of the Goddess": "Hand of Justice"},
+	"Recurve Bow": {"BF Sword": "Giant Slayer", "Chain Vest": "Titan's Resolve", "Giants Belt": "Nashor's Tooth", "Needlessly Large Rod": "Guinsoo's Rageblade", "Negatron Cloak": "Runaan's Hurricane", "Sparring Gloves": "Last Whisper", "Recurve Bow": "Red Buff", "Tear of the Goddess": "Statikk Shiv"},
+	"Tear of the Goddess": {"BF Sword": "Spear of Shojin", "Chain Vest": "Protector's Vow", "Giants Belt": "Redemption", "Needlessly Large Rod": "Archangel's Staff", "Negatron Cloak": "Adaptive Helm", "Sparring Gloves": "Hand of Justice", "Recurve Bow": "Statikk Shiv", "Tear of the Goddess": "Blue Buff"}
+}
 
 var dragging = false
 
@@ -24,7 +39,7 @@ var multisync: MultiplayerSynchronizer
 var main
 var timer
 
-var equipped = false
+var holder = null
 
 func _ready():
 	main = get_tree().root.get_child(0)	
@@ -64,7 +79,7 @@ func _input(event):
 			var query := PhysicsRayQueryParameters3D.create(origin, end, 0b00000000_00000000_00000110_00011111)
 			var result := space_state.intersect_ray(query)
 			if not result.is_empty() and result.collider != null:
-				if (result.collider.get_collision_layer() in [8,24] and result.collider.is_multiplayer_authority()) or result.collider.get_collision_layer() == (512 if main.get_player().defender else 1024):
+				if (result.collider.get_collision_layer() in [8,24] and result.collider.is_multiplayer_authority()) or result.collider.get_collision_layer() == (512 if (main.get_player().defender or not main.get_player().get_current_enemy()) else 1024):
 					if result.collider != coll:
 						if coll:
 							# reset highlight of last unit
@@ -105,14 +120,43 @@ func place_item():
 				coll = null
 				global_transform.origin = initial_pos
 			else:
-				equipped = true
+				holder = coll
 				coll.equip_item.rpc(get_path())
+
+# this is executed on each client as equip_item is calling this
+func upgrade(other_component):
+	var new_item_name = RECIPES[item_name][other_component.get_item_name()]
+	var item_instance_name = new_item_name.to_lower().replacen(" ", "_").replacen("'", "")
+	
+	var folder = "res://src/items/combined_items"
+	var dir = DirAccess.open(folder)
+	
+	var instance_path = folder + "//" + item_instance_name + ".tscn"
+	
+	var instance = load(instance_path).instantiate()
+
+	get_parent().call("add_child", instance, true)
+
+	#if is_multiplayer_authority():
+	#	instance.position += Vector3(randf_range(-1, 1), 0, randf_range(-1, 1))
+	
+	if is_multiplayer_authority():
+		holder.equip_item.rpc(instance.get_path())
+		
+	other_component.queue_free()
+	queue_free()
+
+func get_item_name():
+	return item_name
+
+func is_component():
+	return component
 				
 func is_equipped():
-	return equipped
+	return holder
 	
 func unequip():
-	equipped = false
+	holder = null
 				
 func get_attack_range():
 	return attackrange
@@ -143,3 +187,9 @@ func get_ability_power():
 	
 func get_mr():
 	return magic_resist
+	
+func get_omnivamp():
+	return omnivamp
+	
+func get_ability_crit():
+	return ability_crit

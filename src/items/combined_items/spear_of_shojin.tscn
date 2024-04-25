@@ -1,0 +1,45 @@
+[gd_scene load_steps=7 format=3 uid="uid://xxm6reyjn1y4"]
+
+[ext_resource type="Script" path="res://scripts/item.gd" id="1_hm6ud"]
+[ext_resource type="Texture2D" uid="uid://dbdt13yj23rus" path="res://assets/images/items/SpearofShojin.png" id="2_a3mnj"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_b61h1"]
+size = Vector3(0.5, 0.5, 0.5)
+
+[sub_resource type="BoxMesh" id="BoxMesh_jscx6"]
+size = Vector3(0.5, 0.5, 0.5)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1bv0n"]
+shading_mode = 0
+albedo_texture = ExtResource("2_a3mnj")
+uv1_scale = Vector3(2, 2, 2)
+uv1_offset = Vector3(0.5, 0.5, 0.5)
+uv1_triplanar = true
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_pmwvr"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 2
+properties/1/path = NodePath(".:visible")
+properties/1/spawn = true
+properties/1/replication_mode = 2
+
+[node name="SpearOfShojin" type="StaticBody3D"]
+collision_layer = 256
+collision_mask = 0
+script = ExtResource("1_hm6ud")
+item_texture = ExtResource("2_a3mnj")
+item_name = "Spear of Shojin"
+attack_dmg = 20
+attack_speed = 0.2
+mana = 15
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_b61h1")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_jscx6")
+surface_material_override/0 = SubResource("StandardMaterial3D_1bv0n")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_pmwvr")

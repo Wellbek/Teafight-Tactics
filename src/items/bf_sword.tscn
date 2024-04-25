@@ -29,7 +29,9 @@ collision_layer = 256
 collision_mask = 0
 script = ExtResource("1_u75n8")
 item_texture = ExtResource("1_f7jxe")
+item_name = "BF Sword"
 attack_dmg = 10
+component = true
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("BoxShape3D_b61h1")

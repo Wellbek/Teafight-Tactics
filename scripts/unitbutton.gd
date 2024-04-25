@@ -67,6 +67,7 @@ func handle_spawn(_unit_path):
 	var player = main.get_player()
 	
 	var instance_cost = instance.get_cost()
+	player.decrease_gold(instance_cost)
 	
 	var upgradedUnit = upgrade(instance)
 
@@ -81,10 +82,10 @@ func handle_spawn(_unit_path):
 		instance.tile = tile
 		player.append_unit(instance)
 		tile.register_unit(instance)
-		player.decrease_gold(instance_cost)
 	else: 
 		main.free_object.rpc(instance.get_path())
 		change_bought(false)
+		player.increase_gold(instance_cost)
 
 func upgrade(_unit):
 	if _unit.star >= 3: return null

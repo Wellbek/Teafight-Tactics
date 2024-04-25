@@ -51,6 +51,7 @@ func set_unit(_unit):
 		if t_icon.name == "Background": continue
 		t_icon.visible = (t_icon.name == trait_label.text)
 	ability_control.get_node("Scaling").text = "Ability: " + unit.ABILITY_TYPES[unit.ability_id] + "\n" + str(int(unit.scaling1*100)) + "% / " + str(int(unit.scaling2*100)) + "% / " + str(int(unit.scaling3*100)) + "% " + unit.ABILITY_DMG_TYPES[unit.ability_dmg_type]
+	ability_control.tooltip_text = unit.ABILITY_TT[unit.ability_id]
 	
 	visible = true
 

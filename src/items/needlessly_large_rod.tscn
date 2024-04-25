@@ -32,7 +32,9 @@ collision_layer = 256
 collision_mask = 0
 script = ExtResource("1_wt5ch")
 item_texture = ExtResource("2_c7gck")
+item_name = "Needlessly Large Rod"
 ability_power = 10
+component = true
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("BoxShape3D_b61h1")
