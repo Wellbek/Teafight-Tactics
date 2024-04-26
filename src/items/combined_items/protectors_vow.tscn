@@ -1,7 +1,8 @@
-[gd_scene load_steps=7 format=3 uid="uid://cnkuayd28ma54"]
+[gd_scene load_steps=8 format=3 uid="uid://cnkuayd28ma54"]
 
 [ext_resource type="Script" path="res://scripts/item.gd" id="1_bumwv"]
 [ext_resource type="Texture2D" uid="uid://cqd7dnecj8x3b" path="res://assets/images/items/ProtectorsVow.webp" id="2_c306e"]
+[ext_resource type="PackedScene" uid="uid://cjoei063n71nc" path="res://src/ui/item_tooltip.tscn" id="3_u53cp"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_b61h1"]
 size = Vector3(0.5, 0.5, 0.5)
@@ -32,6 +33,10 @@ item_texture = ExtResource("2_c306e")
 item_name = "Protector's Vow"
 armor = 20
 mana = 30
+tooltip = "+20 Armor
++30 Starting Mana
+
+Once per combat: At 40% Health, gain a 25% maximum Health shield that lasts up to 5 seconds and 20 Armor and Magic Resist for the rest of combat."
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("BoxShape3D_b61h1")
@@ -42,3 +47,5 @@ surface_material_override/0 = SubResource("StandardMaterial3D_1bv0n")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_pmwvr")
+
+[node name="Tooltip" parent="." instance=ExtResource("3_u53cp")]

@@ -1,7 +1,8 @@
-[gd_scene load_steps=7 format=3 uid="uid://b8gf00ljkv1ir"]
+[gd_scene load_steps=8 format=3 uid="uid://b8gf00ljkv1ir"]
 
 [ext_resource type="Script" path="res://scripts/item.gd" id="1_lin64"]
 [ext_resource type="Texture2D" uid="uid://bllxmeggupaij" path="res://assets/images/items/GiantsBelt.png" id="2_j7rbv"]
+[ext_resource type="PackedScene" uid="uid://cjoei063n71nc" path="res://src/ui/item_tooltip.tscn" id="3_pcyab"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_b61h1"]
 size = Vector3(0.5, 0.5, 0.5)
@@ -32,6 +33,7 @@ item_texture = ExtResource("2_j7rbv")
 item_name = "Giants Belt"
 health = 150
 component = true
+tooltip = "+150 Health"
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("BoxShape3D_b61h1")
@@ -42,3 +44,5 @@ surface_material_override/0 = SubResource("StandardMaterial3D_kabef")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_pmwvr")
+
+[node name="Tooltip" parent="." instance=ExtResource("3_pcyab")]

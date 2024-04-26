@@ -1,7 +1,8 @@
-[gd_scene load_steps=7 format=3 uid="uid://djtovmmcni7ky"]
+[gd_scene load_steps=8 format=3 uid="uid://djtovmmcni7ky"]
 
 [ext_resource type="Script" path="res://scripts/item.gd" id="1_gpcfy"]
 [ext_resource type="Texture2D" uid="uid://c7ejyosak10c0" path="res://assets/images/items/NashorsTooth.webp" id="2_sfbr3"]
+[ext_resource type="PackedScene" uid="uid://cjoei063n71nc" path="res://src/ui/item_tooltip.tscn" id="3_ql5nd"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_b61h1"]
 size = Vector3(0.5, 0.5, 0.5)
@@ -33,6 +34,11 @@ item_name = "Nashor's Tooth"
 health = 150
 attack_speed = 0.1
 ability_power = 30
+tooltip = "+10% Attack Speed
++30 Ability Power
++150 Health
+
+After casting an Ability, gain 40% Attack Speed for 5 seconds."
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("BoxShape3D_b61h1")
@@ -43,3 +49,5 @@ surface_material_override/0 = SubResource("StandardMaterial3D_1bv0n")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_pmwvr")
+
+[node name="Tooltip" parent="." instance=ExtResource("3_ql5nd")]

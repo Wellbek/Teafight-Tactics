@@ -1,7 +1,8 @@
-[gd_scene load_steps=7 format=3 uid="uid://cov4ew2xthex7"]
+[gd_scene load_steps=8 format=3 uid="uid://cov4ew2xthex7"]
 
 [ext_resource type="Script" path="res://scripts/item.gd" id="1_m81ca"]
 [ext_resource type="Texture2D" uid="uid://cl2auomc4y3md" path="res://assets/images/items/AdaptiveHelm.webp" id="2_sywn0"]
+[ext_resource type="PackedScene" uid="uid://cjoei063n71nc" path="res://src/ui/item_tooltip.tscn" id="3_nuf5i"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_b61h1"]
 size = Vector3(0.5, 0.5, 0.5)
@@ -33,6 +34,13 @@ item_name = "Adaptive Helm"
 ability_power = 15
 magic_resist = 20
 mana = 15
+tooltip = "+20 Magic Resist
++15 Starting Mana
++15 Ability Power
+
+Combat start: Gain different bonuses based on starting position.
+Front Two Rows: 40 Armor and Magic Resist. Gain 1 Mana when struck by an attack.
+Back Two Rows: 20 Ability Power. Gain 10 Mana every 3 seconds."
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("BoxShape3D_b61h1")
@@ -43,3 +51,5 @@ surface_material_override/0 = SubResource("StandardMaterial3D_1bv0n")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_pmwvr")
+
+[node name="Tooltip" parent="." instance=ExtResource("3_nuf5i")]

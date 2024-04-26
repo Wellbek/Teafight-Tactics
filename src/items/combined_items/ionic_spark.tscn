@@ -1,7 +1,8 @@
-[gd_scene load_steps=7 format=3 uid="uid://d3twhmr2yqkh4"]
+[gd_scene load_steps=8 format=3 uid="uid://d3twhmr2yqkh4"]
 
 [ext_resource type="Script" path="res://scripts/item.gd" id="1_qixyb"]
 [ext_resource type="Texture2D" uid="uid://b2yytcsfcw3pq" path="res://assets/images/items/IonicSpark.png" id="2_l166f"]
+[ext_resource type="PackedScene" uid="uid://cjoei063n71nc" path="res://src/ui/item_tooltip.tscn" id="3_6nv2f"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_b61h1"]
 size = Vector3(0.5, 0.5, 0.5)
@@ -33,6 +34,11 @@ item_name = "Ionic Spark"
 health = 200
 ability_power = 15
 magic_resist = 25
+tooltip = "+200 Health
++15 Ability Power
++25 Magic Resist
+
+30% Shred enemies within 2 hexes. When enemies cast an Ability, they are also zapped for magic damage equal to 160% of their maximum Mana."
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("BoxShape3D_b61h1")
@@ -43,3 +49,5 @@ surface_material_override/0 = SubResource("StandardMaterial3D_1bv0n")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_pmwvr")
+
+[node name="Tooltip" parent="." instance=ExtResource("3_6nv2f")]

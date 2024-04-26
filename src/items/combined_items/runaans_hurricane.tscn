@@ -1,7 +1,8 @@
-[gd_scene load_steps=7 format=3 uid="uid://bvlpy22go4hvt"]
+[gd_scene load_steps=8 format=3 uid="uid://bvlpy22go4hvt"]
 
 [ext_resource type="Script" path="res://scripts/item.gd" id="1_hemjb"]
 [ext_resource type="Texture2D" uid="uid://ck7wlsxtgabgl" path="res://assets/images/items/RunaansHurricane.png" id="2_2lemw"]
+[ext_resource type="PackedScene" uid="uid://cjoei063n71nc" path="res://src/ui/item_tooltip.tscn" id="3_uocq2"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_b61h1"]
 size = Vector3(0.5, 0.5, 0.5)
@@ -33,6 +34,11 @@ item_name = "Runaan's Hurricane"
 attack_dmg = 25
 attack_speed = 0.1
 magic_resist = 20
+tooltip = "+25% Attack Damage
++10% Attack Speed
++20 Magic Resist
+
+Attacks fire a bolt at a nearby enemy, dealing 55% attack damage as physical damage."
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("BoxShape3D_b61h1")
@@ -43,3 +49,5 @@ surface_material_override/0 = SubResource("StandardMaterial3D_1bv0n")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_pmwvr")
+
+[node name="Tooltip" parent="." instance=ExtResource("3_uocq2")]

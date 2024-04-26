@@ -1,7 +1,8 @@
-[gd_scene load_steps=7 format=3 uid="uid://djrfrm48n2r7h"]
+[gd_scene load_steps=8 format=3 uid="uid://djrfrm48n2r7h"]
 
 [ext_resource type="Texture2D" uid="uid://bqatgnnesy5ra" path="res://assets/images/items/BFSword.png" id="1_f7jxe"]
 [ext_resource type="Script" path="res://scripts/item.gd" id="1_u75n8"]
+[ext_resource type="PackedScene" uid="uid://cjoei063n71nc" path="res://src/ui/item_tooltip.tscn" id="3_q8fg8"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_b61h1"]
 size = Vector3(0.5, 0.5, 0.5)
@@ -32,6 +33,7 @@ item_texture = ExtResource("1_f7jxe")
 item_name = "BF Sword"
 attack_dmg = 10
 component = true
+tooltip = "+10% Attack Damage"
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("BoxShape3D_b61h1")
@@ -42,3 +44,5 @@ surface_material_override/0 = SubResource("StandardMaterial3D_1bv0n")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_pmwvr")
+
+[node name="Tooltip" parent="." instance=ExtResource("3_q8fg8")]

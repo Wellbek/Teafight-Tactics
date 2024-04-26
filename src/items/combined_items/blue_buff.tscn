@@ -1,7 +1,8 @@
-[gd_scene load_steps=7 format=3 uid="uid://5d6blmukx7v2"]
+[gd_scene load_steps=8 format=3 uid="uid://5d6blmukx7v2"]
 
 [ext_resource type="Script" path="res://scripts/item.gd" id="1_a8jot"]
 [ext_resource type="Texture2D" uid="uid://cndj352whwsfb" path="res://assets/images/items/BlueBuff.png" id="2_32phb"]
+[ext_resource type="PackedScene" uid="uid://cjoei063n71nc" path="res://src/ui/item_tooltip.tscn" id="3_kl2eb"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_b61h1"]
 size = Vector3(0.5, 0.5, 0.5)
@@ -33,6 +34,13 @@ item_name = "Blue Buff"
 attack_dmg = 20
 ability_power = 20
 mana = 20
+tooltip = "+20% Attack Damage
++20 Starting Mana
++20 Ability Power
+
+Max mana reduced by 10. When the holder gets a takedown, they deal 8% more damage for 8 seconds.
+
+[Unique - Only One Per Champion]"
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("BoxShape3D_b61h1")
@@ -43,3 +51,5 @@ surface_material_override/0 = SubResource("StandardMaterial3D_1bv0n")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_pmwvr")
+
+[node name="Tooltip" parent="." instance=ExtResource("3_kl2eb")]

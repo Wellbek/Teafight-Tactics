@@ -1,7 +1,8 @@
-[gd_scene load_steps=7 format=3 uid="uid://tgf13adp6c8e"]
+[gd_scene load_steps=8 format=3 uid="uid://tgf13adp6c8e"]
 
 [ext_resource type="Script" path="res://scripts/item.gd" id="1_yn85u"]
 [ext_resource type="Texture2D" uid="uid://3f1mn7xeextb" path="res://assets/images/items/SteadfastHeart.png" id="2_vynqw"]
+[ext_resource type="PackedScene" uid="uid://cjoei063n71nc" path="res://src/ui/item_tooltip.tscn" id="3_an3rh"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_b61h1"]
 size = Vector3(0.5, 0.5, 0.5)
@@ -33,6 +34,11 @@ item_name = "Steadfast Heart"
 health = 250
 armor = 20
 crit_chance = 0.2
+tooltip = "+20 Armor
++250 Health
++20% Critical Strike Chance
+
+Take 8% less damage. While above 50% Health, take 15% less damage, instead."
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("BoxShape3D_b61h1")
@@ -43,3 +49,5 @@ surface_material_override/0 = SubResource("StandardMaterial3D_1bv0n")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_pmwvr")
+
+[node name="Tooltip" parent="." instance=ExtResource("3_an3rh")]

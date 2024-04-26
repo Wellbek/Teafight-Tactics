@@ -1,7 +1,8 @@
-[gd_scene load_steps=7 format=3 uid="uid://bgw3a0bvtpgrn"]
+[gd_scene load_steps=8 format=3 uid="uid://bgw3a0bvtpgrn"]
 
 [ext_resource type="Script" path="res://scripts/item.gd" id="1_r7oq1"]
 [ext_resource type="Texture2D" uid="uid://dwnij151vdrda" path="res://assets/images/items/Morellonomicon.png" id="2_ygsm8"]
+[ext_resource type="PackedScene" uid="uid://cjoei063n71nc" path="res://src/ui/item_tooltip.tscn" id="3_e2owj"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_b61h1"]
 size = Vector3(0.5, 0.5, 0.5)
@@ -33,6 +34,13 @@ item_name = "Morellonomicon"
 health = 150
 attack_speed = 0.1
 ability_power = 25
+tooltip = "+25 Ability Power
++150 Health
++10% Attack Speed
+
+Ability damage deals 1% Burn and 33% Wound to enemies for 10 seconds.
+
+[Unique - Only One Per Champion]"
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("BoxShape3D_b61h1")
@@ -43,3 +51,5 @@ surface_material_override/0 = SubResource("StandardMaterial3D_1bv0n")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_pmwvr")
+
+[node name="Tooltip" parent="." instance=ExtResource("3_e2owj")]

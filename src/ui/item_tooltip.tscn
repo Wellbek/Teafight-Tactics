@@ -1,0 +1,20 @@
+[gd_scene format=3 uid="uid://cjoei063n71nc"]
+
+[node name="Tooltip" type="Label3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.888214, 0)
+visible = false
+billboard = 1
+modulate = Color(1, 1, 0.517647, 1)
+text = "+20 Magic Resist
++15 Starting Mana
++15 Ability Power
+
+Combat start: Gain different bonuses based on starting position.
+Front Two Rows: 40 Armor and Magic Resist. Gain 1 Mana when struck by an attack.
+Back Two Rows: 20 Ability Power. Gain 10 Mana every 3 seconds."
+font_size = 50
+outline_size = 20
+horizontal_alignment = 0
+vertical_alignment = 2
+autowrap_mode = 3
+width = 800.0

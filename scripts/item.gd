@@ -16,6 +16,7 @@ extends StaticBody3D
 @export var omnivamp: float = 0
 @export var ability_crit: bool = false
 @export var component = false
+@export_multiline var tooltip: String = ""
 
 const RECIPES = {
 	"BF Sword": {"BF Sword": "Deathblade", "Chain Vest": "Edge of Night", "Giants Belt": "Sterak's Gage", "Needlessly Large Rod": "Hextech Gunblade", "Negatron Cloak": "Bloodthirster", "Sparring Gloves": "Infinity Edge", "Recurve Bow": "Giant Slayer", "Tear of the Goddess": "Spear of Shojin"},
@@ -48,6 +49,9 @@ func _ready():
 	set_multiplayer_authority(get_parent().get_parent().get_id())
 	
 	multisync = find_child("MultiplayerSynchronizer", false)
+	
+	connect("mouse_entered", _on_mouse_entered)
+	connect("mouse_exited", _on_mouse_exited)
 
 func _input_event(camera, event, position, normal, shape_idx):
 	if not is_multiplayer_authority(): return
@@ -193,3 +197,10 @@ func get_omnivamp():
 	
 func get_ability_crit():
 	return ability_crit
+
+func _on_mouse_entered():
+	$Tooltip.text = item_name + ":\n" + tooltip
+	$Tooltip.visible = true
+
+func _on_mouse_exited():
+	$Tooltip.visible = false

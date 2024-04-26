@@ -1,7 +1,8 @@
-[gd_scene load_steps=7 format=3 uid="uid://bt14r8ggerphl"]
+[gd_scene load_steps=8 format=3 uid="uid://bt14r8ggerphl"]
 
 [ext_resource type="Script" path="res://scripts/item.gd" id="1_ysfc8"]
 [ext_resource type="Texture2D" uid="uid://5ftoj3tuk1i1" path="res://assets/images/items/ArchangelsStaff.png" id="2_b81ob"]
+[ext_resource type="PackedScene" uid="uid://cjoei063n71nc" path="res://src/ui/item_tooltip.tscn" id="3_d7ptd"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_b61h1"]
 size = Vector3(0.5, 0.5, 0.5)
@@ -32,6 +33,10 @@ item_texture = ExtResource("2_b81ob")
 item_name = "Archangel's Staff"
 ability_power = 20
 mana = 15
+tooltip = "+20 Ability Power
++15 Starting Mana
+
+Combat start: Grant 30 Ability Power every 5 seconds."
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("BoxShape3D_b61h1")
@@ -42,3 +47,5 @@ surface_material_override/0 = SubResource("StandardMaterial3D_1bv0n")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_pmwvr")
+
+[node name="Tooltip" parent="." instance=ExtResource("3_d7ptd")]

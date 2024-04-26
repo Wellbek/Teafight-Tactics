@@ -1,7 +1,8 @@
-[gd_scene load_steps=7 format=3 uid="uid://boqtjrhdpvjn8"]
+[gd_scene load_steps=8 format=3 uid="uid://boqtjrhdpvjn8"]
 
 [ext_resource type="Script" path="res://scripts/item.gd" id="1_24pph"]
 [ext_resource type="Texture2D" uid="uid://jap2xrjxoql3" path="res://assets/images/items/ThiefsGloves.png" id="2_vp3gq"]
+[ext_resource type="PackedScene" uid="uid://cjoei063n71nc" path="res://src/ui/item_tooltip.tscn" id="3_qrj6c"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_b61h1"]
 size = Vector3(0.5, 0.5, 0.5)
@@ -32,6 +33,10 @@ item_texture = ExtResource("2_vp3gq")
 item_name = "Thief's Gloves"
 health = 150
 crit_chance = 0.2
+tooltip = "+20% Critical Strike Chance
++150 Health
+
+Each round: Equip 2 random items. Consumes 3 item slots."
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("BoxShape3D_b61h1")
@@ -42,3 +47,5 @@ surface_material_override/0 = SubResource("StandardMaterial3D_1bv0n")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_pmwvr")
+
+[node name="Tooltip" parent="." instance=ExtResource("3_qrj6c")]

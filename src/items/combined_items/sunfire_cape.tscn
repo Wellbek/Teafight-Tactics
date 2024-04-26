@@ -1,7 +1,8 @@
-[gd_scene load_steps=7 format=3 uid="uid://dwuxlingou1cr"]
+[gd_scene load_steps=8 format=3 uid="uid://dwuxlingou1cr"]
 
 [ext_resource type="Script" path="res://scripts/item.gd" id="1_o62bc"]
 [ext_resource type="Texture2D" uid="uid://3yql4n50cqau" path="res://assets/images/items/SunfireCape.png" id="2_px18h"]
+[ext_resource type="PackedScene" uid="uid://cjoei063n71nc" path="res://src/ui/item_tooltip.tscn" id="3_3f5rr"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_b61h1"]
 size = Vector3(0.5, 0.5, 0.5)
@@ -32,6 +33,12 @@ item_texture = ExtResource("2_px18h")
 item_name = "Sunfire Cape"
 health = 250
 armor = 20
+tooltip = "+250 Health
++20 Armor
+
+Every 2 seconds, an enemy within 2 hexes is 1% Burned and 33% Wounded for 10 seconds.
+
+[Unique - Only One Per Champion]"
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("BoxShape3D_b61h1")
@@ -42,3 +49,5 @@ surface_material_override/0 = SubResource("StandardMaterial3D_1bv0n")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_pmwvr")
+
+[node name="Tooltip" parent="." instance=ExtResource("3_3f5rr")]

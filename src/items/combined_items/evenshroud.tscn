@@ -1,7 +1,8 @@
-[gd_scene load_steps=7 format=3 uid="uid://daksl466ddwi8"]
+[gd_scene load_steps=8 format=3 uid="uid://daksl466ddwi8"]
 
 [ext_resource type="Script" path="res://scripts/item.gd" id="1_bfe6i"]
 [ext_resource type="Texture2D" uid="uid://c7c8nxtnrc34j" path="res://assets/images/items/Evenshroud.webp" id="2_epqg3"]
+[ext_resource type="PackedScene" uid="uid://cjoei063n71nc" path="res://src/ui/item_tooltip.tscn" id="3_rkj7i"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_b61h1"]
 size = Vector3(0.5, 0.5, 0.5)
@@ -32,6 +33,10 @@ item_texture = ExtResource("2_epqg3")
 item_name = "Evenshroud"
 health = 150
 magic_resist = 20
+tooltip = "+150 Health
++20 Magic Resist
+
+30% Sunder enemies within 2 hexes. Gain 25 Armor and Magic Resist for the first 10 seconds of combat."
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("BoxShape3D_b61h1")
@@ -42,3 +47,5 @@ surface_material_override/0 = SubResource("StandardMaterial3D_1bv0n")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_pmwvr")
+
+[node name="Tooltip" parent="." instance=ExtResource("3_rkj7i")]

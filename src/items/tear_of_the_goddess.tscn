@@ -1,8 +1,9 @@
-[gd_scene load_steps=8 format=3 uid="uid://wfagre4lcw58"]
+[gd_scene load_steps=9 format=3 uid="uid://wfagre4lcw58"]
 
 [ext_resource type="Script" path="res://scripts/item.gd" id="1_gf83k"]
 [ext_resource type="Texture2D" uid="uid://ceaevsqq00d8y" path="res://assets/images/items/SparringGloves.png" id="2_j6k7v"]
 [ext_resource type="Texture2D" uid="uid://hdbe16leloki" path="res://assets/images/items/TearoftheGoddess.png" id="2_stj12"]
+[ext_resource type="PackedScene" uid="uid://cjoei063n71nc" path="res://src/ui/item_tooltip.tscn" id="4_ffbv1"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_b61h1"]
 size = Vector3(0.5, 0.5, 0.5)
@@ -35,6 +36,7 @@ item_texture = ExtResource("2_stj12")
 item_name = "Tear of the Goddess"
 mana = 15
 component = true
+tooltip = "+15 Mana"
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("BoxShape3D_b61h1")
@@ -45,3 +47,5 @@ surface_material_override/0 = SubResource("StandardMaterial3D_x22v4")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_pmwvr")
+
+[node name="Tooltip" parent="." instance=ExtResource("4_ffbv1")]

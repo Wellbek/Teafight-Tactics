@@ -1,7 +1,8 @@
-[gd_scene load_steps=7 format=3 uid="uid://ckj8gd835hdh4"]
+[gd_scene load_steps=8 format=3 uid="uid://ckj8gd835hdh4"]
 
 [ext_resource type="Script" path="res://scripts/item.gd" id="1_fgafg"]
 [ext_resource type="Texture2D" uid="uid://bbh0yvc5dfk2q" path="res://assets/images/items/BrambleVest.png" id="2_dxjvp"]
+[ext_resource type="PackedScene" uid="uid://cjoei063n71nc" path="res://src/ui/item_tooltip.tscn" id="3_higmd"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_b61h1"]
 size = Vector3(0.5, 0.5, 0.5)
@@ -31,6 +32,9 @@ script = ExtResource("1_fgafg")
 item_texture = ExtResource("2_dxjvp")
 item_name = "Bramble Vest"
 armor = 55
+tooltip = "+55 Armor
+
+Take 8% reduced damage from attacks. When struck by any attack, deal 100 magic damage to all adjacent enemies. (once every 2 seconds). Grants 5% max health."
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("BoxShape3D_b61h1")
@@ -41,3 +45,5 @@ surface_material_override/0 = SubResource("StandardMaterial3D_1bv0n")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_pmwvr")
+
+[node name="Tooltip" parent="." instance=ExtResource("3_higmd")]

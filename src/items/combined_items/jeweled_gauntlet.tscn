@@ -1,7 +1,8 @@
-[gd_scene load_steps=7 format=3 uid="uid://c3383mjgxh2mq"]
+[gd_scene load_steps=8 format=3 uid="uid://c3383mjgxh2mq"]
 
 [ext_resource type="Script" path="res://scripts/item.gd" id="1_fxid8"]
 [ext_resource type="Texture2D" uid="uid://dn2u7ty81xrgt" path="res://assets/images/items/JeweledGauntlet.png" id="2_10plh"]
+[ext_resource type="PackedScene" uid="uid://cjoei063n71nc" path="res://src/ui/item_tooltip.tscn" id="3_h8fa8"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_b61h1"]
 size = Vector3(0.5, 0.5, 0.5)
@@ -33,6 +34,10 @@ item_name = "Jeweled Gauntlet"
 crit_chance = 0.35
 ability_power = 35
 ability_crit = true
+tooltip = "+35 Ability Power
++35% Critical Strike Chance
+
+If the holder's abilities can already critically strike, gain 10% Critical Strike Damage instead."
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("BoxShape3D_b61h1")
@@ -43,3 +48,5 @@ surface_material_override/0 = SubResource("StandardMaterial3D_1bv0n")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_pmwvr")
+
+[node name="Tooltip" parent="." instance=ExtResource("3_h8fa8")]

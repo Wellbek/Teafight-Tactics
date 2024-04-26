@@ -1,7 +1,8 @@
-[gd_scene load_steps=7 format=3 uid="uid://lbwjrj3q725v"]
+[gd_scene load_steps=8 format=3 uid="uid://lbwjrj3q725v"]
 
 [ext_resource type="Script" path="res://scripts/item.gd" id="1_e47f1"]
 [ext_resource type="Texture2D" uid="uid://dhlrw0cqgktfg" path="res://assets/images/items/SteraksGage.png" id="2_xc3qy"]
+[ext_resource type="PackedScene" uid="uid://cjoei063n71nc" path="res://src/ui/item_tooltip.tscn" id="3_k5w48"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_b61h1"]
 size = Vector3(0.5, 0.5, 0.5)
@@ -32,6 +33,10 @@ item_texture = ExtResource("2_xc3qy")
 item_name = "Sterak's Gage"
 health = 200
 attack_dmg = 15
+tooltip = "+15% Attack Damage
++200 Health
+
+Once per combat at 60% Health, gain 25% max Health and 35% Attack Damage."
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("BoxShape3D_b61h1")
@@ -42,3 +47,5 @@ surface_material_override/0 = SubResource("StandardMaterial3D_1bv0n")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_pmwvr")
+
+[node name="Tooltip" parent="." instance=ExtResource("3_k5w48")]

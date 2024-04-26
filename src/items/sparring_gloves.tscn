@@ -1,7 +1,8 @@
-[gd_scene load_steps=7 format=3 uid="uid://djy582r05m0s3"]
+[gd_scene load_steps=8 format=3 uid="uid://djy582r05m0s3"]
 
 [ext_resource type="Script" path="res://scripts/item.gd" id="1_2bmmk"]
 [ext_resource type="Texture2D" uid="uid://ceaevsqq00d8y" path="res://assets/images/items/SparringGloves.png" id="2_knmjy"]
+[ext_resource type="PackedScene" uid="uid://cjoei063n71nc" path="res://src/ui/item_tooltip.tscn" id="3_fv33g"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_b61h1"]
 size = Vector3(0.5, 0.5, 0.5)
@@ -34,6 +35,7 @@ item_texture = ExtResource("2_knmjy")
 item_name = "Sparring Gloves"
 crit_chance = 0.2
 component = true
+tooltip = "+20% Critical Strike Chance"
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("BoxShape3D_b61h1")
@@ -44,3 +46,5 @@ surface_material_override/0 = SubResource("StandardMaterial3D_x22v4")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_pmwvr")
+
+[node name="Tooltip" parent="." instance=ExtResource("3_fv33g")]

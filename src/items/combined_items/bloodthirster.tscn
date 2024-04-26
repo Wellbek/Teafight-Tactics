@@ -1,7 +1,8 @@
-[gd_scene load_steps=7 format=3 uid="uid://cmhxwusx1t8rw"]
+[gd_scene load_steps=8 format=3 uid="uid://cmhxwusx1t8rw"]
 
 [ext_resource type="Script" path="res://scripts/item.gd" id="1_0enk2"]
 [ext_resource type="Texture2D" uid="uid://ebgpujdw163o" path="res://assets/images/items/Bloodthirster.png" id="2_m1s0l"]
+[ext_resource type="PackedScene" uid="uid://cjoei063n71nc" path="res://src/ui/item_tooltip.tscn" id="3_i6ico"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_b61h1"]
 size = Vector3(0.5, 0.5, 0.5)
@@ -34,6 +35,11 @@ attack_dmg = 20
 ability_power = 15
 magic_resist = 20
 omnivamp = 0.2
+tooltip = "+20% Attack Damage
++15 Ability Power
++20 Magic Resist
+
+Grant 20% Omnivamp. Once per combat at 40% Health, gain a 25% maximum Health shield that lasts up to 5 seconds."
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("BoxShape3D_b61h1")
@@ -44,3 +50,5 @@ surface_material_override/0 = SubResource("StandardMaterial3D_1bv0n")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_pmwvr")
+
+[node name="Tooltip" parent="." instance=ExtResource("3_i6ico")]
