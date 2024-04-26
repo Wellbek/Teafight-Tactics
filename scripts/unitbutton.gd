@@ -116,11 +116,6 @@ func upgrade(_unit):
 					sameUnits[0].level_up()
 					return sameUnits[0]
 	return null
-	
-@rpc("authority", "call_local", "reliable")
-func free_unbought():
-	if unit_id == -1: return
-	if not bought: main.add_to_pool.rpc_id(1, unit_id)
 		
 @rpc("authority", "call_local", "reliable")
 func generate_button(_unit_path):	
@@ -131,6 +126,7 @@ func generate_button(_unit_path):
 	var tmp = load(unit_path).instantiate()
 	tmp.name = str(multiplayer.get_unique_id()) + "#" + tmp.name
 	unit_id = tmp.get_unit_id()
+	main.get_player().set_unit_button_ids(get_index(), unit_id)
 	
 	image.texture = load(tmp.get_image())
 	cost_label.text = str(tmp.get_cost())
@@ -162,3 +158,4 @@ func generate_button(_unit_path):
 func change_bought(val):
 	bought = val
 	button_content.visible = !val
+	main.get_player().set_unit_button_ids(get_index(), -1 if bought else unit_id)

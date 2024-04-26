@@ -57,6 +57,14 @@ var xp_bar: ProgressBar
 var xp_label: Label
 var level_label: Label
 
+var unit_button_ids = [-1,-1,-1,-1,-1]
+
+func get_unit_button_ids():
+	return unit_button_ids
+	
+func set_unit_button_ids(idx, val):
+	unit_button_ids[idx] = val
+
 func _enter_tree():
 	main = get_tree().root.get_child(0)
 	myid = name.to_int()

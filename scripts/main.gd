@@ -56,6 +56,8 @@ var unit_pool = {
 	29: 18
 }
 
+var missing_from_pool = 0
+
 # inclusive, exclusive
 const COST_RANGES = {
 	1: Vector2(0,7),
@@ -160,12 +162,14 @@ func remove_from_pool(_id, _amount = 1):
 		printerr("ERROR: cant remove more units from pool than available")
 	#print("remove " + str(_id) + ": " + str(unit_pool[_id]-_amount))
 	unit_pool[_id] -= _amount
+	missing_from_pool += _amount
 	
 @rpc("any_peer", "call_local", "reliable")
 func add_to_pool(_id, _amount = 1):
 	if _id >= len(unit_pool)-1: return
 	#print("add " + str(_id) + ": " + str(unit_pool[_id]+_amount))
 	unit_pool[_id] += _amount
+	missing_from_pool -= _amount
 	
 func is_in_pool(_id):
 	if _id >= len(unit_pool)-1: return false
@@ -195,9 +199,10 @@ func generate_buttons(for_whom = -1):
 	for _player in players:
 		if for_whom == -1 or _player.get_id() == for_whom:
 			for i in range(5):
-				get_ui().get_node("UnitShop/HBoxContainer").get_child(i).free_unbought.rpc_id(_player.get_id())
-				
-	# NOTE: NEED TO SOMEONE MAKE IT SO WE AWAIT RESETTING THE POOL BEFORE GENERATING NEW
+				var _id = _player.get_unit_button_ids()[i]
+				if _id != -1: add_to_pool(_id)
+	
+	#print(missing_from_pool)
 	
 	for _player in players:
 		if _player != null and not _player.is_defeated() and (for_whom == -1 or _player.get_id() == for_whom):
