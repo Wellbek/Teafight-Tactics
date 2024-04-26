@@ -29,8 +29,8 @@ func _ready():
 	else: printerr("Unknown grid type")
 
 func generate_hex_grid(_x: int, _z:int):
-	for xi in _x:
-		for zi in _z:
+	for zi in _z:
+		for xi in _x:
 			var hex = preload("res://src/tiles/hex.tscn").instantiate()
 			add_child(hex)
 			var hexX = W*xi*W_CORRECTION
@@ -42,8 +42,8 @@ func generate_hex_grid(_x: int, _z:int):
 			tiles.append(hex)
 			
 func generate_grid(_x: int, _z:int):
-	for xi in _x:
-		for zi in _z:
+	for zi in _z:
+		for xi in _x:
 			var square = preload("res://src/tiles/square.tscn").instantiate()
 			add_child(square)
 			var squareX = W*xi

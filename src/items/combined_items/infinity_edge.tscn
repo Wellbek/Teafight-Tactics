@@ -34,7 +34,7 @@ item_name = "Infinity Edge"
 attack_dmg = 35
 crit_chance = 0.35
 ability_crit = true
-tooltip = "+35% Attack Damage
+tooltip = "+35 Attack Damage
 +35% Critical Strike Chance
 
 Abilities can critically strike. If the holder's abilities can already critically strike, gain 10% Critical Strike Damage instead."

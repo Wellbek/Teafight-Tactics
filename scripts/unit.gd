@@ -73,6 +73,25 @@ var duelist_counter = 0
 var omnivamp = 0.0 # heal of RAW dmg
 var bonus_dmg = 0.0 # in percent
 
+# (mostly) item related stats
+# adapt
+var mana_on_dmg = 0
+var mana_per_attack = 10
+#archangels
+var as_bonus_ap = 0
+# gunblade
+var heal_lowest_ally = false
+# hand of justice
+var double = 0 # 1: attackdmg und ap; 2: omnivamp
+# guinsoo
+var rageblade_stacking = false
+var rageblade_stacks = 0
+var rageblade_labels = {}
+# titans resolve
+var titans_stacking = false
+var tr_stacks = 0
+var titans_labels = {}
+
 @export_category("Ability")
 @export_enum("Enhanced Auto", "Poison Bomb") var ability_id = 0
 const ABILITY_TYPES = ["Enhanced AA", "Poison Bomb"]
@@ -89,7 +108,6 @@ const ABILITY_DMG_TYPES = ["AD", "AP", "TrueDMG"]
 @export var ranged_ability_anim: String = "2H_Ranged_Shoot"
 @export var magic_ability_anim: String = "Spellcast_Raise"
 var ability_crit = false
-const MANA_PER_ATTACK = 10
 var poisoned_enemies = {} # unit: counter
 
 const LOCAL_COLOR = Color(0.2, 0.898, 0.243)
@@ -222,6 +240,72 @@ func change_mode(_mode: int):
 	play_animation(idle_anim, false)
 	
 	if _mode == BATTLE:
+		
+		# ========== ITEMS =================
+		
+		var item_index = 0
+		for item in items:
+			if item == null: continue
+			
+			match item.get_item_name():
+				"Adaptive Helm":
+					# Combat start: Gain different bonuses based on starting position.
+					if tile.get_row() < 2:
+						# Front Two Rows: 40 Armor and Magic Resist. Gain 1 Mana when struck by an attack.
+						armor += 40
+						mr += 40
+						mana_on_dmg += 1
+					else:
+						# Back Two Rows: 20 Ability Power. Gain 10 Mana every 3 seconds.
+						ability_power += 20
+						var timer = Timer.new()
+						add_child(timer)
+						timer.name = "adaptive_helm_mana_every3"
+						timer.wait_time = 3
+						timer.one_shot = false
+						timer.connect("timeout", _on_adaptive_helm_3sec)
+						timer.start()	
+				"Archangel's Staff":
+					#Combat start: Grant 30 Ability Power every 5 seconds.
+					var timer = Timer.new()
+					add_child(timer)
+					timer.name = "archangels_staff"
+					timer.wait_time = 5
+					timer.one_shot = false
+					timer.connect("timeout", _on_archangels_staff)
+					timer.start()	
+				"Titan's Resolve":
+					# Grants 2 Attack Damage and 2 Ability Power when attacking or taking damage, stacking up to 25 times. At full stacks, grant 20 Armor and 20 Magic Resist.
+					titans_labels[item] = get_ui().get_node("HBoxContainer/" + str(item_index) + "/Counter")
+					titans_labels[item].visible = true
+					titans_labels[item].text = str(tr_stacks)
+					titans_stacking = true
+				"Guinsoo's Rageblade":
+					rageblade_labels[item] = get_ui().get_node("HBoxContainer/" + str(item_index) + "/Counter")
+					rageblade_labels[item].visible = true
+					rageblade_labels[item].text = str(rageblade_stacks)
+					rageblade_stacking = true
+				"Hand of Justice":
+					#Grant 2 effects:
+					#+15 Attack Damage and +15 Ability Power
+					#15% Omnivamp
+					#Each round, randomly double 1 of these effects.
+					double = randi_range(0,1)
+					if double == 0: 
+						attack_dmg += 15
+						ability_power += 15
+					else: omnivamp += .15
+				"Hextech Gunblade":
+					heal_lowest_ally = true
+				"Warmog's Armor":
+					max_health *= 1.08
+					curr_health = max_health
+					refresh_hpbar()
+				_: pass
+			item_index += 1
+		
+		# ========== TRAITS ================	
+		
 		# bastion (kinda): - aromatic 
 		# all bastion units increased armor and mr (in combat): increased by 100% for first 10 sec
 		if type == 6:
@@ -326,7 +410,59 @@ func change_mode(_mode: int):
 	
 		
 		set_collision_layer_value(5, true) # only collide with battling units (hidden prep units should be ignored)
-	else:
+	else: #================================================ RESET ===============================================
+		for item in items:
+			if item == null: continue
+			
+			match item.get_item_name():
+				"Adaptive Helm":
+					# Combat start: Gain different bonuses based on starting position.
+					if tile.get_row() < 2:
+						# Front Two Rows: 40 Armor and Magic Resist. Gain 1 Mana when struck by an attack.
+						armor -= 40
+						mr -= 40
+						mana_on_dmg -= 1
+					else:
+						# Back Two Rows: 20 Ability Power. Gain 10 Mana every 3 seconds.
+						ability_power -= 20
+						var adapt_timer = get_node_or_null("adaptive_helm_mana_every3")
+						if adapt_timer: adapt_timer.queue_free()
+				"Archangel's Staff":
+					# Combat start: Grant 30 Ability Power every 5 seconds.
+					ability_power -= as_bonus_ap
+					var arch_timer = get_node_or_null("archangels_staff")
+					if arch_timer: arch_timer.queue_free()
+				"Titan's Resolve":
+					titans_labels[item].visible = false
+					titans_stacking = false
+					attack_dmg -= 2 * tr_stacks * len(titans_labels)
+					ability_power -= 2 * tr_stacks * len(titans_labels)
+					if tr_stacks >= 25:
+						armor -= 20 * len(titans_labels)
+						mr -= 20 * len(titans_labels)
+					tr_stacks = 0
+					titans_labels.erase(item)
+				"Guinsoo's Rageblade":
+					rageblade_labels[item].visible = false
+					rageblade_stacking = false
+					rageblade_stacks = 0
+					rageblade_labels.erase(item)
+				"Hand of Justice":
+					#Grant 2 effects:
+					#+15 Attack Damage and +15 Ability Power
+					#15% Omnivamp
+					#Each round, randomly double 1 of these effects.
+					if double == 0: 
+						attack_dmg -= 15
+						ability_power -= 15
+					else: omnivamp -= .15
+				"Hextech Gunblade":
+					heal_lowest_ally = false
+				"Warmog's Armor":
+					max_health /= 1.08
+					if curr_health > max_health: curr_health = max_health
+				_: pass
+		
 		# reset bastion trait
 		if type == 6:		
 			if get_node_or_null("aromatic_trait"): _on_aromatic_10sec()
@@ -396,7 +532,7 @@ func change_mode(_mode: int):
 					attack_dmg -= 70
 				_: pass
 		
-		# reset duelist trait
+		# reset duelist trait (and guinsoos item) stacking attackspeed
 		attack_speed -= bonus_attack_speed
 		bonus_attack_speed = 0
 		duelist_counter = 0
@@ -451,6 +587,14 @@ func _on_shurima():
 		heal_popup.text = str(int(heal))
 		add_child(heal_popup)
 		heal_popup.global_transform.origin += Vector3(randf_range(-.5,.5), randf_range(0,1), 0.5)
+
+func _on_adaptive_helm_3sec():
+	curr_mana = min(curr_mana+10, max_mana)
+	refresh_manabar()
+	
+func _on_archangels_staff():
+	as_bonus_ap += 30
+	ability_power += 30
 
 func get_mode():
 	return mode
@@ -617,22 +761,65 @@ func auto_attack(_target, pve = false):
 			heal_popup.text = str(int(heal))
 			add_child(heal_popup)
 			heal_popup.global_transform.origin += Vector3(randf_range(-.5,.5), randf_range(0,1), 0.5)
+		if heal_lowest_ally:
+			var lowest_ally = null
+			var lowest_percent = 1
+			for unit in get_parent().get_children():
+				if unit == self: continue
+				
+				var percent = unit.get_curr_health()/unit.get_max_health()
+				if unit.get_mode() == BATTLE and percent < lowest_percent:
+					lowest_ally = unit
+					lowest_percent = percent
+			if lowest_ally:
+				var ally_heal = min(damage*0.2, lowest_ally.get_max_health()-lowest_ally.get_curr_health())
+				lowest_ally.curr_health += ally_heal #0.2 gunblade heal
+				lowest_ally.refresh_hpbar()
+			
+				var heal_popup = preload("res://src/damage_popup.tscn").instantiate()
+				heal_popup.modulate = Color.LIME_GREEN
+				heal_popup.text = str(int(ally_heal))
+				lowest_ally.add_child(heal_popup)
+				heal_popup.global_transform.origin += Vector3(randf_range(-.5,.5), randf_range(0,1), 0.5)
+	
+	# rageblade
+	if rageblade_stacking and not affected_by_urf:
+		rageblade_stacks += 1
+		for item in rageblade_labels:
+			rageblade_labels[item].text = str(rageblade_stacks)
+			bonus_attack_speed += attack_speed*1.05 - attack_speed
+			attack_speed *= 1.05
+			
+	# Titans resolve
+	if titans_stacking and tr_stacks < 25:
+		tr_stacks += 1
+		for item in titans_labels:
+			titans_labels[item].text = str(tr_stacks)
+			attack_dmg += 2
+			ability_power += 2
+			if tr_stacks >= 25:
+				armor += 20
+				mr += 20
 	
 	# duelist (kinda): - black 
 	# for duelists: stacking attack speed up to 12; 5% -> 10% -> 15%
-	if type == 2:
+	if type == 2 and not affected_by_urf:
 		if duelist_counter < 12:
-			var tmp = attack_speed
 			match main.get_classes().get_class_level(CLASS_NAMES[2]):
-				1: attack_speed *= 1.05
-				2: attack_speed *= 1.10
-				3: attack_speed *= 1.15
+				1: 
+					bonus_attack_speed += attack_speed*1.05 - attack_speed
+					attack_speed *= 1.05
+				2: 
+					bonus_attack_speed += attack_speed*1.05 - attack_speed
+					attack_speed *= 1.1
+				3: 
+					bonus_attack_speed += attack_speed*1.05 - attack_speed
+					attack_speed *= 1.15
 				_: pass
-			bonus_attack_speed += attack_speed - tmp
 			duelist_counter += 1
 			
 	# mana
-	curr_mana = min(max_mana, curr_mana + MANA_PER_ATTACK)
+	curr_mana = min(max_mana, curr_mana + mana_per_attack)
 	
 	refresh_manabar()
 	
@@ -667,7 +854,7 @@ func take_dmg(raw_dmg, dmg_type = 0, dodgeable = true):
 	var dmg = raw_dmg / (1+armor/100) if dmg_type == 0 else raw_dmg / (1+mr/100)
 	
 	# and taking damage generates (1% of pre-mitigation damage taken and 7% of post-mitigation damage taken) mana, up to 42.5 Mana[1][2], depending on the pre-mitigated damage.
-	var mana_increase = min(42.5, (.01 * raw_dmg) + (.07 * dmg))
+	var mana_increase = min(42.5, (.01 * raw_dmg) + (.07 * dmg)) + mana_on_dmg
 	
 	curr_mana = min(max_mana, curr_mana+mana_increase)
 		
@@ -800,7 +987,9 @@ func equip_item(item_path):
 		crit_chance = min(1, crit_chance + item.get_crit_chance())
 		start_mana = min(max_mana, start_mana + item.get_mana())
 		if item.get_ability_crit():
-			ability_crit = true
+			if ability_crit:
+				crit_damage += 0.1
+			else: ability_crit = true
 		omnivamp += item.get_omnivamp()
 		if mode == PREP: 
 			curr_mana = start_mana
@@ -846,6 +1035,8 @@ func unequip_item(index):
 		crit_chance = max(0, crit_chance - item.get_crit_chance())
 		start_mana = max(0, start_mana - item.get_mana()) # NOTE: this can cause issues if item mana was constrained when equipping (rarely happens as there is no feature yet to unequip items except upgrading and selling)
 		if item.get_ability_crit(): # not optimal but w.e
+			if crit_damage > 0.3:
+				crit_damage -= 0.1
 			ability_crit = false
 		omnivamp -= item.get_omnivamp()
 		if mode == PREP: 
@@ -943,6 +1134,27 @@ func ability(_target, pve = false):
 					heal_popup.text = str(int(heal))
 					add_child(heal_popup)
 					heal_popup.global_transform.origin += Vector3(randf_range(-.5,.5), randf_range(0,1), 0.5)
+				
+				if heal_lowest_ally:
+					var lowest_ally = null
+					var lowest_percent = 1
+					for unit in get_parent().get_children():
+						if unit == self: continue
+						
+						var percent = unit.get_curr_health()/unit.get_max_health()
+						if unit.get_mode() == BATTLE and percent < lowest_percent:
+							lowest_ally = unit
+							lowest_percent = percent
+					if lowest_ally:
+						var ally_heal = min(damage*0.2, lowest_ally.get_max_health()-lowest_ally.get_curr_health())
+						lowest_ally.curr_health += ally_heal #0.2 gunblade heal
+						lowest_ally.refresh_hpbar()
+					
+						var heal_popup = preload("res://src/damage_popup.tscn").instantiate()
+						heal_popup.modulate = Color.LIME_GREEN
+						heal_popup.text = str(int(ally_heal))
+						lowest_ally.add_child(heal_popup)
+						heal_popup.global_transform.origin += Vector3(randf_range(-.5,.5), randf_range(0,1), 0.5)
 		1:
 			var timer = get_node_or_null("poison_bomb")
 			if not timer:
@@ -1003,6 +1215,27 @@ func _on_poison_bomb_timeout():
 					heal_popup.modulate = Color.LIME_GREEN
 					heal_popup.text = str(int(heal))
 					add_child(heal_popup)
+					heal_popup.global_transform.origin += Vector3(randf_range(-.5,.5), randf_range(0,1), 0.5)
+				
+			if heal_lowest_ally:
+				var lowest_ally = null
+				var lowest_percent = 1
+				for unit in get_parent().get_children():
+					if unit == self: continue
+					
+					var percent = unit.get_curr_health()/unit.get_max_health()
+					if unit.get_mode() == BATTLE and percent < lowest_percent:
+						lowest_ally = unit
+						lowest_percent = percent
+				if lowest_ally:
+					var ally_heal = min(damage*0.2, lowest_ally.get_max_health()-lowest_ally.get_curr_health())
+					lowest_ally.curr_health += ally_heal #0.2 gunblade heal
+					lowest_ally.refresh_hpbar()
+				
+					var heal_popup = preload("res://src/damage_popup.tscn").instantiate()
+					heal_popup.modulate = Color.LIME_GREEN
+					heal_popup.text = str(int(ally_heal))
+					lowest_ally.add_child(heal_popup)
 					heal_popup.global_transform.origin += Vector3(randf_range(-.5,.5), randf_range(0,1), 0.5)
 
 func get_unit_id():

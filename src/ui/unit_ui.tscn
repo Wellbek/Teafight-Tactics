@@ -45,6 +45,24 @@ properties/1/replication_mode = 2
 properties/2/path = NodePath("HPBar:value")
 properties/2/spawn = true
 properties/2/replication_mode = 2
+properties/3/path = NodePath("HBoxContainer/0/Counter:text")
+properties/3/spawn = true
+properties/3/replication_mode = 2
+properties/4/path = NodePath("HBoxContainer/0/Counter:visible")
+properties/4/spawn = true
+properties/4/replication_mode = 2
+properties/5/path = NodePath("HBoxContainer/1/Counter:text")
+properties/5/spawn = true
+properties/5/replication_mode = 2
+properties/6/path = NodePath("HBoxContainer/1/Counter:visible")
+properties/6/spawn = true
+properties/6/replication_mode = 2
+properties/7/path = NodePath("HBoxContainer/2/Counter:visible")
+properties/7/spawn = true
+properties/7/replication_mode = 2
+properties/8/path = NodePath("HBoxContainer/2/Counter:text")
+properties/8/spawn = true
+properties/8/replication_mode = 2
 
 [node name="UnitUI" type="Control"]
 layout_mode = 3
@@ -115,15 +133,66 @@ layout_mode = 2
 expand_mode = 2
 stretch_mode = 4
 
+[node name="Counter" type="Label" parent="HBoxContainer/0"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 13.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.94902, 0.94902, 0.113725, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 9
+theme_override_font_sizes/font_size = 22
+text = "0"
+horizontal_alignment = 1
+vertical_alignment = 2
+
 [node name="1" type="TextureRect" parent="HBoxContainer"]
 layout_mode = 2
 expand_mode = 2
 stretch_mode = 4
 
+[node name="Counter" type="Label" parent="HBoxContainer/1"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 19.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.94902, 0.94902, 0.113725, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 9
+theme_override_font_sizes/font_size = 22
+text = "0"
+horizontal_alignment = 1
+vertical_alignment = 2
+
 [node name="2" type="TextureRect" parent="HBoxContainer"]
 layout_mode = 2
 expand_mode = 2
 stretch_mode = 4
+
+[node name="Counter" type="Label" parent="HBoxContainer/2"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 19.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.94902, 0.94902, 0.113725, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 9
+theme_override_font_sizes/font_size = 22
+text = "0"
+horizontal_alignment = 1
+vertical_alignment = 2
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_gv2af")

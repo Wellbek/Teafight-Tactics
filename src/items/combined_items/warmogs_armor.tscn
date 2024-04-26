@@ -32,7 +32,9 @@ script = ExtResource("1_8oxdx")
 item_texture = ExtResource("2_2bidq")
 item_name = "Warmog's Armor"
 health = 600
-tooltip = "+600 HealthGain\\n\\n8% max health."
+tooltip = "+600 Health
+
+Gain 8% max health."
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("BoxShape3D_b61h1")

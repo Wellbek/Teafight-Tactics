@@ -51,3 +51,11 @@ func has_unit():
 
 func get_unit():
 	return unit
+	
+func get_row():
+	var per_row = get_parent().x
+	var tiles_in_parent = get_parent().get_tiles()
+	
+	for i in range(len(tiles_in_parent)):
+		if tiles_in_parent[i] == self:
+			return floor(i/per_row)

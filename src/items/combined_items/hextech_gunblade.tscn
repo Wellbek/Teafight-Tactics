@@ -35,7 +35,7 @@ attack_dmg = 15
 ability_power = 15
 omnivamp = 0.2
 tooltip = "+15 Ability Power
-+15% Attack Damage
++15 Attack Damage
 
 Grant 20% Omnivamp, which also heals the lowest percent Health ally."
 

@@ -3,8 +3,8 @@
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_mrq3l"]
 [ext_resource type="Script" path="res://scripts/gridmap/gridmap.gd" id="1_ust0k"]
 [ext_resource type="Script" path="res://scripts/camera.gd" id="2_sby6c"]
-[ext_resource type="PackedScene" uid="uid://5d6blmukx7v2" path="res://src/items/combined_items/blue_buff.tscn" id="4_b0xjo"]
-[ext_resource type="PackedScene" uid="uid://cov4ew2xthex7" path="res://src/items/combined_items/adaptive_helm.tscn" id="5_fgjg6"]
+[ext_resource type="PackedScene" uid="uid://q45j08vjwt35" path="res://src/items/combined_items/titans_resolve.tscn" id="4_dgdhc"]
+[ext_resource type="PackedScene" uid="uid://djd6lbhimsxih" path="res://src/items/combined_items/guinsoos_rageblade.tscn" id="4_fou0m"]
 [ext_resource type="PackedScene" uid="uid://bnrnjxoiaaiuo" path="res://src/minions/melee_minion.tscn" id="5_o4yok"]
 [ext_resource type="PackedScene" uid="uid://divt1x550fa5f" path="res://src/minions/ranged_minion.tscn" id="6_c78bq"]
 [ext_resource type="PackedScene" uid="uid://2e2xsfjwn1bu" path="res://src/minions/krug.tscn" id="7_aytho"]
@@ -304,9 +304,19 @@ shape = SubResource("BoxShape3D_62cms")
 [node name="Items" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.078, 0.8, 7.829)
 
-[node name="BlueBuff" parent="Items" instance=ExtResource("4_b0xjo")]
+[node name="TitansResolve" parent="Items" instance=ExtResource("4_dgdhc")]
 
-[node name="AdaptiveHelm" parent="Items" instance=ExtResource("5_fgjg6")]
+[node name="TitansResolve2" parent="Items" instance=ExtResource("4_dgdhc")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.912024)
+
+[node name="TitansResolve3" parent="Items" instance=ExtResource("4_dgdhc")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.01718)
+
+[node name="GuinsoosRageblade" parent="Items" instance=ExtResource("4_fou0m")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0)
+
+[node name="GuinsoosRageblade2" parent="Items" instance=ExtResource("4_fou0m")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, -1)
 
 [node name="PVERounds" type="Node3D" parent="."]
 
@@ -315,6 +325,8 @@ visible = false
 
 [node name="MeleeMinion" parent="PVERounds/1-2" instance=ExtResource("5_o4yok")]
 transform = Transform3D(-0.8, 0, -6.99382e-08, 0, 0.8, 0, 6.99382e-08, 0, -0.8, -2, 0.5, -2)
+max_health = 10000.0
+attack_dmg = 5.0
 
 [node name="MeleeMinion2" parent="PVERounds/1-2" instance=ExtResource("5_o4yok")]
 transform = Transform3D(-0.8, 0, -6.99382e-08, 0, 0.8, 0, 6.99382e-08, 0, -0.8, 2, 0.5, -2)
