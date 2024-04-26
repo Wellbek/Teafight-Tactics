@@ -1,6 +1,9 @@
 extends Control
 
-@export var class_bars: VBoxContainer
+@export var my_class_bars: VBoxContainer
+@export var enemy_class_bars: VBoxContainer
+
+var main = null
 
 const CLASS_DICT = {
 	"Herbal Heroes": [2,3,5],
@@ -22,8 +25,11 @@ const TOOLTIPS = {
 	"Aromatic Avatars": "Aromatic Avatars gain increased armor during combat. \n The bonus armor is increased by 100% for the first 10 seconds of each combat. \n 25 bonus armor \n 50 bonus armor \n 95 bonus armor"
 }
 
+func _ready():
+	main = get_tree().root.get_child(0)
+
 func get_unitclass(_name):
-	return class_bars.get_node_or_null(_name)
+	return my_class_bars.get_node_or_null(_name)
 	
 func get_class_count(_name):
 	var cb = get_unitclass(_name)
@@ -38,9 +44,10 @@ func increase_count(_name):
 	if cb: cb.increase_count()
 	else: 
 		cb = preload("res://src/ui/class_bar.tscn").instantiate()
-		class_bars.add_child(cb)
+		my_class_bars.add_child(cb)
 		cb.init(_name, CLASS_DICT[_name][0], CLASS_DICT[_name][1], CLASS_DICT[_name][2], TOOLTIPS[_name])
 	sort_bars()
+	main.get_player().active_classes[_name] = get_class_count(_name)
 	
 func decrease_count(_name):
 	var cb = get_unitclass(_name)
@@ -48,10 +55,12 @@ func decrease_count(_name):
 		cb.decrease_count()
 		if cb.get_count() <= 0:
 			cb.free()
+			main.get_player().active_classes.erase(_name)
+		else: main.get_player().active_classes[_name] -= 1
 		sort_bars()
 
-func sort_bars():
-	var sorted_bars = class_bars.get_children()
+func sort_bars(_parent = my_class_bars):
+	var sorted_bars = _parent.get_children()
 	
 	sorted_bars.sort_custom(
 		func(a: Control, b: Control):
@@ -60,8 +69,25 @@ func sort_bars():
 			else: return a.get_level() > b.get_level()
 	)
 	
-	for bar in class_bars.get_children():
-		class_bars.remove_child(bar)
+	for bar in _parent.get_children():
+		_parent.remove_child(bar)
 	
 	for bar in sorted_bars:
-		class_bars.add_child(bar)
+		_parent.add_child(bar)
+		
+func see_bars_of_id(id):
+	if id == multiplayer.get_unique_id():
+		enemy_class_bars.visible = false
+		my_class_bars.visible = true
+	else:
+		my_class_bars.visible = false
+		enemy_class_bars.visible = true
+		for child in enemy_class_bars.get_children():
+			enemy_class_bars.remove_child(child)
+		var e_classes = main.get_node("World/"+str(id)).active_classes
+		for e_class in e_classes:
+			var cb = preload("res://src/ui/class_bar.tscn").instantiate()
+			enemy_class_bars.add_child(cb)
+			cb.init(e_class, CLASS_DICT[e_class][0], CLASS_DICT[e_class][1], CLASS_DICT[e_class][2], TOOLTIPS[e_class])
+			cb.increase_count(e_classes[e_class]-1) # 1 is default, hence we subtract 1
+		sort_bars(enemy_class_bars)

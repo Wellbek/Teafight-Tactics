@@ -790,7 +790,7 @@ vertical_alignment = 1
 clip_text = true
 script = ExtResource("7_1bn8j")
 
-[node name="Classes" type="Control" parent="GUI" node_paths=PackedStringArray("class_bars")]
+[node name="Classes" type="Control" parent="GUI" node_paths=PackedStringArray("my_class_bars", "enemy_class_bars")]
 visible = false
 custom_minimum_size = Vector2(300, 50)
 layout_mode = 1
@@ -802,7 +802,8 @@ offset_right = 0.47998
 offset_bottom = 0.25592
 mouse_filter = 1
 script = ExtResource("10_sbqyv")
-class_bars = NodePath("VBoxContainer")
+my_class_bars = NodePath("MyClasses")
+enemy_class_bars = NodePath("EnemyClasses")
 
 [node name="ColorRect" type="ColorRect" parent="GUI/Classes"]
 layout_mode = 1
@@ -812,7 +813,19 @@ anchor_bottom = 1.0
 offset_bottom = 0.208008
 color = Color(1, 0.890196, 0.647059, 1)
 
-[node name="VBoxContainer" type="VBoxContainer" parent="GUI/Classes"]
+[node name="MyClasses" type="VBoxContainer" parent="GUI/Classes"]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.026
+anchor_right = 1.067
+anchor_bottom = 0.974
+offset_top = -0.112
+offset_right = -0.0400085
+offset_bottom = 0.112
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="EnemyClasses" type="VBoxContainer" parent="GUI/Classes"]
 layout_mode = 1
 anchors_preset = -1
 anchor_top = 0.026
@@ -826,7 +839,7 @@ grow_vertical = 2
 
 [node name="MultiplayerSpawner3" type="MultiplayerSpawner" parent="GUI/Classes"]
 _spawnable_scenes = PackedStringArray("res://src/ui/class_bar.tscn")
-spawn_path = NodePath("../VBoxContainer")
+spawn_path = NodePath("../MyClasses")
 
 [node name="UnitInspec" type="Control" parent="GUI" node_paths=PackedStringArray("stars", "unit_icon", "name_label", "cost_label", "rarity_rect", "hp_bar", "mana_bar", "ad_label", "ap_label", "armor_label", "mr_label", "as_label", "ar_label", "critc_label", "critd_label", "omnivamp_label", "dodge_label", "movespeed_label", "trait_label", "trait_icons", "ability_control")]
 visible = false

@@ -117,6 +117,9 @@ properties/14/replication_mode = 2
 properties/15/path = NodePath(".:unit_button_ids")
 properties/15/spawn = true
 properties/15/replication_mode = 2
+properties/16/path = NodePath(".:active_classes")
+properties/16/spawn = true
+properties/16/replication_mode = 2
 
 [node name="Player" type="Node3D" node_paths=PackedStringArray("benchGrid", "boardGrid", "camera", "enemyCam", "multiplayerSpawner")]
 script = ExtResource("1_mrq3l")

@@ -38,12 +38,12 @@ func refresh():
 		_: pass
 	circle.self_modulate = circle_color
 	
-func increase_count():
-	count += 1
+func increase_count(_amt = 1):
+	count += _amt
 	refresh()
 	
-func decrease_count():
-	count -= 1
+func decrease_count(_amt = 1):
+	count -= _amt
 	refresh()
 	
 func get_count():

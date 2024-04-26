@@ -2,10 +2,9 @@
 
 [ext_resource type="Script" path="res://scripts/minion.gd" id="1_ma8u5"]
 [ext_resource type="PackedScene" uid="uid://cmyaotov37g7y" path="res://src/ui/unit_ui.tscn" id="2_ld3cf"]
+[ext_resource type="ArrayMesh" uid="uid://3puhajf4pkw4" path="res://assets/Easy Animated Enemy Pack - Jan 2019/OBJ/Wasp.obj" id="2_vm1aq"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_13c1d"]
-
-[sub_resource type="SphereMesh" id="SphereMesh_n51u8"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8mc6m"]
 albedo_color = Color(0.239501, 0.396227, 0.591996, 1)
@@ -46,7 +45,7 @@ properties/9/spawn = true
 properties/9/replication_mode = 2
 
 [node name="Raptor" type="CharacterBody3D" node_paths=PackedStringArray("attack_timer")]
-transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, 0, 0.5, 0)
+transform = Transform3D(-0.8, 0, -6.99382e-08, 0, 0.8, 0, 6.99382e-08, 0, -0.8, 0, 0.5, 0)
 collision_layer = 0
 collision_mask = 48
 axis_lock_linear_y = true
@@ -67,7 +66,8 @@ attack_timer = NodePath("AttackTimer")
 shape = SubResource("SphereShape3D_13c1d")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-mesh = SubResource("SphereMesh_n51u8")
+transform = Transform3D(-1.74846e-08, 0, 0.4, 0, 0.4, 0, -0.4, 0, -1.74846e-08, -2.12741e-08, -0.755879, 0.243347)
+mesh = ExtResource("2_vm1aq")
 surface_material_override/0 = SubResource("StandardMaterial3D_8mc6m")
 
 [node name="Sprite3D" type="Sprite3D" parent="."]

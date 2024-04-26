@@ -107,6 +107,7 @@ func change_camera(_index):
 		for bar in get_ui().get_node("PlayerBars/VBoxContainer").get_children():
 			bar.hp_bar.set_tint_under(Color(0.169, 0.169, 0.169))
 		local_player.get_camera().change_current(true)
+		get_ui().get_node("Classes").see_bars_of_id(multiplayer.get_unique_id())
 	else:	
 		var ids = multiplayer.get_peers()
 		if _index-1 >= ids.size(): return
@@ -122,6 +123,8 @@ func change_camera(_index):
 			else:
 				bar.hp_bar.set_tint_under(Color(0.169, 0.169, 0.169))
 	
+		get_ui().get_node("Classes").see_bars_of_id(ids[_index-1])
+	
 func change_camera_by_id(_id):		
 	if not local_player: return
 	
@@ -131,6 +134,8 @@ func change_camera_by_id(_id):
 		var peer = get_tree().root.get_child(0).find_child("World").get_node(str(_id))
 		if peer:
 			peer.get_enemy_cam().change_current(true)
+			
+	get_ui().get_node("Classes").see_bars_of_id(_id)
 	
 	# reset highlight		
 	for bar in get_ui().get_node("PlayerBars/VBoxContainer").get_children():

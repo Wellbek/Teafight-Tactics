@@ -59,6 +59,8 @@ var level_label: Label
 
 var unit_button_ids = [-1,-1,-1,-1,-1]
 
+var active_classes = {} # class_name : amount
+
 func get_unit_button_ids():
 	return unit_button_ids
 	
