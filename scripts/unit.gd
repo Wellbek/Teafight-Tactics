@@ -761,7 +761,7 @@ func sell_unit():
 	elif star == 3: 
 		pool_amt = 9
 		main.free_from_pool(get_unit_id())
-	#main.add_to_pool.rpc(get_unit_id(), pool_amt)
+	main.add_to_pool.rpc_id(1, get_unit_id(), pool_amt)
 	main.free_object.rpc(get_path())
 	
 func set_bar_color(color: Color):

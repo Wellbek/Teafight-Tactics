@@ -119,6 +119,7 @@ script = ExtResource("1_35go2")
 timer = NodePath("RoundTimer")
 gui = NodePath("GUI")
 classes = NodePath("GUI/Classes")
+unit_folder = "res://src/units"
 
 [node name="MultiplayerManager" type="Node" parent="." node_paths=PackedStringArray("local_test_check", "main", "timer", "startButton", "lobby_id_box", "enable_on_start", "disable_on_start", "id_box")]
 script = ExtResource("4_d7qmq")

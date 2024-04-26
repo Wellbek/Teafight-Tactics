@@ -407,10 +407,8 @@ func reroll_shop():
 	if gold < RR_COST or is_defeated(): return
 	
 	decrease_gold(RR_COST)
-	
-	var buttons = main.get_ui().get_node("UnitShop/HBoxContainer").get_children()
-	for button in buttons:
-		button.generate_button()
+
+	main.generate_buttons.rpc_id(1,get_id())
 		
 @rpc("any_peer", "call_local", "reliable")
 func spawn_item(path):

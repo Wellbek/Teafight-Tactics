@@ -1,7 +1,4 @@
 extends TextureButton
-
-@export_dir var unit_folder: String
-
 @onready var button_content = get_node("SubViewport/ButtonContent")
 @onready var name_label = button_content.get_node("Name")
 @onready var cost_label = button_content.get_node("Cost")
@@ -22,7 +19,7 @@ var bought = false
 
 func _ready():
 	main = get_tree().root.get_child(0)
-	generate_button()
+	#generate_button()
 	
 func _on_player_gold_changed(new_amount):
 	if bought: return
@@ -119,53 +116,25 @@ func upgrade(_unit):
 					sameUnits[0].level_up()
 					return sameUnits[0]
 	return null
-		
-func generate_button():
-	#if not bought: main.add_to_pool.rpc(unit_id.get_unit_id())
 	
+@rpc("authority", "call_local", "reliable")
+func free_unbought():
+	if unit_id == -1: return
+	if not bought: main.add_to_pool.rpc_id(1, unit_id)
+		
+@rpc("authority", "call_local", "reliable")
+func generate_button(_unit_path):	
 	change_bought(false)
 	
-	var player_level = 1 if main.get_player() == null else main.get_player().get_level()
-	
-	var rarity = randf() # number between 0 and 1
-	var drop_table = main.DROP_RATES[player_level - 1]
-	for i in range(len(drop_table)):
-		if rarity < drop_table[i]:
-			unit_cost = i+1
-			break
-		rarity -= drop_table[i]
-		
-	var pool = []
-	for i in range(main.COST_RANGES[unit_cost].x, main.COST_RANGES[unit_cost].y):
-		if main.is_excluded_from_pool(i): continue
-		var addition = []
-		addition.resize(main.get_unit_pool()[i])
-		addition.fill(i)
-		pool.append_array(addition)
-	var rng = randi() % pool.size()
-	var choice = pool[rng] - main.COST_RANGES[unit_cost].x
-	
-	print(choice)
-	
-	var folder = unit_folder + "//" + str(unit_cost)
-	var dir = DirAccess.open(folder)
-	var unitArray = dir.get_files()
-	var unitFileName = ""
-	for i in range(0,len(unitArray)):
-		if i == choice: 
-			unitFileName = unitArray[i]
-
-	if unitFileName == "": 
-		printerr("ERROR: unitFileName is empty")
-		return
-	
-	unit_path = folder + "//" + unitFileName
+	unit_path = _unit_path
 	
 	var tmp = load(unit_path).instantiate()
 	tmp.name = str(multiplayer.get_unique_id()) + "#" + tmp.name
+	unit_id = tmp.get_unit_id()
 	
 	image.texture = load(tmp.get_image())
 	cost_label.text = str(tmp.get_cost())
+	unit_cost = tmp.get_cost()
 	name_label.text = tmp.get_unit_name()
 	trait_label.text = tmp.CLASS_NAMES[tmp.get_trait()]
 	

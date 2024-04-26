@@ -84,8 +84,10 @@ func initialize():
 	start_game.rpc()
 	
 @rpc("authority", "call_local", "reliable")
-func start_game():
+func start_game():	
 	increment_round()
+	
+	main.generate_buttons()
 	
 	wait_time = START_GAME_DURATION
 	start()
@@ -113,9 +115,8 @@ func start_preparation_phase():
 	preparing = true
 	
 	if main.get_player() and not main.get_player().is_defeated():
-		var buttons = main.get_ui().get_node("UnitShop/HBoxContainer").get_children()
-		for button in buttons:
-			button.generate_button()
+		if multiplayer.is_server():
+			main.generate_buttons()
 	#print("Preparation Phase Started for Round: ", current_round)
 	
 		for unit in main.get_player().get_units():

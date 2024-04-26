@@ -67,6 +67,8 @@ const COST_RANGES = {
 
 var excluded_from_pool = { }
 
+@export_dir var unit_folder: String
+
 func _input(event):
 	for i in range(len(multiplayer.get_peers())+1):
 		if event.is_action_pressed("spectate" + str(i)):
@@ -156,11 +158,13 @@ func remove_from_pool(_id, _amount = 1):
 	if unit_pool[_id] - _amount < 0: 
 		unit_pool[_id] = 0
 		printerr("ERROR: cant remove more units from pool than available")
+	#print("remove " + str(_id) + ": " + str(unit_pool[_id]-_amount))
 	unit_pool[_id] -= _amount
 	
 @rpc("any_peer", "call_local", "reliable")
 func add_to_pool(_id, _amount = 1):
 	if _id >= len(unit_pool)-1: return
+	#print("add " + str(_id) + ": " + str(unit_pool[_id]+_amount))
 	unit_pool[_id] += _amount
 	
 func is_in_pool(_id):
@@ -182,3 +186,57 @@ func free_from_pool(_id):
 	
 func is_excluded_from_pool(_id):
 	return _id in excluded_from_pool
+	
+@rpc("any_peer", "call_local", "reliable")
+func generate_buttons(for_whom = -1):	
+	if not multiplayer.is_server(): return
+
+	# reset pool
+	for _player in players:
+		if for_whom == -1 or _player.get_id() == for_whom:
+			for i in range(5):
+				get_ui().get_node("UnitShop/HBoxContainer").get_child(i).free_unbought.rpc_id(_player.get_id())
+				
+	# NOTE: NEED TO SOMEONE MAKE IT SO WE AWAIT RESETTING THE POOL BEFORE GENERATING NEW
+	
+	for _player in players:
+		if _player != null and not _player.is_defeated() and (for_whom == -1 or _player.get_id() == for_whom):
+			for i in range(5):
+				var player_level = max(1,_player.get_level()) # ??? idk but fixes first generation issue on game start
+	
+				var rarity = randf() # number between 0 and 1
+				var drop_table = DROP_RATES[player_level - 1]
+				var unit_cost = 1
+				for j in range(len(drop_table)):
+					if rarity < drop_table[j]:
+						unit_cost = j+1
+						break
+					rarity -= drop_table[j]
+					
+				var pool = []
+				for j in range(COST_RANGES[unit_cost].x, COST_RANGES[unit_cost].y):
+					if is_excluded_from_pool(j): continue
+					var addition = []
+					addition.resize(get_unit_pool()[j])
+					addition.fill(j)
+					pool.append_array(addition)
+				var rng = randi() % pool.size()
+				
+				remove_from_pool(pool[rng])
+				
+				var choice = pool[rng] - COST_RANGES[unit_cost].x
+				
+				var folder = unit_folder + "//" + str(unit_cost)
+				var dir = DirAccess.open(folder)
+				var unitArray = dir.get_files()
+				var unitFileName = ""
+				for j in range(0,len(unitArray)):
+					if j == choice: 
+						unitFileName = unitArray[j]
+
+				if unitFileName == "": 
+					printerr("ERROR: unitFileName is empty")
+					return
+				var unit_path = folder + "//" + unitFileName
+				
+				get_ui().get_node("UnitShop/HBoxContainer").get_child(i).generate_button.rpc_id(_player.get_id(),unit_path)
