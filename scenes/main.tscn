@@ -7,7 +7,7 @@
 [ext_resource type="Script" path="res://scripts/multiplayermanager.gd" id="4_d7qmq"]
 [ext_resource type="Texture2D" uid="uid://dt00e868xcrql" path="res://assets/images/tft_coin.png" id="6_g8e0e"]
 [ext_resource type="Script" path="res://scenes/dynamic_font.gd" id="7_1bn8j"]
-[ext_resource type="Texture2D" uid="uid://slcps076ioqt" path="res://src/units/1/assam_archer.png" id="7_41kj8"]
+[ext_resource type="Texture2D" uid="uid://slcps076ioqt" path="res://assets/images/unit_icons/assam_archer.png" id="7_41kj8"]
 [ext_resource type="PackedScene" uid="uid://dfbxcmkrqggoj" path="res://src/ui/player_bar.tscn" id="7_n3kcn"]
 [ext_resource type="Script" path="res://scenes/unit_inspec.gd" id="7_snble"]
 [ext_resource type="Texture2D" uid="uid://bp78gtu6wfxgg" path="res://assets/images/1_Star.webp" id="8_eym16"]

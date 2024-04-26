@@ -1,0 +1,22 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://yvv3tw8ppoac"
+path="res://.godot/imported/Snake_angry.obj-8be574cbadbfa3130eebd82429b6ff79.mesh"
+
+[deps]
+
+files=["res://.godot/imported/Snake_angry.obj-8be574cbadbfa3130eebd82429b6ff79.mesh"]
+
+source_file="res://assets/Easy Animated Enemy Pack - Jan 2019/OBJ/Snake_angry.obj"
+dest_files=["res://.godot/imported/Snake_angry.obj-8be574cbadbfa3130eebd82429b6ff79.mesh", "res://.godot/imported/Snake_angry.obj-8be574cbadbfa3130eebd82429b6ff79.mesh"]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+optimize_mesh=true
+force_disable_mesh_compression=false

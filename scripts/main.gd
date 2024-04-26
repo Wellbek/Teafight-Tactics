@@ -23,6 +23,50 @@ const DROP_RATES = [
 	[0.05, 0.10, 0.20, 0.40, 0.25]  # Level 10
 ]
 
+var unit_pool = {
+	0: 44,
+	1: 44,
+	2: 44,
+	3: 44,
+	4: 44,
+	5: 44,
+	6: 44,
+	7: 40,
+	8: 40,
+	9: 40,
+	10: 40,
+	11: 40,
+	12: 40,
+	13: 40,
+	14: 34,
+	15: 34,
+	16: 34,
+	17: 34,
+	18: 34,
+	19: 34,
+	20: 20,
+	21: 20,
+	22: 20,
+	23: 20,
+	24: 20,
+	25: 20,
+	26: 18,
+	27: 18,
+	28: 18,
+	29: 18
+}
+
+# inclusive, exclusive
+const COST_RANGES = {
+	1: Vector2(0,7),
+	2: Vector2(7, 14),
+	3: Vector2(14, 20),
+	4: Vector2(20, 26),
+	5: Vector2(26, 30)
+}
+
+var excluded_from_pool = { }
+
 func _input(event):
 	for i in range(len(multiplayer.get_peers())+1):
 		if event.is_action_pressed("spectate" + str(i)):
@@ -105,3 +149,36 @@ func is_unit_sellable():
 	
 func get_classes():
 	return classes
+	
+@rpc("any_peer", "call_local", "reliable")
+func remove_from_pool(_id, _amount = 1):
+	if _id >= len(unit_pool): return
+	if unit_pool[_id] - _amount < 0: 
+		unit_pool[_id] = 0
+		printerr("ERROR: cant remove more units from pool than available")
+	unit_pool[_id] -= _amount
+	
+@rpc("any_peer", "call_local", "reliable")
+func add_to_pool(_id, _amount = 1):
+	if _id >= len(unit_pool)-1: return
+	unit_pool[_id] += _amount
+	
+func is_in_pool(_id):
+	if _id >= len(unit_pool)-1: return false
+	return unit_pool[_id] > 0
+	
+func get_pool_amount(_id):
+	if _id >= len(unit_pool)-1: return -1
+	return unit_pool[_id]
+	
+func get_unit_pool():
+	return unit_pool
+	
+func exclude_from_pool(_id):
+	excluded_from_pool[_id] = null
+	
+func free_from_pool(_id):
+	excluded_from_pool.erase(_id)
+	
+func is_excluded_from_pool(_id):
+	return _id in excluded_from_pool

@@ -1,6 +1,6 @@
 [gd_scene load_steps=15 format=3 uid="uid://b6qey8lycnpgo"]
 
-[ext_resource type="Texture2D" uid="uid://h454wgvpe3xg" path="res://src/units/2/cascara_champion.png" id="1_2rm75"]
+[ext_resource type="Texture2D" uid="uid://h454wgvpe3xg" path="res://assets/images/unit_icons/cascara_champion.png" id="1_2rm75"]
 [ext_resource type="Texture2D" uid="uid://dt00e868xcrql" path="res://assets/images/tft_coin.png" id="2_6yivg"]
 [ext_resource type="Texture2D" uid="uid://mmrv5abf47td" path="res://assets/images/white_circle.png" id="3_s2dc0"]
 [ext_resource type="Texture2D" uid="uid://c24q0nj8r6ri8" path="res://assets/images/white_circle_small.png" id="4_42so2"]

@@ -14,7 +14,7 @@ var unit_path: String
 
 var unit_cost = 0
 
-var unit = null
+var unit_id = -1
 
 var main
 
@@ -37,6 +37,8 @@ func _on_player_gold_changed(new_amount):
 func _on_pressed():		
 	if bought or (main.get_player() and main.get_player().is_defeated()): return
 	
+	if main.get_player().get_gold() < unit_cost: return
+	
 	change_bought(true)
 	spawn_unit.rpc_id(1, multiplayer.get_unique_id(), main.get_player().get_path(), unit_path) # tell server to spawn unit
 	# Note the called rpc sends feedback back to the client (see handle_spawn func)
@@ -45,7 +47,7 @@ func _on_pressed():
 func spawn_unit(_feedbackid, _player_path, _unit_path):
 	var player = get_tree().root.get_node(_player_path)
 	
-	var instance = load(_unit_path + ".tscn").instantiate()
+	var instance = load(_unit_path).instantiate()
 	instance.name = str(_feedbackid) + "#" + instance.name
 
 	player.find_child("Units").call("add_child", instance, true)
@@ -66,9 +68,9 @@ func handle_spawn(_unit_path):
 	
 	var player = main.get_player()
 	
-	var instance_cost = instance.get_cost()
+	var instance_cost = instance.get_cost() if instance else 0
 	player.decrease_gold(instance_cost)
-	
+	 
 	var upgradedUnit = upgrade(instance)
 
 	if upgradedUnit:
@@ -93,7 +95,7 @@ func upgrade(_unit):
 	var sameUnits = []
 	# check if there are 2 more units of same name and star
 	for u in main.get_player().get_units():
-		if u.unit_name == _unit.unit_name and u.star == _unit.star and _unit != u and u.get_mode() != u.BATTLE and main.get_timer().is_preparing():
+		if u.unit_name == _unit.unit_name and u.star == _unit.star and _unit != u and u.get_mode() != u.BATTLE:
 			sameUnits.append(u)
 			if sameUnits.size() >= 2:
 				if _unit.get_tile():
@@ -119,6 +121,8 @@ func upgrade(_unit):
 	return null
 		
 func generate_button():
+	#if not bought: main.add_to_pool.rpc(unit_id.get_unit_id())
+	
 	change_bought(false)
 	
 	var player_level = 1 if main.get_player() == null else main.get_player().get_level()
@@ -130,14 +134,34 @@ func generate_button():
 			unit_cost = i+1
 			break
 		rarity -= drop_table[i]
-			
+		
+	var pool = []
+	for i in range(main.COST_RANGES[unit_cost].x, main.COST_RANGES[unit_cost].y):
+		if main.is_excluded_from_pool(i): continue
+		var addition = []
+		addition.resize(main.get_unit_pool()[i])
+		addition.fill(i)
+		pool.append_array(addition)
+	var rng = randi() % pool.size()
+	var choice = pool[rng] - main.COST_RANGES[unit_cost].x
+	
+	print(choice)
+	
 	var folder = unit_folder + "//" + str(unit_cost)
 	var dir = DirAccess.open(folder)
 	var unitArray = dir.get_files()
-	var unitFileName = unitArray[randi() % unitArray.size()].get_slice(".",0)
+	var unitFileName = ""
+	for i in range(0,len(unitArray)):
+		if i == choice: 
+			unitFileName = unitArray[i]
+
+	if unitFileName == "": 
+		printerr("ERROR: unitFileName is empty")
+		return
+	
 	unit_path = folder + "//" + unitFileName
 	
-	var tmp = load(unit_path + ".tscn").instantiate()
+	var tmp = load(unit_path).instantiate()
 	tmp.name = str(multiplayer.get_unique_id()) + "#" + tmp.name
 	
 	image.texture = load(tmp.get_image())

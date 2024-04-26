@@ -2,13 +2,10 @@
 
 [ext_resource type="Script" path="res://scripts/minion.gd" id="1_uvdvo"]
 [ext_resource type="PackedScene" uid="uid://cmyaotov37g7y" path="res://src/ui/unit_ui.tscn" id="2_1lyb0"]
+[ext_resource type="ArrayMesh" uid="uid://capbblp2ia74k" path="res://assets/Monster Pack Animated by Quaternius/OBJ/Dragon.obj" id="2_j0f05"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_qvi0x"]
 radius = 3.0
-
-[sub_resource type="SphereMesh" id="SphereMesh_g7g7s"]
-radius = 3.0
-height = 6.0
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_v2teq"]
 albedo_color = Color(0.705898, 0.701991, 0.701991, 1)
@@ -52,7 +49,7 @@ properties/9/spawn = true
 properties/9/replication_mode = 2
 
 [node name="ElderDrake" type="CharacterBody3D" node_paths=PackedStringArray("attack_timer")]
-transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, 0, 0.5, 0)
+transform = Transform3D(-0.8, 0, -6.99382e-08, 0, 0.8, 0, 6.99382e-08, 0, -0.8, 0, 0.5, 0)
 collision_layer = 0
 collision_mask = 48
 axis_lock_linear_y = true
@@ -74,13 +71,13 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 0)
 shape = SubResource("SphereShape3D_qvi0x")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 0)
-mesh = SubResource("SphereMesh_g7g7s")
+transform = Transform3D(-1.5, 0, -1.31134e-07, 0, 1.5, 0, 1.31134e-07, 0, -1.5, 0, -0.5, 0)
+mesh = ExtResource("2_j0f05")
 skeleton = NodePath("")
 surface_material_override/0 = SubResource("StandardMaterial3D_v2teq")
 
 [node name="Sprite3D" type="Sprite3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.79287, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.57754, 0)
 billboard = 1
 texture = SubResource("ViewportTexture_vdcr0")
 

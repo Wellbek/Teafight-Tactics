@@ -22,7 +22,7 @@ const RECIPES = {
 	"Chain Vest": {"BF Sword": "Edge of Night", "Chain Vest": "Bramble Vest", "Giants Belt": "Sunfire Cape", "Needlessly Large Rod": "", "Negatron Cloak": "Gargoyle Stoneplate", "Sparring Gloves": "Steadfast Heart", "Recurve Bow": "Titan's Resolve", "Tear of the Goddess": "Protector's Vow"},
 	"Giants Belt": {"BF Sword": "Sterak's Gage", "Chain Vest": "Sunfire Cape", "Giants Belt": "Warmog's Armor", "Needlessly Large Rod": "Morellonomicon", "Negatron Cloak": "Evenshroud", "Sparring Gloves": "Guardbreaker", "Recurve Bow": "Nashor's Tooth", "Tear of the Goddess": "Redemption"},
 	"Needlessly Large Rod": {"BF Sword": "Hextech Gunblade", "Chain Vest": "Crownguard", "Giants Belt": "Morellonomicon", "Needlessly Large Rod": "Rabadon's Deathcap", "Negatron Cloak": "Ionic Spark", "Sparring Gloves": "Jeweled Gauntlet", "Recurve Bow": "Guinsoo's Rageblade", "Tear of the Goddess": "Archangel's Staff"},
-	"Negatron Cloak": {"BF Sword": "Bloodthirster", "Chain Vest": "Gargoyle Sto20neplate", "Giants Belt": "Evenshroud", "Needlessly Large Rod": "Ionic Spark", "Negatron Cloak": "Dragon's Claw", "Sparring Gloves": "Quicksilver", "Recurve Bow": "Runaan's Hurricane", "Tear of the Goddess": "Adaptive Helm"},
+	"Negatron Cloak": {"BF Sword": "Bloodthirster", "Chain Vest": "Gargoyle Stoneplate", "Giants Belt": "Evenshroud", "Needlessly Large Rod": "Ionic Spark", "Negatron Cloak": "Dragon's Claw", "Sparring Gloves": "Quicksilver", "Recurve Bow": "Runaan's Hurricane", "Tear of the Goddess": "Adaptive Helm"},
 	"Sparring Gloves": {"BF Sword": "Infinity Edge", "Chain Vest": "Steadfast Heart", "Giants Belt": "Guardbreaker", "Needlessly Large Rod": "Jeweled Gauntlet", "Negatron Cloak": "Quicksilver", "Sparring Gloves": "Thief's Gloves", "Recurve Bow": "Last Whisper", "Tear of the Goddess": "Hand of Justice"},
 	"Recurve Bow": {"BF Sword": "Giant Slayer", "Chain Vest": "Titan's Resolve", "Giants Belt": "Nashor's Tooth", "Needlessly Large Rod": "Guinsoo's Rageblade", "Negatron Cloak": "Runaan's Hurricane", "Sparring Gloves": "Last Whisper", "Recurve Bow": "Red Buff", "Tear of the Goddess": "Statikk Shiv"},
 	"Tear of the Goddess": {"BF Sword": "Spear of Shojin", "Chain Vest": "Protector's Vow", "Giants Belt": "Redemption", "Needlessly Large Rod": "Archangel's Staff", "Negatron Cloak": "Adaptive Helm", "Sparring Gloves": "Hand of Justice", "Recurve Bow": "Statikk Shiv", "Tear of the Goddess": "Blue Buff"}
@@ -116,7 +116,7 @@ func place_item():
 		if coll == null:  
 			global_transform.origin = initial_pos
 		elif coll.get_collision_layer() in [8, 24]:
-			if not coll.can_equip_item():
+			if (component and not coll.can_equip_component()) or (not component and not coll.can_equip_item()):
 				coll = null
 				global_transform.origin = initial_pos
 			else:

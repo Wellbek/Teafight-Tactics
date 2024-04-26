@@ -17,6 +17,7 @@ var multisync
 
 @export_file("*.png", "*.jpg") var image
 @export var unit_name: String
+@export var unit_id = 0
 @export_enum("NONE","1", "2", "3") var star: int = 1
 @export_enum("Herbal Heroes", "Green Guardians", "Black Brigade", "Floral Fighters", "Exotic Enchanters", "Fruitful Forces", "Aromatic Avatars") var type: int = 0
 const CLASS_NAMES = ["Herbal Heroes", "Green Guardians", "Black Brigade", "Floral Fighters", "Exotic Enchanters", "Fruitful Forces", "Aromatic Avatars"]
@@ -523,6 +524,8 @@ func level_up():
 		max_health *= 1.8
 		curr_health = max_health
 		
+		if star == 3: main.exclude_from_pool(get_unit_id())
+		
 func toggle_ui(value):
 	ui.visible = value
 	
@@ -753,6 +756,12 @@ func sell_unit():
 	change_color(coll.find_children("MeshInstance3D")[0], Color.CYAN)
 	player.erase_unit(self)
 	unequip_items()
+	var pool_amt = 1
+	if star == 2: pool_amt = 3
+	elif star == 3: 
+		pool_amt = 9
+		main.free_from_pool(get_unit_id())
+	#main.add_to_pool.rpc(get_unit_id(), pool_amt)
 	main.free_object.rpc(get_path())
 	
 func set_bar_color(color: Color):
@@ -995,3 +1004,6 @@ func _on_poison_bomb_timeout():
 					heal_popup.text = str(int(heal))
 					add_child(heal_popup)
 					heal_popup.global_transform.origin += Vector3(randf_range(-.5,.5), randf_range(0,1), 0.5)
+
+func get_unit_id():
+	return unit_id

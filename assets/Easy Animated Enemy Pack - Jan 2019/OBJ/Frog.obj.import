@@ -1,0 +1,22 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://braib4oge3tcy"
+path="res://.godot/imported/Frog.obj-11eaf2ac2ea56859939f4210d29aa82d.mesh"
+
+[deps]
+
+files=["res://.godot/imported/Frog.obj-11eaf2ac2ea56859939f4210d29aa82d.mesh"]
+
+source_file="res://assets/Easy Animated Enemy Pack - Jan 2019/OBJ/Frog.obj"
+dest_files=["res://.godot/imported/Frog.obj-11eaf2ac2ea56859939f4210d29aa82d.mesh", "res://.godot/imported/Frog.obj-11eaf2ac2ea56859939f4210d29aa82d.mesh"]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+optimize_mesh=true
+force_disable_mesh_compression=false

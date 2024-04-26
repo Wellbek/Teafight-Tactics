@@ -1,0 +1,22 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://d1u4qoojgwdib"
+path="res://.godot/imported/Skeleton.obj-b710e53495085d816d12364b31d3ac19.mesh"
+
+[deps]
+
+files=["res://.godot/imported/Skeleton.obj-b710e53495085d816d12364b31d3ac19.mesh"]
+
+source_file="res://assets/Monster Pack Animated by Quaternius/OBJ/Skeleton.obj"
+dest_files=["res://.godot/imported/Skeleton.obj-b710e53495085d816d12364b31d3ac19.mesh", "res://.godot/imported/Skeleton.obj-b710e53495085d816d12364b31d3ac19.mesh"]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+optimize_mesh=true
+force_disable_mesh_compression=false
