@@ -32,7 +32,7 @@ script = ExtResource("1_mfimp")
 item_texture = ExtResource("2_i3qjc")
 item_name = "Deathblade"
 attack_dmg = 55
-tooltip = "+55% Attack Damage
+tooltip = "55% Attack Damage
 
 Deal 8% bonus damage"
 

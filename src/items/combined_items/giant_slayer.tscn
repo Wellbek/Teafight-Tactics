@@ -34,7 +34,7 @@ item_name = "Giant Slayer"
 attack_dmg = 30
 attack_speed = 0.1
 ability_power = 20
-tooltip = "+30% Attack Damage
+tooltip = "+30 Attack Damage
 +10% Attack Speed
 +20 Ability Power
 

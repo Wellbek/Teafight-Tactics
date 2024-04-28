@@ -71,10 +71,10 @@ var dodge_chance = 0.0
 var bonus_attack_speed = 0.0 # in raw (not percent)
 var duelist_counter = 0
 var omnivamp = 0.0 # heal of RAW dmg
-var bonus_dmg = 0.0 # in percent
+var bonus_dmg = 0.0 # slayer in percent
 
 # (mostly) item related stats
-# adapt
+# adapt and shojin
 var mana_on_dmg = 0
 var mana_per_attack = 10
 #archangels
@@ -82,7 +82,7 @@ var as_bonus_ap = 0
 # gunblade
 var heal_lowest_ally = false
 # hand of justice
-var double = 0 # 1: attackdmg und ap; 2: omnivamp
+var double = {} # 1: attackdmg und ap; 2: omnivamp
 # guinsoo
 var rageblade_stacking = false
 var rageblade_stacks = 0
@@ -91,6 +91,20 @@ var rageblade_labels = {}
 var titans_stacking = false
 var tr_stacks = 0
 var titans_labels = {}
+# giant slayer
+var giant_slayer = false
+# deathblade
+var deathblade_bonus_dmg = 0.0
+# steadfast
+var steadfast_reduction = 0.0
+# rabadons
+var rabadons_bonus_dmg = 0.0
+# more and sunfire
+var wounded = false
+var wound = 0.0
+var burned_enemies = {} # enemy: stacks | at 4 stacks remove
+var burn_timer = null
+var morello = false
 
 @export_category("Ability")
 @export_enum("Enhanced Auto", "Poison Bomb") var ability_id = 0
@@ -237,6 +251,10 @@ func _input(event):
 func change_mode(_mode: int):
 	if mode == _mode: return
 	
+	mode = _mode
+	
+	if not is_multiplayer_authority(): return
+		
 	play_animation(idle_anim, false)
 	
 	if _mode == BATTLE:
@@ -260,7 +278,7 @@ func change_mode(_mode: int):
 						ability_power += 20
 						var timer = Timer.new()
 						add_child(timer)
-						timer.name = "adaptive_helm_mana_every3"
+						timer.name = str(item.name)
 						timer.wait_time = 3
 						timer.one_shot = false
 						timer.connect("timeout", _on_adaptive_helm_3sec)
@@ -269,10 +287,22 @@ func change_mode(_mode: int):
 					#Combat start: Grant 30 Ability Power every 5 seconds.
 					var timer = Timer.new()
 					add_child(timer)
-					timer.name = "archangels_staff"
+					timer.name = str(item.name)
 					timer.wait_time = 5
 					timer.one_shot = false
 					timer.connect("timeout", _on_archangels_staff)
+					timer.start()	
+				"Deathblade":
+					deathblade_bonus_dmg += 0.08
+					print(deathblade_bonus_dmg)
+				"Dragon's Claw":
+					# Every 2 seconds, regenerate 5% maximum Health.
+					var timer = Timer.new()
+					add_child(timer)
+					timer.name = str(item.name)
+					timer.wait_time = 2
+					timer.one_shot = false
+					timer.connect("timeout", _on_dragons_claw)
 					timer.start()	
 				"Titan's Resolve":
 					# Grants 2 Attack Damage and 2 Ability Power when attacking or taking damage, stacking up to 25 times. At full stacks, grant 20 Armor and 20 Magic Resist.
@@ -280,6 +310,8 @@ func change_mode(_mode: int):
 					titans_labels[item].visible = true
 					titans_labels[item].text = str(tr_stacks)
 					titans_stacking = true
+				"Giant Slayer":
+					giant_slayer = true
 				"Guinsoo's Rageblade":
 					rageblade_labels[item] = get_ui().get_node("HBoxContainer/" + str(item_index) + "/Counter")
 					rageblade_labels[item].visible = true
@@ -290,17 +322,54 @@ func change_mode(_mode: int):
 					#+15 Attack Damage and +15 Ability Power
 					#15% Omnivamp
 					#Each round, randomly double 1 of these effects.
-					double = randi_range(0,1)
-					if double == 0: 
+					double[item] = randi_range(0,1)
+					if double[item] == 0: 
 						attack_dmg += 15
 						ability_power += 15
 					else: omnivamp += .15
+					print(double)
 				"Hextech Gunblade":
 					heal_lowest_ally = true
+				"Morellonomicon":
+					if not burn_timer: 
+						var timer = Timer.new()
+						add_child(timer)
+						timer.name = "burn_timer"
+						timer.wait_time = 1
+						timer.one_shot = false
+						timer.connect("timeout", _on_burn)
+						timer.start()
+					morello = true
+				"Sunfire Cape":
+					var sunfire_timer = get_node_or_null("sunfire_timer")
+					if not sunfire_timer:
+						# Every 2 seconds, an enemy within 2 hexes is 1% Burned and 33% Wounded for 10 seconds.
+						var timer = Timer.new()
+						add_child(timer)
+						timer.name = "sunfire_timer"
+						timer.wait_time = 2
+						timer.one_shot = false
+						timer.connect("timeout", _on_sunfire)
+						timer.start()
+					if not burn_timer: 
+						var timer = Timer.new()
+						add_child(timer)
+						timer.name = "burn_timer"
+						timer.wait_time = 1
+						timer.one_shot = false
+						timer.connect("timeout", _on_burn)
+						timer.start()
+				"Spear of Shojin":
+					mana_per_attack += 5
+				"Steadfast Heart":
+					# Take 8% less damage. While above 50% Health, take 15% less damage, instead.
+					steadfast_reduction += 0.08
 				"Warmog's Armor":
 					max_health *= 1.08
 					curr_health = max_health
 					refresh_hpbar()
+				"Rabadon's Deathcap":
+					rabadons_bonus_dmg += 0.2
 				_: pass
 			item_index += 1
 		
@@ -425,13 +494,19 @@ func change_mode(_mode: int):
 					else:
 						# Back Two Rows: 20 Ability Power. Gain 10 Mana every 3 seconds.
 						ability_power -= 20
-						var adapt_timer = get_node_or_null("adaptive_helm_mana_every3")
+						var adapt_timer = get_node_or_null(str(item.name))
 						if adapt_timer: adapt_timer.queue_free()
 				"Archangel's Staff":
 					# Combat start: Grant 30 Ability Power every 5 seconds.
 					ability_power -= as_bonus_ap
-					var arch_timer = get_node_or_null("archangels_staff")
+					var arch_timer = get_node_or_null(str(item.name))
 					if arch_timer: arch_timer.queue_free()
+				"Deathblade":
+					deathblade_bonus_dmg -= 0.08
+					print(deathblade_bonus_dmg)
+				"Dragon's Claw":
+					var dragons_claw_timer = get_node_or_null(str(item.name))
+					if dragons_claw_timer: dragons_claw_timer.queue_free()
 				"Titan's Resolve":
 					titans_labels[item].visible = false
 					titans_stacking = false
@@ -442,6 +517,8 @@ func change_mode(_mode: int):
 						mr -= 20 * len(titans_labels)
 					tr_stacks = 0
 					titans_labels.erase(item)
+				"Giant Slayer":
+					giant_slayer = true
 				"Guinsoo's Rageblade":
 					rageblade_labels[item].visible = false
 					rageblade_stacking = false
@@ -452,15 +529,33 @@ func change_mode(_mode: int):
 					#+15 Attack Damage and +15 Ability Power
 					#15% Omnivamp
 					#Each round, randomly double 1 of these effects.
-					if double == 0: 
+					if double[item] == 0: 
 						attack_dmg -= 15
 						ability_power -= 15
 					else: omnivamp -= .15
+					double.erase(item)
 				"Hextech Gunblade":
 					heal_lowest_ally = false
+				"Morellonomicon":
+					morello = true
+					var burn_timer = get_node_or_null("burn_timer")
+					if burn_timer: burn_timer.queue_free()
+				
+				"Sunfire Cape":
+					var sunfire_timer = get_node_or_null("sunfire_timer")
+					if sunfire_timer: sunfire_timer.queue_free()
+					
+					var burn_timer = get_node_or_null("burn_timer")
+					if burn_timer: burn_timer.queue_free()
+				"Spear of Shojin":
+					mana_per_attack -= 5
+				"Steadfast Heart":
+					steadfast_reduction -= 0.08
 				"Warmog's Armor":
 					max_health /= 1.08
 					if curr_health > max_health: curr_health = max_health
+				"Rabadon's Deathcap":
+					rabadons_bonus_dmg += 0.2
 				_: pass
 		
 		# reset bastion trait
@@ -549,8 +644,6 @@ func change_mode(_mode: int):
 		curr_mana = start_mana
 		
 		refresh_manabar()
-		
-	mode = _mode
 	
 func _on_aromatic_10sec():
 	match main.get_classes().get_class_level(CLASS_NAMES[6]):
@@ -577,6 +670,8 @@ func _on_shurima():
 		3: heal = min(max_health*0.2, max_health-curr_health)
 		_: pass
 		
+	if wounded: heal -= heal * wound
+		
 	curr_health += heal
 		
 	if heal > 0:	
@@ -584,7 +679,7 @@ func _on_shurima():
 		
 		var heal_popup = preload("res://src/damage_popup.tscn").instantiate()
 		heal_popup.modulate = Color.LIME_GREEN
-		heal_popup.text = str(int(heal))
+		heal_popup.text = "+" + str(int(heal))
 		add_child(heal_popup)
 		heal_popup.global_transform.origin += Vector3(randf_range(-.5,.5), randf_range(0,1), 0.5)
 
@@ -595,6 +690,59 @@ func _on_adaptive_helm_3sec():
 func _on_archangels_staff():
 	as_bonus_ap += 30
 	ability_power += 30
+
+func _on_dragons_claw():
+	var heal = min(max_health * .05, max_health-curr_health)
+	if wounded: heal -= heal * wound
+	if heal > 0:
+		curr_health += heal
+		refresh_hpbar()
+		var heal_popup = preload("res://src/damage_popup.tscn").instantiate()
+		heal_popup.modulate = Color.LIME_GREEN
+		heal_popup.text = "+" + str(int(heal))
+		add_child(heal_popup)
+		heal_popup.global_transform.origin += Vector3(randf_range(-.5,.5), randf_range(0,1), 0.5)
+	
+func _on_sunfire():
+	if not player.get_current_enemy(): # pve round
+		for pve_round in player.get_node("PVERounds").get_children():	
+			if pve_round.visible:
+				for minion in pve_round.get_children():
+					if not minion.is_targetable(): continue
+				
+					if global_transform.origin.distance_to(minion.global_transform.origin) < 4:
+						minion.be_wounded.rpc()
+						burned_enemies[minion] = 4
+		return
+	
+	var enemy_units = player.get_current_enemy().find_child("Units").get_children()
+	
+	for unit in enemy_units:	
+		if not unit.is_targetable() or unit.dead: continue
+	
+		if global_transform.origin.distance_to(unit.global_transform.origin) < 4:
+			unit.be_wounded.rpc()
+			burned_enemies[unit] = 4
+
+func _on_burn():
+	for e in burned_enemies:
+		if not e or not is_instance_valid(e): 
+			burned_enemies.erase(e)
+			continue
+		
+		var damage = e.get_max_health() * 0.01
+		
+		var dmg_popup = preload("res://src/damage_popup.tscn").instantiate()
+		dmg_popup.modulate = Color.WHITE
+		dmg_popup.text = str(int(damage))
+		add_child(dmg_popup)
+		dmg_popup.global_transform.origin = e.global_transform.origin + Vector3(randf_range(-.5,.5), randf_range(0,1), 0.5)
+	
+		e.take_dmg.rpc_id(e.get_multiplayer_authority(), damage, 2, false)
+		
+		burned_enemies[e] -= 1
+		if burned_enemies[e] <= 0:
+			burned_enemies.erase(e)
 
 func get_mode():
 	return mode
@@ -736,7 +884,12 @@ func auto_attack(_target, pve = false):
 	var rng = randf()
 	
 	var damage = attack_dmg if rng > crit_chance else attack_dmg * (1+crit_damage)
+	damage *= 1+deathblade_bonus_dmg
+	damage *= 1+rabadons_bonus_dmg
 	damage *= (1+(bonus_dmg*2)) if (_target.get_curr_health()/_target.get_max_health() < 0.66) and type == 1 else (1+bonus_dmg)
+	if _target.get_max_health() > 1750 and giant_slayer: 
+		print("gs proc")
+		damage*=1.25
 	
 	var dmg_popup = preload("res://src/damage_popup.tscn").instantiate()
 	dmg_popup.modulate = Color.CRIMSON
@@ -752,13 +905,14 @@ func auto_attack(_target, pve = false):
 	# omnivamp - (we just do raw dmg here as actual dmg is computed in take_dmg func)
 	if omnivamp > 0:
 		var heal = min(damage*omnivamp, max_health-curr_health)
+		if wounded: heal -= heal * wound
 		curr_health += heal
 		if heal > 0:	
 			refresh_hpbar()
 			
 			var heal_popup = preload("res://src/damage_popup.tscn").instantiate()
 			heal_popup.modulate = Color.LIME_GREEN
-			heal_popup.text = str(int(heal))
+			heal_popup.text = "+" + str(int(heal))
 			add_child(heal_popup)
 			heal_popup.global_transform.origin += Vector3(randf_range(-.5,.5), randf_range(0,1), 0.5)
 		if heal_lowest_ally:
@@ -778,7 +932,7 @@ func auto_attack(_target, pve = false):
 			
 				var heal_popup = preload("res://src/damage_popup.tscn").instantiate()
 				heal_popup.modulate = Color.LIME_GREEN
-				heal_popup.text = str(int(ally_heal))
+				heal_popup.text = "+" + str(int(ally_heal))
 				lowest_ally.add_child(heal_popup)
 				heal_popup.global_transform.origin += Vector3(randf_range(-.5,.5), randf_range(0,1), 0.5)
 	
@@ -851,7 +1005,13 @@ func take_dmg(raw_dmg, dmg_type = 0, dodgeable = true):
 		return
 	
 	# https://leagueoflegends.fandom.com/wiki/Armor
-	var dmg = raw_dmg / (1+armor/100) if dmg_type == 0 else raw_dmg / (1+mr/100)
+	var dmg = raw_dmg
+	if dmg_type == 0:
+		dmg /= (1+armor/100) 
+	elif dmg_type == 1: 
+		raw_dmg / (1+mr/100)
+		
+	if dmg_type != 2: dmg -= (steadfast_reduction*dmg) if curr_health/max_health < 0.5 else (steadfast_reduction*dmg*2)
 	
 	# and taking damage generates (1% of pre-mitigation damage taken and 7% of post-mitigation damage taken) mana, up to 42.5 Mana[1][2], depending on the pre-mitigated damage.
 	var mana_increase = min(42.5, (.01 * raw_dmg) + (.07 * dmg)) + mana_on_dmg
@@ -1109,7 +1269,10 @@ func ability(_target, pve = false):
 				damage = damage if rng > crit_chance else damage * (1+crit_damage)
 				if rng <= crit_chance: crit = true
 			
+			damage *= 1+deathblade_bonus_dmg
+			damage *= 1+rabadons_bonus_dmg
 			damage *= (1+(bonus_dmg*2)) if (_target.get_curr_health()/_target.get_max_health() < 0.66) and type == 1 else (1+bonus_dmg)
+			if _target.get_max_health() > 1750 and giant_slayer: damage*=1.25
 			
 			var dmg_popup = preload("res://src/damage_popup.tscn").instantiate()
 			dmg_popup.modulate = Color.CRIMSON if ability_dmg_type == 0 else Color.DODGER_BLUE
@@ -1120,18 +1283,22 @@ func ability(_target, pve = false):
 			add_child(dmg_popup)
 			dmg_popup.global_transform.origin = _target.global_transform.origin + Vector3(randf_range(-.5,.5), randf_range(0,1), 0.5)
 			
+			if morello: 
+				_target.be_wounded.rpc_id(_target.get_multiplayer_authority())
+				burned_enemies[_target] = 4
 			_target.take_dmg.rpc_id(id, damage, ability_dmg_type, false) # can't dodge attack
 			
 			# omnivamp - (we just do raw dmg here as actual dmg is computed in take_dmg func)
 			if omnivamp > 0:
 				var heal = min(damage*omnivamp, max_health-curr_health)
+				if wounded: heal -= heal * wound
 				curr_health += heal
 				if heal > 0:	
 					refresh_hpbar()
 					
 					var heal_popup = preload("res://src/damage_popup.tscn").instantiate()
 					heal_popup.modulate = Color.LIME_GREEN
-					heal_popup.text = str(int(heal))
+					heal_popup.text = "+" + str(int(heal))
 					add_child(heal_popup)
 					heal_popup.global_transform.origin += Vector3(randf_range(-.5,.5), randf_range(0,1), 0.5)
 				
@@ -1152,7 +1319,7 @@ func ability(_target, pve = false):
 					
 						var heal_popup = preload("res://src/damage_popup.tscn").instantiate()
 						heal_popup.modulate = Color.LIME_GREEN
-						heal_popup.text = str(int(ally_heal))
+						heal_popup.text = "+" + str(int(ally_heal))
 						lowest_ally.add_child(heal_popup)
 						heal_popup.global_transform.origin += Vector3(randf_range(-.5,.5), randf_range(0,1), 0.5)
 		1:
@@ -1191,7 +1358,10 @@ func _on_poison_bomb_timeout():
 				damage = damage if rng > crit_chance else damage * (1+crit_damage)
 				if rng <= crit_chance: crit = true
 			
+			damage *= 1+deathblade_bonus_dmg
+			damage *= 1+rabadons_bonus_dmg
 			damage *= (1+(bonus_dmg*2)) if (_target.get_curr_health()/_target.get_max_health() < 0.66) and type == 1 else (1+bonus_dmg)
+			if _target.get_max_health() > 1750 and giant_slayer: damage*=1.25
 			
 			var dmg_popup = preload("res://src/damage_popup.tscn").instantiate()
 			dmg_popup.modulate = Color.CRIMSON if ability_dmg_type == 0 else Color.DODGER_BLUE
@@ -1207,13 +1377,14 @@ func _on_poison_bomb_timeout():
 			# omnivamp - (we just do raw dmg here as actual dmg is computed in take_dmg func)
 			if omnivamp > 0:
 				var heal = min(damage*omnivamp, max_health-curr_health)
+				if wounded: heal -= heal * wound
 				curr_health += heal
 				if heal > 0:	
 					refresh_hpbar()
 					
 					var heal_popup = preload("res://src/damage_popup.tscn").instantiate()
 					heal_popup.modulate = Color.LIME_GREEN
-					heal_popup.text = str(int(heal))
+					heal_popup.text = "+" + str(int(heal))
 					add_child(heal_popup)
 					heal_popup.global_transform.origin += Vector3(randf_range(-.5,.5), randf_range(0,1), 0.5)
 				
@@ -1234,9 +1405,48 @@ func _on_poison_bomb_timeout():
 				
 					var heal_popup = preload("res://src/damage_popup.tscn").instantiate()
 					heal_popup.modulate = Color.LIME_GREEN
-					heal_popup.text = str(int(ally_heal))
+					heal_popup.text = "+" + str(int(ally_heal))
 					lowest_ally.add_child(heal_popup)
 					heal_popup.global_transform.origin += Vector3(randf_range(-.5,.5), randf_range(0,1), 0.5)
 
 func get_unit_id():
 	return unit_id
+	
+@rpc("any_peer", "call_local", "reliable")
+func be_wounded(percent = 0.33, duration = 10.0):
+	wounded = true
+	wound = percent
+	var timer = get_node_or_null("wound_timer")
+	if not timer: 
+		timer = Timer.new()
+		add_child(timer)
+		timer.name = "wound_timer"
+	timer.wait_time = duration
+	timer.one_shot = true
+	timer.connect("timeout", _on_wounded_end)
+	timer.start()	
+
+	# particle
+	var particles = get_node_or_null("wounded_burn")
+	if not particles:
+		spawn_particle.rpc("res://src/wounded_burn.tscn", "wounded_burn")
+
+func _on_wounded_end():
+	wounded = false
+	wound = 0
+	var timer = get_node_or_null("wound_timer")
+	if timer: timer.queue_free()
+	
+	# particles
+	remove_particle.rpc("wounded_burn")
+	
+@rpc("any_peer", "call_local", "unreliable")
+func spawn_particle(_path, _name):
+	var particle = load(_path).instantiate()
+	particle.name = _name
+	add_child(particle)
+	
+@rpc("any_peer", "call_local", "unreliable")
+func remove_particle(_name):
+	var particle = main.get_node_or_null(_name)
+	if particle: particle.queue_free()

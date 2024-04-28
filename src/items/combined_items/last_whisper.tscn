@@ -34,7 +34,7 @@ item_name = "Last Whisper"
 attack_dmg = 15
 attack_speed = 0.25
 crit_chance = 0.2
-tooltip = "+15% Attack Damage
+tooltip = "+15 Attack Damage
 +25% Attack Speed
 +20% Critical Strike Chance
 

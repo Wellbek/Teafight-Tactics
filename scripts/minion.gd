@@ -24,6 +24,9 @@ var dead = false
 @export var attack_speed = 0.8
 @export var attack_timer: Timer
 
+var wounded = false
+var wound = 0.0
+
 const BAR_COLOR = Color(0.757, 0.231, 0.259)
 
 # tft is to complicated and couldn't figure out orb droprate
@@ -199,3 +202,41 @@ func get_curr_health():
 	
 func get_max_health():
 	return max_health
+
+@rpc("any_peer", "call_local", "reliable")
+func be_wounded(percent = 0.33, duration = 10.0):
+	wounded = true
+	wound = percent
+	var timer = get_node_or_null("wound_timer")
+	if not timer: 
+		timer = Timer.new()
+		add_child(timer)
+		timer.name = "wound_timer"
+		timer.connect("timeout", _on_wounded_end)
+	timer.wait_time = duration
+	timer.one_shot = true
+	timer.start()	
+	# particle
+	var particles = get_node_or_null("wounded_burn")
+	if not particles:
+		spawn_particle.rpc("res://src/wounded_burn.tscn", "wounded_burn")
+
+func _on_wounded_end():
+	wounded = false
+	wound = 0
+	var timer = get_node_or_null("wound_timer")
+	if timer: timer.queue_free()
+	
+	# particles
+	remove_particle.rpc("wounded_burn")
+	
+@rpc("any_peer", "call_local", "unreliable")
+func spawn_particle(_path, _name):
+	var particle = load(_path).instantiate()
+	particle.name = _name
+	add_child(particle)
+	
+@rpc("any_peer", "call_local", "unreliable")
+func remove_particle(_name):
+	var particle = main.get_node_or_null(_name)
+	if particle: particle.queue_free()

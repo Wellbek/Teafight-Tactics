@@ -34,7 +34,7 @@ item_name = "Spear of Shojin"
 attack_dmg = 20
 attack_speed = 0.2
 mana = 15
-tooltip = "+20% Attack Damage
+tooltip = "+20 Attack Damage
 +20 Ability Power
 +15 Starting Mana
 

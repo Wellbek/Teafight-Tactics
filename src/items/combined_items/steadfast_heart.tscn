@@ -38,7 +38,7 @@ tooltip = "+20 Armor
 +250 Health
 +20% Critical Strike Chance
 
-Take 8% less damage. While above 50% Health, take 15% less damage, instead."
+Take 8% less damage. While above 50% Health, take 16% less damage, instead."
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("BoxShape3D_b61h1")

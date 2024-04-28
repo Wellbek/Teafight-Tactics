@@ -3,9 +3,9 @@
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_mrq3l"]
 [ext_resource type="Script" path="res://scripts/gridmap/gridmap.gd" id="1_ust0k"]
 [ext_resource type="Script" path="res://scripts/camera.gd" id="2_sby6c"]
-[ext_resource type="PackedScene" uid="uid://q45j08vjwt35" path="res://src/items/combined_items/titans_resolve.tscn" id="4_dgdhc"]
-[ext_resource type="PackedScene" uid="uid://djd6lbhimsxih" path="res://src/items/combined_items/guinsoos_rageblade.tscn" id="4_fou0m"]
+[ext_resource type="PackedScene" uid="uid://bgw3a0bvtpgrn" path="res://src/items/combined_items/morellonomicon.tscn" id="4_wb61p"]
 [ext_resource type="PackedScene" uid="uid://bnrnjxoiaaiuo" path="res://src/minions/melee_minion.tscn" id="5_o4yok"]
+[ext_resource type="PackedScene" uid="uid://dwuxlingou1cr" path="res://src/items/combined_items/sunfire_cape.tscn" id="5_u0wog"]
 [ext_resource type="PackedScene" uid="uid://divt1x550fa5f" path="res://src/minions/ranged_minion.tscn" id="6_c78bq"]
 [ext_resource type="PackedScene" uid="uid://2e2xsfjwn1bu" path="res://src/minions/krug.tscn" id="7_aytho"]
 [ext_resource type="PackedScene" uid="uid://c5mfa8icnoe6p" path="res://src/minions/greater_murk_wolf.tscn" id="8_2pv24"]
@@ -304,19 +304,17 @@ shape = SubResource("BoxShape3D_62cms")
 [node name="Items" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.078, 0.8, 7.829)
 
-[node name="TitansResolve" parent="Items" instance=ExtResource("4_dgdhc")]
+[node name="Morellonomicon" parent="Items" instance=ExtResource("4_wb61p")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.370211, 0, 0)
 
-[node name="TitansResolve2" parent="Items" instance=ExtResource("4_dgdhc")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.912024)
+[node name="Morellonomicon2" parent="Items" instance=ExtResource("4_wb61p")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.370211, 0, 1)
 
-[node name="TitansResolve3" parent="Items" instance=ExtResource("4_dgdhc")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.01718)
+[node name="SunfireCape" parent="Items" instance=ExtResource("5_u0wog")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.417996, 0, 0)
 
-[node name="GuinsoosRageblade" parent="Items" instance=ExtResource("4_fou0m")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0)
-
-[node name="GuinsoosRageblade2" parent="Items" instance=ExtResource("4_fou0m")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, -1)
+[node name="SunfireCape2" parent="Items" instance=ExtResource("5_u0wog")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.417996, 0, 0.944058)
 
 [node name="PVERounds" type="Node3D" parent="."]
 
