@@ -35,7 +35,7 @@ attack_dmg = 20
 ability_power = 15
 magic_resist = 20
 omnivamp = 0.2
-tooltip = "+20% Attack Damage
+tooltip = "+20 Attack Damage
 +15 Ability Power
 +20 Magic Resist
 

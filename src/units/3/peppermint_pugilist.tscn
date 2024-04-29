@@ -9,7 +9,7 @@
 [sub_resource type="ViewportTexture" id="ViewportTexture_vdcr0"]
 viewport_path = NodePath("SubViewport")
 
-[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_rxs5i"]
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_fyhnt"]
 properties/0/path = NodePath(".:position")
 properties/0/spawn = true
 properties/0/replication_mode = 2
@@ -73,6 +73,9 @@ properties/19/replication_mode = 2
 properties/20/path = NodePath(".:mr")
 properties/20/spawn = true
 properties/20/replication_mode = 2
+properties/21/path = NodePath(".:shield")
+properties/21/spawn = true
+properties/21/replication_mode = 2
 
 [node name="PeppermintPugilist" type="CharacterBody3D" node_paths=PackedStringArray("attack_timer")]
 transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, 999, 1, 999)
@@ -126,4 +129,4 @@ size = Vector2i(150, 69)
 [node name="UnitUI" parent="SubViewport" instance=ExtResource("2_0frix")]
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
-replication_config = SubResource("SceneReplicationConfig_rxs5i")
+replication_config = SubResource("SceneReplicationConfig_fyhnt")

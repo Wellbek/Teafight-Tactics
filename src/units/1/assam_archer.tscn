@@ -73,6 +73,9 @@ properties/19/replication_mode = 2
 properties/20/path = NodePath(".:mr")
 properties/20/spawn = true
 properties/20/replication_mode = 2
+properties/21/path = NodePath(".:shield")
+properties/21/spawn = true
+properties/21/replication_mode = 2
 
 [node name="AssamArcher" type="CharacterBody3D" node_paths=PackedStringArray("attack_timer")]
 transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, 999, 1, 999)

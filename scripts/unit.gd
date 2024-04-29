@@ -56,6 +56,7 @@ var dead = false
 @export var attackrange = 4.0
 @export var max_health = 100.0
 @onready var curr_health = max_health
+var shield = 0.0
 @export var max_mana = 100.0
 @export var start_mana = 0
 @onready var curr_mana = start_mana
@@ -105,6 +106,13 @@ var wound = 0.0
 var burned_enemies = {} # enemy: stacks | at 4 stacks remove
 var burn_timer = null
 var morello = false
+# bloodthirster 
+var bt_passive_ready = false
+var bt_shield = 0
+# bramble
+var bramble = false
+var bramble_ready = false
+var bramble_dmg = 0
 
 @export_category("Ability")
 @export_enum("Enhanced Auto", "Poison Bomb") var ability_id = 0
@@ -292,9 +300,28 @@ func change_mode(_mode: int):
 					timer.one_shot = false
 					timer.connect("timeout", _on_archangels_staff)
 					timer.start()	
+				"Bloodthirster":
+					# Once per combat at 40% Health, gain a 25% maximum Health shield that lasts up to 5 seconds.
+					if curr_health/max_health >= 0.4: 
+						bt_passive_ready = true
+					bt_shield += 0.25
+				"Bramble Vest":
+					bramble = true
+					bramble_ready = true
+					bramble_dmg += 100
+					max_health *= 1.05
+					curr_health = max_health
+					refresh_hpbar()
+					var timer = get_node_or_null("bramble_timer")
+					if not timer:
+						timer = Timer.new()
+						add_child(timer)
+						timer.name = "bramble_timer"
+						timer.wait_time = 2
+						timer.one_shot = true
+						timer.connect("timeout", _on_bramble)
 				"Deathblade":
 					deathblade_bonus_dmg += 0.08
-					print(deathblade_bonus_dmg)
 				"Dragon's Claw":
 					# Every 2 seconds, regenerate 5% maximum Health.
 					var timer = Timer.new()
@@ -327,7 +354,6 @@ func change_mode(_mode: int):
 						attack_dmg += 15
 						ability_power += 15
 					else: omnivamp += .15
-					print(double)
 				"Hextech Gunblade":
 					heal_lowest_ally = true
 				"Morellonomicon":
@@ -501,9 +527,22 @@ func change_mode(_mode: int):
 					ability_power -= as_bonus_ap
 					var arch_timer = get_node_or_null(str(item.name))
 					if arch_timer: arch_timer.queue_free()
+				"Bloodthirster":
+					# Once per combat at 40% Health, gain a 25% maximum Health shield that lasts up to 5 seconds.
+					bt_passive_ready = false
+					bt_shield -= 0.25
+					var bt_timer = get_node_or_null("bt_timer")
+					if bt_timer: bt_timer.queue_free()
+				"Bramble Vest":
+					bramble = false
+					bramble_ready = false
+					bramble_dmg -= 100
+					var bramble_timer = get_node_or_null("bramble_timer")
+					if bramble_timer: bramble_timer.queue_free()
+					max_health /= 1.05
+					if curr_health > max_health: curr_health = max_health
 				"Deathblade":
 					deathblade_bonus_dmg -= 0.08
-					print(deathblade_bonus_dmg)
 				"Dragon's Claw":
 					var dragons_claw_timer = get_node_or_null(str(item.name))
 					if dragons_claw_timer: dragons_claw_timer.queue_free()
@@ -540,7 +579,6 @@ func change_mode(_mode: int):
 					morello = true
 					var burn_timer = get_node_or_null("burn_timer")
 					if burn_timer: burn_timer.queue_free()
-				
 				"Sunfire Cape":
 					var sunfire_timer = get_node_or_null("sunfire_timer")
 					if sunfire_timer: sunfire_timer.queue_free()
@@ -659,6 +697,11 @@ func _on_aromatic_10sec():
 		_: pass
 	get_node("aromatic_trait").queue_free()
 	
+func _on_bramble():
+	if dead: return
+	bramble_ready = true
+	print("Bramble ready again")
+	
 func _on_shurima():
 	if dead: return
 	
@@ -743,6 +786,12 @@ func _on_burn():
 		burned_enemies[e] -= 1
 		if burned_enemies[e] <= 0:
 			burned_enemies.erase(e)
+			
+func _on_bt_passive_end():
+	shield = max(0, shield-(bt_shield*max_health))
+	refresh_shieldbar()
+	var bt_timer = get_node_or_null("bt_timer")
+	if bt_timer: bt_timer.queue_free()
 
 func get_mode():
 	return mode
@@ -984,6 +1033,9 @@ func get_curr_health():
 	
 func get_max_health():
 	return max_health
+	
+func get_curr_shield():
+	return shield
 
 func change_attack_speed(val):
 	attack_speed = val
@@ -1011,7 +1063,10 @@ func take_dmg(raw_dmg, dmg_type = 0, dodgeable = true):
 	elif dmg_type == 1: 
 		raw_dmg / (1+mr/100)
 		
-	if dmg_type != 2: dmg -= (steadfast_reduction*dmg) if curr_health/max_health < 0.5 else (steadfast_reduction*dmg*2)
+	if dmg_type != 2: 
+		dmg -= (steadfast_reduction*dmg) if curr_health/max_health < 0.5 else (steadfast_reduction*dmg*2)
+		if dmg_type == 0:
+			dmg -= (0.08*dmg) # bramble vest: Take 8% reduced damage from attacks.
 	
 	# and taking damage generates (1% of pre-mitigation damage taken and 7% of post-mitigation damage taken) mana, up to 42.5 Mana[1][2], depending on the pre-mitigated damage.
 	var mana_increase = min(42.5, (.01 * raw_dmg) + (.07 * dmg)) + mana_on_dmg
@@ -1022,9 +1077,63 @@ func take_dmg(raw_dmg, dmg_type = 0, dodgeable = true):
 	
 	if curr_mana >= max_mana: ability(target, targeting_neutral)
 	
-	curr_health = 0 if dmg >= curr_health else curr_health-dmg
+	if dmg_type != 2 and shield > 0:
+		var tmp = shield
+		shield = max(0, shield-dmg)
+		dmg = dmg - tmp
+		refresh_shieldbar()
+		
+	if bt_passive_ready and curr_health/max_health <= 0.4:
+		bt_passive_ready = false
+		var timer = Timer.new()
+		add_child(timer)
+		shield += bt_shield*max_health
+		timer.name = "bt_timer"
+		timer.wait_time = 5
+		timer.one_shot = true
+		timer.connect("timeout", _on_bt_passive_end)
+		timer.start()
 	
-	refresh_hpbar()
+	if dmg > 0: 
+		curr_health = 0 if dmg >= curr_health else curr_health-dmg
+		refresh_hpbar()
+		
+		if dmg_type == 0 and bramble:
+			# Bramble Vest: When struck by any attack, deal 100 magic damage to all adjacent enemies. (once every 2 seconds). 
+			if bramble_ready:
+				if not player.get_current_enemy(): # pve round
+					for pve_round in player.get_node("PVERounds").get_children():	
+						if pve_round.visible:
+							for minion in pve_round.get_children():
+								if not minion.is_targetable(): continue
+							
+								if global_transform.origin.distance_to(minion.global_transform.origin) < 2:
+									var dmg_popup = preload("res://src/damage_popup.tscn").instantiate()
+									dmg_popup.modulate = Color.DODGER_BLUE
+									dmg_popup.text = str(int(bramble_dmg))
+									add_child(dmg_popup)
+									dmg_popup.global_transform.origin = minion.global_transform.origin + Vector3(randf_range(-.5,.5), randf_range(0,1), 0.5)
+					
+									minion.take_dmg.rpc_id(minion.get_multiplayer_authority(), bramble_dmg, 1, false)
+				else:		
+					var enemy_units = player.get_current_enemy().find_child("Units").get_children()
+					
+					for unit in enemy_units:	
+						if not unit.is_targetable() or unit.dead: continue
+					
+						if global_transform.origin.distance_to(unit.global_transform.origin) < 2:
+							var dmg_popup = preload("res://src/damage_popup.tscn").instantiate()
+							dmg_popup.modulate = Color.DODGER_BLUE
+							dmg_popup.text = str(int(bramble_dmg))
+							add_child(dmg_popup)
+							dmg_popup.global_transform.origin = unit.global_transform.origin + Vector3(randf_range(-.5,.5), randf_range(0,1), 0.5)
+							unit.take_dmg.rpc_id(unit.get_multiplayer_authority(), bramble_dmg, 1, false)
+		
+				bramble_ready = false
+				var bramble_timer = get_node_or_null("bramble_timer")
+				if bramble_timer:
+					bramble_timer.wait_time = 2
+					bramble_timer.start()
 	
 	if curr_health <= 0 and not dead:
 		death.rpc()
@@ -1032,6 +1141,10 @@ func take_dmg(raw_dmg, dmg_type = 0, dodgeable = true):
 # synced via multiplayersync
 func refresh_hpbar():
 	ui.get_node("HPBar").value = curr_health/max_health * 100
+	
+# synced via multiplayersync
+func refresh_shieldbar():
+	ui.get_node("ShieldBar").value = shield/max_health * 100
 	
 # synced via multiplayersync
 func refresh_manabar():
