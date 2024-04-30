@@ -23,6 +23,7 @@ var dead = false
 @export var armor = 30.0
 @export var attack_speed = 0.8
 @export var attack_timer: Timer
+var shield = 0.0
 
 var wounded = false
 var wound = 0.0
@@ -240,3 +241,6 @@ func spawn_particle(_path, _name):
 func remove_particle(_name):
 	var particle = main.get_node_or_null(_name)
 	if particle: particle.queue_free()
+	
+func is_shielded():
+	return shield > 0

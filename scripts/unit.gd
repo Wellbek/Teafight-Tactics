@@ -113,6 +113,11 @@ var bt_shield = 0
 var bramble = false
 var bramble_ready = false
 var bramble_dmg = 0
+# crownguard 
+var crownguards = 0
+# guardbreaker
+var guardbreaker_bonus_dmg = 0.0
+var guardbreaker_bonus_active = false
 
 @export_category("Ability")
 @export_enum("Enhanced Auto", "Poison Bomb") var ability_id = 0
@@ -320,6 +325,19 @@ func change_mode(_mode: int):
 						timer.wait_time = 2
 						timer.one_shot = true
 						timer.connect("timeout", _on_bramble)
+				"Crownguard":
+					shield += 0.3*max_health
+					refresh_shieldbar()
+					crownguards += 1
+					var timer = get_node_or_null("crownguard_timer")
+					if not timer:
+						timer = Timer.new()
+						add_child(timer)
+						timer.name = "crownguard_timer"
+						timer.wait_time = 8 + main.get_timer().TRANSITION_TIME
+						timer.one_shot = false
+						timer.connect("timeout", _on_crownguard)
+						timer.start()
 				"Deathblade":
 					deathblade_bonus_dmg += 0.08
 				"Dragon's Claw":
@@ -337,6 +355,8 @@ func change_mode(_mode: int):
 					titans_labels[item].visible = true
 					titans_labels[item].text = str(tr_stacks)
 					titans_stacking = true
+				"Guardbreaker":
+					guardbreaker_bonus_dmg += 0.25
 				"Giant Slayer":
 					giant_slayer = true
 				"Guinsoo's Rageblade":
@@ -541,6 +561,11 @@ func change_mode(_mode: int):
 					if bramble_timer: bramble_timer.queue_free()
 					max_health /= 1.05
 					if curr_health > max_health: curr_health = max_health
+				"Crownguard":
+					var timer = get_node_or_null("crownguard_timer")
+					if timer: timer.queue_free()
+					ability_power -= crownguards*35
+					crownguards = 0
 				"Deathblade":
 					deathblade_bonus_dmg -= 0.08
 				"Dragon's Claw":
@@ -556,6 +581,8 @@ func change_mode(_mode: int):
 						mr -= 20 * len(titans_labels)
 					tr_stacks = 0
 					titans_labels.erase(item)
+				"Guardbreaker":
+					guardbreaker_bonus_dmg -= 0.25
 				"Giant Slayer":
 					giant_slayer = true
 				"Guinsoo's Rageblade":
@@ -700,7 +727,6 @@ func _on_aromatic_10sec():
 func _on_bramble():
 	if dead: return
 	bramble_ready = true
-	print("Bramble ready again")
 	
 func _on_shurima():
 	if dead: return
@@ -792,7 +818,19 @@ func _on_bt_passive_end():
 	refresh_shieldbar()
 	var bt_timer = get_node_or_null("bt_timer")
 	if bt_timer: bt_timer.queue_free()
-
+	
+func _on_crownguard():
+	ability_power += 35*crownguards
+	shield = max(0, shield-(max_health*0.3*crownguards))
+	refresh_shieldbar()
+	var timer = get_node_or_null("crownguard_timer")
+	if timer: timer.queue_free()
+	
+func _on_guardbreaker_end():
+	guardbreaker_bonus_active = false
+	var timer = get_node_or_null("guardbreaker_timer")
+	if timer: timer.queue_free()
+	
 func get_mode():
 	return mode
 			
@@ -935,9 +973,9 @@ func auto_attack(_target, pve = false):
 	var damage = attack_dmg if rng > crit_chance else attack_dmg * (1+crit_damage)
 	damage *= 1+deathblade_bonus_dmg
 	damage *= 1+rabadons_bonus_dmg
+	if guardbreaker_bonus_active: damage *= 1+guardbreaker_bonus_dmg
 	damage *= (1+(bonus_dmg*2)) if (_target.get_curr_health()/_target.get_max_health() < 0.66) and type == 1 else (1+bonus_dmg)
 	if _target.get_max_health() > 1750 and giant_slayer: 
-		print("gs proc")
 		damage*=1.25
 	
 	var dmg_popup = preload("res://src/damage_popup.tscn").instantiate()
@@ -950,6 +988,19 @@ func auto_attack(_target, pve = false):
 	dmg_popup.global_transform.origin = _target.global_transform.origin + Vector3(randf_range(-.5,.5), randf_range(0,1), 0.5)
 	
 	_target.take_dmg.rpc_id(id, damage)
+	
+	# guardbreaker
+	if _target.is_shielded() and guardbreaker_bonus_dmg > 0:
+		guardbreaker_bonus_active = true
+		var timer = get_node_or_null("guardbreaker_timer")
+		if not timer:
+			timer = Timer.new()
+			timer.name = "guardbreaker_timer"
+			add_child(timer)
+		timer.wait_time = 3
+		timer.one_shot = false
+		timer.connect("timeout", _on_guardbreaker_end)
+		timer.start()
 	
 	# omnivamp - (we just do raw dmg here as actual dmg is computed in take_dmg func)
 	if omnivamp > 0:
@@ -1088,6 +1139,7 @@ func take_dmg(raw_dmg, dmg_type = 0, dodgeable = true):
 		var timer = Timer.new()
 		add_child(timer)
 		shield += bt_shield*max_health
+		refresh_shieldbar()
 		timer.name = "bt_timer"
 		timer.wait_time = 5
 		timer.one_shot = true
@@ -1563,3 +1615,6 @@ func spawn_particle(_path, _name):
 func remove_particle(_name):
 	var particle = main.get_node_or_null(_name)
 	if particle: particle.queue_free()
+	
+func is_shielded():
+	return shield > 0
