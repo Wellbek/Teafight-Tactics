@@ -34,6 +34,7 @@ item_name = "Quicksilver"
 attack_speed = 0.3
 crit_chance = 0.2
 magic_resist = 20
+unique = true
 tooltip = "+30% Attack Speed
 +20 Magic Resist
 +20% Critical Strike Chance

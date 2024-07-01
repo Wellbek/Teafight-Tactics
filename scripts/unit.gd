@@ -118,6 +118,9 @@ var crownguards = 0
 # guardbreaker
 var guardbreaker_bonus_dmg = 0.0
 var guardbreaker_bonus_active = false
+# blue buff
+const BB_BONUS_DMG = 0.7
+var bb_active = false
 
 @export_category("Ability")
 @export_enum("Enhanced Auto", "Poison Bomb") var ability_id = 0
@@ -800,6 +803,7 @@ func _on_burn():
 			continue
 		
 		var damage = e.get_max_health() * 0.01
+		if bb_active: damage *= 1+BB_BONUS_DMG
 		
 		var dmg_popup = preload("res://src/damage_popup.tscn").instantiate()
 		dmg_popup.modulate = Color.WHITE
@@ -807,7 +811,7 @@ func _on_burn():
 		add_child(dmg_popup)
 		dmg_popup.global_transform.origin = e.global_transform.origin + Vector3(randf_range(-.5,.5), randf_range(0,1), 0.5)
 	
-		e.take_dmg.rpc_id(e.get_multiplayer_authority(), damage, 2, false)
+		e.take_dmg.rpc_id(e.get_multiplayer_authority(), damage, 2, false, get_path())
 		
 		burned_enemies[e] -= 1
 		if burned_enemies[e] <= 0:
@@ -974,6 +978,7 @@ func auto_attack(_target, pve = false):
 	damage *= 1+deathblade_bonus_dmg
 	damage *= 1+rabadons_bonus_dmg
 	if guardbreaker_bonus_active: damage *= 1+guardbreaker_bonus_dmg
+	if bb_active: damage *= 1+BB_BONUS_DMG
 	damage *= (1+(bonus_dmg*2)) if (_target.get_curr_health()/_target.get_max_health() < 0.66) and type == 1 else (1+bonus_dmg)
 	if _target.get_max_health() > 1750 and giant_slayer: 
 		damage*=1.25
@@ -987,7 +992,7 @@ func auto_attack(_target, pve = false):
 	add_child(dmg_popup)
 	dmg_popup.global_transform.origin = _target.global_transform.origin + Vector3(randf_range(-.5,.5), randf_range(0,1), 0.5)
 	
-	_target.take_dmg.rpc_id(id, damage)
+	_target.take_dmg.rpc_id(id, damage, 0, true, get_path())
 	
 	# guardbreaker
 	if _target.is_shielded() and guardbreaker_bonus_dmg > 0:
@@ -1094,7 +1099,7 @@ func change_attack_speed(val):
 	if attacking == true: attack_timer.start()
 
 @rpc("any_peer", "call_local", "unreliable")
-func take_dmg(raw_dmg, dmg_type = 0, dodgeable = true):
+func take_dmg(raw_dmg, dmg_type, dodgeable, source: NodePath):
 	if mode != BATTLE or dead: return
 	
 	# dodge
@@ -1153,20 +1158,23 @@ func take_dmg(raw_dmg, dmg_type = 0, dodgeable = true):
 		if dmg_type == 0 and bramble:
 			# Bramble Vest: When struck by any attack, deal 100 magic damage to all adjacent enemies. (once every 2 seconds). 
 			if bramble_ready:
+				var reflect_dmg = bramble_dmg
+				if bb_active: reflect_dmg *= 1+BB_BONUS_DMG
+				
 				if not player.get_current_enemy(): # pve round
 					for pve_round in player.get_node("PVERounds").get_children():	
 						if pve_round.visible:
 							for minion in pve_round.get_children():
 								if not minion.is_targetable(): continue
-							
+								
 								if global_transform.origin.distance_to(minion.global_transform.origin) < 2:
 									var dmg_popup = preload("res://src/damage_popup.tscn").instantiate()
 									dmg_popup.modulate = Color.DODGER_BLUE
-									dmg_popup.text = str(int(bramble_dmg))
+									dmg_popup.text = str(int(reflect_dmg))
 									add_child(dmg_popup)
 									dmg_popup.global_transform.origin = minion.global_transform.origin + Vector3(randf_range(-.5,.5), randf_range(0,1), 0.5)
 					
-									minion.take_dmg.rpc_id(minion.get_multiplayer_authority(), bramble_dmg, 1, false)
+									minion.take_dmg.rpc_id(minion.get_multiplayer_authority(), reflect_dmg, 1, false, get_path())
 				else:		
 					var enemy_units = player.get_current_enemy().find_child("Units").get_children()
 					
@@ -1176,10 +1184,10 @@ func take_dmg(raw_dmg, dmg_type = 0, dodgeable = true):
 						if global_transform.origin.distance_to(unit.global_transform.origin) < 2:
 							var dmg_popup = preload("res://src/damage_popup.tscn").instantiate()
 							dmg_popup.modulate = Color.DODGER_BLUE
-							dmg_popup.text = str(int(bramble_dmg))
+							dmg_popup.text = str(int(reflect_dmg))
 							add_child(dmg_popup)
 							dmg_popup.global_transform.origin = unit.global_transform.origin + Vector3(randf_range(-.5,.5), randf_range(0,1), 0.5)
-							unit.take_dmg.rpc_id(unit.get_multiplayer_authority(), bramble_dmg, 1, false)
+							unit.take_dmg.rpc_id(unit.get_multiplayer_authority(), reflect_dmg, 1, false, get_path())
 		
 				bramble_ready = false
 				var bramble_timer = get_node_or_null("bramble_timer")
@@ -1188,8 +1196,32 @@ func take_dmg(raw_dmg, dmg_type = 0, dodgeable = true):
 					bramble_timer.start()
 	
 	if curr_health <= 0 and not dead:
+		var attacker = get_node_or_null(source) if source else null
+		if attacker: attacker.on_kill.rpc_id(attacker.get_multiplayer_authority(), get_path())
 		death.rpc()
-		
+
+@rpc("any_peer", "call_local", "unreliable")
+func on_kill(_target_path):
+	var _target = get_node(_target_path)
+	#print(name, " killed ", _target.name)
+	
+	# Blue Buff: When the holder gets a takedown, they deal 7% more damage for 8 seconds.
+	bb_active = true
+	var timer = get_node_or_null("blue_buff")
+	if not timer:
+		timer = Timer.new()
+		add_child(timer)
+		timer.name = "blue_buff"
+	timer.wait_time = 8.0
+	timer.one_shot = true
+	timer.connect("timeout", _on_blue_buff_timeout)
+	timer.start()
+	
+func _on_blue_buff_timeout():
+	var timer = get_node_or_null("blue_buff")
+	if timer: timer.queue_free()
+	bb_active = false
+
 # synced via multiplayersync
 func refresh_hpbar():
 	ui.get_node("HPBar").value = curr_health/max_health * 100
@@ -1285,7 +1317,7 @@ func equip_item(item_path):
 	
 	if item.is_component():
 		if not can_equip_component(): return
-	elif not can_equip_item(): return
+	elif not can_equip_item(item): return
 	
 	for i in range(len(items)):
 		if items[i] == null:
@@ -1311,6 +1343,7 @@ func equip_item(item_path):
 		attack_speed *= 1+item.get_attack_speed()
 		crit_chance = min(1, crit_chance + item.get_crit_chance())
 		start_mana = min(max_mana, start_mana + item.get_mana())
+		if item.get_item_name() == "Blue Buff": max_mana = max(1, max_mana - 10)
 		if item.get_ability_crit():
 			if ability_crit:
 				crit_damage += 0.1
@@ -1324,23 +1357,24 @@ func equip_item(item_path):
 		
 		item.visible = false
 	
-func can_equip_item():
+func can_equip_item(to_equip = null):
 	for item in items:
 		if item == null: return true 
+		elif to_equip and to_equip.is_unique() and to_equip.get_item_name() == item.get_item_name(): return false 
 	
 	return false
-	
+
 func can_equip_component():
 	for item in items:
 		if item == null or item.is_component(): return true 
 	
 	return false
-	
+
 func unequip_items():
 	for i in range(len(items)):
 		if items[i] == null: return
 		unequip_item(i)
-		
+
 @rpc("any_peer", "call_local", "unreliable")
 func unequip_item(index):
 	var item = items[index]
@@ -1380,7 +1414,7 @@ func transfer_items(to_unit):
 		if item.is_component():
 			if to_unit.can_equip_component():
 				to_unit.equip_item.rpc(item.get_path())
-		elif to_unit.can_equip_item():
+		elif to_unit.can_equip_item(item):
 			to_unit.equip_item.rpc(item.get_path())
 				
 @rpc("any_peer", "call_local", "reliable")
@@ -1436,6 +1470,7 @@ func ability(_target, pve = false):
 			
 			damage *= 1+deathblade_bonus_dmg
 			damage *= 1+rabadons_bonus_dmg
+			if bb_active: damage *= 1+BB_BONUS_DMG
 			damage *= (1+(bonus_dmg*2)) if (_target.get_curr_health()/_target.get_max_health() < 0.66) and type == 1 else (1+bonus_dmg)
 			if _target.get_max_health() > 1750 and giant_slayer: damage*=1.25
 			
@@ -1451,7 +1486,7 @@ func ability(_target, pve = false):
 			if morello: 
 				_target.be_wounded.rpc_id(_target.get_multiplayer_authority())
 				burned_enemies[_target] = 4
-			_target.take_dmg.rpc_id(id, damage, ability_dmg_type, false) # can't dodge attack
+			_target.take_dmg.rpc_id(id, damage, ability_dmg_type, false, get_path()) # can't dodge attack
 			
 			# omnivamp - (we just do raw dmg here as actual dmg is computed in take_dmg func)
 			if omnivamp > 0:
@@ -1525,6 +1560,7 @@ func _on_poison_bomb_timeout():
 			
 			damage *= 1+deathblade_bonus_dmg
 			damage *= 1+rabadons_bonus_dmg
+			if bb_active: damage *= 1+BB_BONUS_DMG
 			damage *= (1+(bonus_dmg*2)) if (_target.get_curr_health()/_target.get_max_health() < 0.66) and type == 1 else (1+bonus_dmg)
 			if _target.get_max_health() > 1750 and giant_slayer: damage*=1.25
 			
@@ -1537,7 +1573,7 @@ func _on_poison_bomb_timeout():
 			add_child(dmg_popup)
 			dmg_popup.global_transform.origin = _target.global_transform.origin + Vector3(randf_range(-.5,.5), randf_range(0,1), 0.5)
 			
-			_target.take_dmg.rpc_id(id, damage, ability_dmg_type, false) # can't dodge attack
+			_target.take_dmg.rpc_id(id, damage, ability_dmg_type, false, get_path()) # can't dodge attack
 			
 			# omnivamp - (we just do raw dmg here as actual dmg is computed in take_dmg func)
 			if omnivamp > 0:

@@ -2,7 +2,7 @@
 
 [ext_resource type="Texture2D" uid="uid://mmrv5abf47td" path="res://assets/images/white_circle.png" id="1_84dmm"]
 [ext_resource type="Script" path="res://scripts/player_bar.gd" id="1_bgs5b"]
-[ext_resource type="Script" path="res://scenes/dynamic_font.gd" id="2_wab65"]
+[ext_resource type="Script" path="res://scripts/dynamic_font.gd" id="2_wab65"]
 [ext_resource type="Texture2D" uid="uid://c24q0nj8r6ri8" path="res://assets/images/white_circle_small.png" id="2_xwc4t"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_m0m4m"]

@@ -6,17 +6,17 @@
 [ext_resource type="PackedScene" uid="uid://g18y6a837usc" path="res://src/player.tscn" id="4_bh7tl"]
 [ext_resource type="Script" path="res://scripts/multiplayermanager.gd" id="4_d7qmq"]
 [ext_resource type="Texture2D" uid="uid://dt00e868xcrql" path="res://assets/images/tft_coin.png" id="6_g8e0e"]
-[ext_resource type="Script" path="res://scenes/dynamic_font.gd" id="7_1bn8j"]
+[ext_resource type="Script" path="res://scripts/dynamic_font.gd" id="7_1bn8j"]
 [ext_resource type="Texture2D" uid="uid://slcps076ioqt" path="res://assets/images/unit_icons/assam_archer.png" id="7_41kj8"]
 [ext_resource type="PackedScene" uid="uid://dfbxcmkrqggoj" path="res://src/ui/player_bar.tscn" id="7_n3kcn"]
-[ext_resource type="Script" path="res://scenes/unit_inspec.gd" id="7_snble"]
+[ext_resource type="Script" path="res://scripts/unit_inspec.gd" id="7_snble"]
 [ext_resource type="Texture2D" uid="uid://bp78gtu6wfxgg" path="res://assets/images/1_Star.webp" id="8_eym16"]
 [ext_resource type="Texture2D" uid="uid://d3ugo452yq2y5" path="res://assets/League_of_Legends_Screenshot_2021.04.26___13.43.59.70.jpeg" id="8_ukdsg"]
 [ext_resource type="Texture2D" uid="uid://isbp8j5mubnq" path="res://assets/images/streak_icon.png" id="9_8icbs"]
 [ext_resource type="Texture2D" uid="uid://c1bapo4gwbicj" path="res://assets/images/2_Star.webp" id="9_mdaou"]
 [ext_resource type="Texture2D" uid="uid://dtm4s2pumnnj3" path="res://assets/images/Attack_damage_colored_icon.webp" id="9_vngjv"]
 [ext_resource type="Texture2D" uid="uid://64gva5g8w1h5" path="res://assets/images/3_Star.webp" id="10_moym5"]
-[ext_resource type="Script" path="res://scenes/class_manager.gd" id="10_sbqyv"]
+[ext_resource type="Script" path="res://scripts/class_manager.gd" id="10_sbqyv"]
 [ext_resource type="Texture2D" uid="uid://bljcarwg6tl8o" path="res://assets/images/Ability_power_colored_icon.webp" id="10_x7p4p"]
 [ext_resource type="Texture2D" uid="uid://cfqfb74biflrb" path="res://assets/images/Armor_colored_icon.webp" id="11_du1vp"]
 [ext_resource type="Texture2D" uid="uid://r25dc3g0hak7" path="res://assets/images/Magic_resistance_colored_icon.webp" id="12_tk5u8"]
@@ -131,7 +131,7 @@ timer = NodePath("../RoundTimer")
 startButton = NodePath("../GUI/TmpStartGame")
 lobby_id_box = NodePath("../GUI/LobbyID")
 enable_on_start = [NodePath("../GUI/GameStartLabel")]
-disable_on_start = [NodePath("../GUI/TmpHost"), NodePath("../GUI/TmpJoin"), NodePath("../GUI/TmpLobbies"), NodePath("../GUI/Label"), NodePath("../GUI/CheckButton"), NodePath("../GUI/TextEdit"), NodePath("../GUI/LobbyContainer")]
+disable_on_start = [NodePath("../GUI/TextEdit"), NodePath("../GUI/TmpHost"), NodePath("../GUI/TmpJoin"), NodePath("../GUI/TmpLobbies"), NodePath("../GUI/LobbyContainer")]
 id_box = NodePath("../GUI/TextEdit")
 
 [node name="RoundTimer" type="Timer" parent="."]

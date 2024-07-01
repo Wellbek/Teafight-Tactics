@@ -10,7 +10,7 @@
 [ext_resource type="Texture2D" uid="uid://cfixm5imne5xe" path="res://assets/images/cybernetic_icon.png" id="8_lvggj"]
 [ext_resource type="Texture2D" uid="uid://cebwi6nvwmwd4" path="res://assets/images/shurima_icon.png" id="9_d7qax"]
 [ext_resource type="Texture2D" uid="uid://c6xtqy351huik" path="res://assets/images/bastion_icon.png" id="10_kav4f"]
-[ext_resource type="Script" path="res://scenes/dynamic_font.gd" id="11_aw4f0"]
+[ext_resource type="Script" path="res://scripts/dynamic_font.gd" id="11_aw4f0"]
 
 [node name="ClassBar" type="Control" node_paths=PackedStringArray("circle", "class_name_label", "curr_count_label", "class_step_label", "icons")]
 custom_minimum_size = Vector2(300, 50)

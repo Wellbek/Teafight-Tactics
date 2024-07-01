@@ -16,6 +16,7 @@ extends StaticBody3D
 @export var omnivamp: float = 0
 @export var ability_crit: bool = false
 @export var component = false
+@export var unique = false # Unique - only 1 per champion
 @export_multiline var tooltip: String = ""
 
 const RECIPES = {
@@ -120,7 +121,7 @@ func place_item():
 		if coll == null:  
 			global_transform.origin = initial_pos
 		elif coll.get_collision_layer() in [8, 24]:
-			if (component and not coll.can_equip_component()) or (not component and not coll.can_equip_item()):
+			if (component and not coll.can_equip_component()) or (not component and not coll.can_equip_item(self)):
 				coll = null
 				global_transform.origin = initial_pos
 			else:
@@ -204,3 +205,6 @@ func _on_mouse_entered():
 
 func _on_mouse_exited():
 	$Tooltip.visible = false
+	
+func is_unique():
+	return unique

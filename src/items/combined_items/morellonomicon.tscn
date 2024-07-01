@@ -34,6 +34,7 @@ item_name = "Morellonomicon"
 health = 150
 attack_speed = 0.1
 ability_power = 25
+unique = true
 tooltip = "+25 Ability Power
 +150 Health
 +10% Attack Speed

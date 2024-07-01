@@ -34,6 +34,7 @@ item_name = "Blue Buff"
 attack_dmg = 20
 ability_power = 20
 mana = 20
+unique = true
 tooltip = "+20% Attack Damage
 +20 Starting Mana
 +20 Ability Power

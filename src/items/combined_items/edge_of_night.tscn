@@ -33,6 +33,7 @@ item_texture = ExtResource("2_8w27y")
 item_name = "Edge of Night"
 attack_dmg = 10
 armor = 20
+unique = true
 tooltip = "+10% Attack Damage
 +20 Armor
 

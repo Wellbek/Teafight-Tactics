@@ -33,6 +33,7 @@ item_texture = ExtResource("2_px18h")
 item_name = "Sunfire Cape"
 health = 250
 armor = 20
+unique = true
 tooltip = "+250 Health
 +20 Armor
 

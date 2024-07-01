@@ -118,7 +118,7 @@ func _on_attack_timer_timeout():
 func auto_attack(_target):
 	if _target == null or _target.get_mode() != 1: return
 	
-	_target.take_dmg.rpc_id(_target.get_owner_id(), attack_dmg)
+	_target.take_dmg.rpc_id(_target.get_owner_id(), attack_dmg, 0, true, get_path())
 
 func change_attack_speed(val):
 	attack_speed = val
@@ -126,7 +126,7 @@ func change_attack_speed(val):
 	if attacking == true: attack_timer.start()
 
 @rpc("any_peer", "call_local", "unreliable")
-func take_dmg(raw_dmg, dmg_type = 0, dodgeable = true):
+func take_dmg(raw_dmg, dmg_type, dodgeable, source: NodePath):
 	var dmg = raw_dmg / (1+armor/100) # https://leagueoflegends.fandom.com/wiki/Armor
 	
 	curr_health = 0 if dmg >= curr_health else curr_health-dmg
@@ -134,9 +134,16 @@ func take_dmg(raw_dmg, dmg_type = 0, dodgeable = true):
 	ui.get_node("HPBar").value = curr_health/max_health * 100
 	
 	if curr_health <= 0 and not dead: 
+		var attacker = get_node_or_null(source) if source else null
+		if attacker: attacker.on_kill.rpc_id(attacker.get_multiplayer_authority(), get_path())
 		dead = true
 		death.rpc(get_path())
 		main.free_object.rpc(get_path())
+		
+@rpc("any_peer", "call_local", "unreliable")
+func on_kill(_target_path):
+	var _target = get_node(_target_path)
+	print(name, " killed ", _target)
 		
 @rpc("any_peer", "call_local", "reliable")
 func death(_path):
