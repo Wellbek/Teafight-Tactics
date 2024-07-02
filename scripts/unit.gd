@@ -121,6 +121,9 @@ var guardbreaker_bonus_active = false
 # blue buff
 const BB_BONUS_DMG = 0.7
 var bb_active = false
+# edge of night
+var eon_target = null
+var eon_passive_ready = false
 
 @export_category("Ability")
 @export_enum("Enhanced Auto", "Poison Bomb") var ability_id = 0
@@ -313,6 +316,10 @@ func change_mode(_mode: int):
 					if curr_health/max_health >= 0.4: 
 						bt_passive_ready = true
 					bt_shield += 0.25
+				"Edge of Night":
+					# Once per combat: At 60% Health, briefly become untargetable and shed negative effects. Then, gain 15% bonus Attack Speed.
+					if curr_health/max_health >= 0.6:
+						eon_passive_ready = true
 				"Bramble Vest":
 					bramble = true
 					bramble_ready = true
@@ -556,6 +563,10 @@ func change_mode(_mode: int):
 					bt_shield -= 0.25
 					var bt_timer = get_node_or_null("bt_timer")
 					if bt_timer: bt_timer.queue_free()
+				"Edge of Night":
+					if not eon_passive_ready:
+						change_attack_speed(attack_speed / 1.15)
+					else: eon_passive_ready = false
 				"Bramble Vest":
 					bramble = false
 					bramble_ready = false
@@ -696,7 +707,7 @@ func change_mode(_mode: int):
 				_: pass
 		
 		# reset duelist trait (and guinsoos item) stacking attackspeed
-		attack_speed -= bonus_attack_speed
+		change_attack_speed(attack_speed - bonus_attack_speed)
 		bonus_attack_speed = 0
 		duelist_counter = 0
 		
@@ -795,6 +806,31 @@ func _on_sunfire():
 		if global_transform.origin.distance_to(unit.global_transform.origin) < 4:
 			unit.be_wounded.rpc()
 			burned_enemies[unit] = 4
+			
+func _on_edge_of_night():
+	change_attack_speed(attack_speed * 1.15)
+	
+	var enemy_units = []
+	
+	if not player.get_current_enemy(): # pve round
+		for pve_round in player.get_node("PVERounds").get_children():	
+			if pve_round.visible:
+				enemy_units = pve_round.get_children()
+	else:
+		enemy_units = player.get_current_enemy().find_child("Units").get_children()
+	
+	for unit in enemy_units:	
+		if unit.dead: continue
+		
+		unit.receive_eon_effect.rpc_id(unit.get_multiplayer_authority(), get_path())
+
+@rpc("any_peer", "call_local", "unreliable")
+func receive_eon_effect(eon_owner_path: NodePath):
+	var eon_owner = get_node(eon_owner_path)
+	
+	if eon_owner == target:
+		eon_target = target
+		target = null
 
 func _on_burn():
 	for e in burned_enemies:
@@ -855,16 +891,19 @@ func find_target():
 	var enemy_units = player.get_current_enemy().find_child("Units").get_children()
 	
 	for unit in enemy_units:	
-		if not unit.is_targetable() or unit.dead: continue
+		if not unit.is_targetable() or unit.dead or unit == eon_target: continue
 		
 		#if multiplayer.is_server(): print(unit.name, ": ", global_transform.origin.distance_to(unit.global_transform.origin))
 		
 		if not target or global_transform.origin.distance_to(unit.global_transform.origin) < global_transform.origin.distance_to(target.global_transform.origin):
 			target = unit
+			eon_target = null
 			targeting_neutral = false
 			
-	#if multiplayer.is_server():
-	#	if target != null: print(self, " targets ", target)
+	# in case no other valid target was found but there is still the untargetable edge of night one
+	if not target and eon_target:
+		target = eon_target
+		eon_target = null
 
 func change_color(mesh, color):
 	var newMaterial = StandardMaterial3D.new()
@@ -1047,7 +1086,7 @@ func auto_attack(_target, pve = false):
 		for item in rageblade_labels:
 			rageblade_labels[item].text = str(rageblade_stacks)
 			bonus_attack_speed += attack_speed*1.05 - attack_speed
-			attack_speed *= 1.05
+			change_attack_speed(attack_speed*1.05)
 			
 	# Titans resolve
 	if titans_stacking and tr_stacks < 25:
@@ -1067,13 +1106,13 @@ func auto_attack(_target, pve = false):
 			match main.get_classes().get_class_level(CLASS_NAMES[2]):
 				1: 
 					bonus_attack_speed += attack_speed*1.05 - attack_speed
-					attack_speed *= 1.05
+					change_attack_speed(attack_speed*1.05)
 				2: 
 					bonus_attack_speed += attack_speed*1.05 - attack_speed
-					attack_speed *= 1.1
+					change_attack_speed(attack_speed*1.1)
 				3: 
 					bonus_attack_speed += attack_speed*1.05 - attack_speed
-					attack_speed *= 1.15
+					change_attack_speed(attack_speed*1.15)
 				_: pass
 			duelist_counter += 1
 			
@@ -1150,6 +1189,10 @@ func take_dmg(raw_dmg, dmg_type, dodgeable, source: NodePath):
 		timer.one_shot = true
 		timer.connect("timeout", _on_bt_passive_end)
 		timer.start()
+		
+	if eon_passive_ready and curr_health/max_health <= 0.6:
+		eon_passive_ready = false
+		_on_edge_of_night()
 	
 	if dmg > 0: 
 		curr_health = 0 if dmg >= curr_health else curr_health-dmg
@@ -1197,11 +1240,11 @@ func take_dmg(raw_dmg, dmg_type, dodgeable, source: NodePath):
 	
 	if curr_health <= 0 and not dead:
 		var attacker = get_node_or_null(source) if source else null
-		if attacker: attacker.on_kill.rpc_id(attacker.get_multiplayer_authority(), get_path())
+		if attacker: attacker._on_kill.rpc_id(attacker.get_multiplayer_authority(), get_path())
 		death.rpc()
 
 @rpc("any_peer", "call_local", "unreliable")
-func on_kill(_target_path):
+func _on_kill(_target_path):
 	var _target = get_node(_target_path)
 	#print(name, " killed ", _target.name)
 	
@@ -1340,7 +1383,7 @@ func equip_item(item_path):
 		ability_power += item.get_ability_power()
 		armor += item.get_armor()
 		mr += item.get_mr()
-		attack_speed *= 1+item.get_attack_speed()
+		change_attack_speed(attack_speed * (1+item.get_attack_speed()))
 		crit_chance = min(1, crit_chance + item.get_crit_chance())
 		start_mana = min(max_mana, start_mana + item.get_mana())
 		if item.get_item_name() == "Blue Buff": max_mana = max(1, max_mana - 10)
@@ -1390,7 +1433,7 @@ func unequip_item(index):
 		ability_power -= item.get_ability_power()
 		armor -= item.get_armor()
 		mr -= item.get_mr()
-		attack_speed /= 1-item.get_attack_speed()/100
+		change_attack_speed(attack_speed / (1+item.get_attack_speed()))
 		crit_chance = max(0, crit_chance - item.get_crit_chance())
 		start_mana = max(0, start_mana - item.get_mana()) # NOTE: this can cause issues if item mana was constrained when equipping (rarely happens as there is no feature yet to unequip items except upgrading and selling)
 		if item.get_ability_crit(): # not optimal but w.e

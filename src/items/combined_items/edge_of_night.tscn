@@ -34,7 +34,7 @@ item_name = "Edge of Night"
 attack_dmg = 10
 armor = 20
 unique = true
-tooltip = "+10% Attack Damage
+tooltip = "+10 Attack Damage
 +20 Armor
 
 Once per combat: At 60% Health, briefly become untargetable and shed negative effects. Then, gain 15% bonus Attack Speed.

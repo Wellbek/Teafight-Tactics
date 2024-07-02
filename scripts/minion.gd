@@ -9,6 +9,7 @@ var parent
 var ui: Control
 
 var target = null
+var eon_target = null
 var targetable = true 
 var attacking = false
 
@@ -52,7 +53,7 @@ func _enter_tree():
 func _process(delta):
 	if dead: return
 	
-	if parent.visible and not timer.is_transitioning() and not timer.is_preparing():
+	if parent.visible and not timer.is_transitioning() and not timer.is_preparing() and not target:
 		find_target()
 
 func _physics_process(delta):	
@@ -88,10 +89,16 @@ func find_target():
 	var player_units = player.find_child("Units").get_children()
 	
 	for unit in player_units:	
-		if not unit.is_targetable(): continue
+		if not unit.is_targetable() or unit.dead or unit == eon_target: continue
 		
 		if not target or global_transform.origin.distance_to(unit.global_transform.origin) < global_transform.origin.distance_to(target.global_transform.origin):
 			target = unit
+			eon_target = null
+			
+	# in case no other valid target was found but there is still the untargetable edge of night one
+	if not target and eon_target:
+		target = eon_target
+		eon_target = null
 		
 func toggle_ui(value):
 	ui.visible = value
@@ -135,13 +142,13 @@ func take_dmg(raw_dmg, dmg_type, dodgeable, source: NodePath):
 	
 	if curr_health <= 0 and not dead: 
 		var attacker = get_node_or_null(source) if source else null
-		if attacker: attacker.on_kill.rpc_id(attacker.get_multiplayer_authority(), get_path())
+		if attacker: attacker._on_kill.rpc_id(attacker.get_multiplayer_authority(), get_path())
 		dead = true
 		death.rpc(get_path())
 		main.free_object.rpc(get_path())
 		
 @rpc("any_peer", "call_local", "unreliable")
-func on_kill(_target_path):
+func _on_kill(_target_path):
 	var _target = get_node(_target_path)
 	print(name, " killed ", _target)
 		
@@ -251,3 +258,11 @@ func remove_particle(_name):
 	
 func is_shielded():
 	return shield > 0
+
+@rpc("any_peer", "call_local", "unreliable")
+func receive_eon_effect(eon_owner_path: NodePath):
+	var eon_owner = get_node(eon_owner_path)
+	
+	if eon_owner == target:
+		eon_target = target
+		target = null

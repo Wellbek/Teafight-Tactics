@@ -131,7 +131,7 @@ timer = NodePath("../RoundTimer")
 startButton = NodePath("../GUI/TmpStartGame")
 lobby_id_box = NodePath("../GUI/LobbyID")
 enable_on_start = [NodePath("../GUI/GameStartLabel")]
-disable_on_start = [NodePath("../GUI/TextEdit"), NodePath("../GUI/TmpHost"), NodePath("../GUI/TmpJoin"), NodePath("../GUI/TmpLobbies"), NodePath("../GUI/LobbyContainer")]
+disable_on_start = [NodePath("../GUI/TextEdit"), NodePath("../GUI/TmpHost"), NodePath("../GUI/TmpJoin"), NodePath("../GUI/TmpLobbies"), NodePath("../GUI/LobbyContainer"), NodePath("../GUI/Label"), NodePath("../GUI/CheckButton")]
 id_box = NodePath("../GUI/TextEdit")
 
 [node name="RoundTimer" type="Timer" parent="."]
