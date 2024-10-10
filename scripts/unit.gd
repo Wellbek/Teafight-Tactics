@@ -146,6 +146,10 @@ var last_whisper = false
 var curr_sunder = 0.0
 const LAST_WHISPER_SUNDER_AMOUNT = 0.3
 const LAST_WHISPER_DURATION = 3
+# nashors tooth
+const NASHORS_AS_BUFF = 0.4
+const NASHORS_DURATION = 5.0
+var nashor_as_bonus = 0.0
 
 @export_category("Ability")
 @export_enum("Enhanced Auto", "Poison Bomb") var ability_id = 0
@@ -297,6 +301,9 @@ func change_mode(_mode: int):
 	if not is_multiplayer_authority(): return
 		
 	play_animation(idle_anim, false)
+	
+	# reset buff
+	_on_nashor_end()
 	
 	if _mode == BATTLE:
 		
@@ -468,6 +475,8 @@ func change_mode(_mode: int):
 					runaans_count += 1
 				"Last Whisper":
 					last_whisper = true
+				"Nashor's Tooth":
+					nashor_as_bonus += NASHORS_AS_BUFF
 				_: pass
 			item_index += 1
 		
@@ -695,6 +704,8 @@ func change_mode(_mode: int):
 					runaans_count = 0
 				"Last Whisper":
 					last_whisper = false
+				"Nashor's Tooth":
+					nashor_as_bonus -= NASHORS_AS_BUFF
 				_: pass
 		
 		# reset bastion trait
@@ -1306,6 +1317,36 @@ func change_attack_speed(val):
 	attack_timer.wait_time = 1/attack_speed
 	if attacking == true: attack_timer.start()
 	
+func apply_nashor():
+	var nashor_timer = get_node_or_null("nashor_timer")
+	
+	if nashor_timer: nashor_timer.queue_free() # Remove old timer if it exists
+	
+	# Create and start a new timer for Nashor's effect duration
+	var timer = Timer.new()
+	add_child(timer)
+	timer.name = "nashor_timer"
+	timer.wait_time = NASHORS_DURATION
+	timer.one_shot = true
+	timer.connect("timeout", _on_nashor_end)
+	timer.start()
+	
+	change_attack_speed(attack_speed * (1 + nashor_as_bonus))
+
+	# print("Nashor's Tooth applied: +", nashor_as_bonus * 100, "% AS bonus")
+
+# Remove Nashor's Tooth effect
+func _on_nashor_end():
+	var nashor_timer = get_node_or_null("nashor_timer")
+	
+	if nashor_timer: nashor_timer.queue_free()
+	
+	# Remove the Nashor's Tooth attack speed bonus
+	change_attack_speed(attack_speed / (1 + nashor_as_bonus))
+
+	# print("Nashor's Tooth ended, AS bonus reset")
+	
+	
 @rpc("any_peer", "call_local", "unreliable")
 func apply_sunder(_amount, _duration):
 	if not is_multiplayer_authority(): return
@@ -1832,6 +1873,8 @@ func ability(_target, pve = false):
 			timer.start()
 			poisoned_enemies[_target] = 10
 		_: pass
+		
+	if nashor_as_bonus > 0: apply_nashor()
 	
 func _on_poison_bomb_timeout():	
 	if not poisoned_enemies:
