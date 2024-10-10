@@ -157,6 +157,8 @@ const GARGOYLE_BUFF = 10
 # protectors vow
 var pv_count = 0
 var pv_passive_ready = false
+# ionic spark
+const SPARK_SHRED = 0.45
 
 @export_category("Ability")
 @export_enum("Enhanced Auto", "Poison Bomb") var ability_id = 0
@@ -463,6 +465,17 @@ func change_mode(_mode: int):
 						timer.one_shot = false
 						timer.connect("timeout", _on_burn)
 						timer.start()
+				"Ionic Spark":
+					var spark_timer = get_node_or_null("spark_timer")
+					if not spark_timer:
+						# Every second shred enemies within 2 hexes for 1 second
+						var timer = Timer.new()
+						add_child(timer)
+						timer.name = "spark_timer"
+						timer.wait_time = 1
+						timer.one_shot = false
+						timer.connect("timeout", _on_spark)
+						timer.start()
 				"Spear of Shojin":
 					mana_per_attack += 5
 				"Steadfast Heart":
@@ -695,6 +708,9 @@ func change_mode(_mode: int):
 					
 					var burn_timer = get_node_or_null("burn_timer")
 					if burn_timer: burn_timer.queue_free()
+				"Ionic Spark":
+					var spark_timer = get_node_or_null("spark_timer")
+					if spark_timer: spark_timer.queue_free()
 				"Spear of Shojin":
 					mana_per_attack -= 5
 				"Steadfast Heart":
@@ -880,6 +896,25 @@ func _on_dragons_claw():
 		heal_popup.text = "+" + str(int(heal))
 		add_child(heal_popup)
 		heal_popup.global_transform.origin += Vector3(randf_range(-.5,.5), randf_range(0,1), 0.5)
+	
+func _on_spark():
+	if not player.get_current_enemy(): # pve round
+		for pve_round in player.get_node("PVERounds").get_children():	
+			if pve_round.visible:
+				for minion in pve_round.get_children():
+					if not minion.is_targetable(): continue
+				
+					if global_transform.origin.distance_to(minion.global_transform.origin) < 4:
+						minion.apply_shred(SPARK_SHRED, 1)
+		return
+	
+	var enemy_units = player.get_current_enemy().find_child("Units").get_children()
+	
+	for unit in enemy_units:	
+		if not unit.is_targetable() or unit.dead: continue
+	
+		if global_transform.origin.distance_to(unit.global_transform.origin) < 4:
+			unit.apply_shred.rpc_id(unit.get_owner_id(), SPARK_SHRED, 1)
 	
 func _on_sunfire():
 	if not player.get_current_enemy(): # pve round
@@ -1382,18 +1417,21 @@ func apply_sunder(_amount, _duration):
 	if not is_multiplayer_authority(): return
 	
 	# only overwrite current sunder if new effect is stronger or same
-	if _amount >= curr_sunder: 
+	if _amount >= curr_sunder:
 		var sunder_timer = get_node_or_null("sunder_timer")
 		
-		if sunder_timer: sunder_timer.free() # remove old one
-			
-		var timer = Timer.new()
-		add_child(timer)
-		timer.name = "sunder_timer"
-		timer.wait_time = _duration
-		timer.one_shot = true
-		timer.connect("timeout", _on_sunder_end)
-		timer.start()
+		if not sunder_timer: # If timer doesn't exist, create it
+			sunder_timer = Timer.new()
+			add_child(sunder_timer)
+			sunder_timer.name = "sunder_timer"
+			sunder_timer.one_shot = true
+			sunder_timer.connect("timeout", _on_sunder_end)
+		else:
+			sunder_timer.stop() # Stop the timer if it's already running
+		
+		# Set the timer duration and start it
+		sunder_timer.wait_time = _duration
+		sunder_timer.start()
 		
 		# Remove old sunder effect by dividing by (1 - curr_sunder)
 		if curr_sunder != 0:
@@ -1406,17 +1444,19 @@ func apply_sunder(_amount, _duration):
 		armor *= (1 - curr_sunder)
 		
 		#print("Sundered now for ", curr_sunder, "// new armor is hence ", armor)
-		
+
 func _on_sunder_end():
 	var sunder_timer = get_node_or_null("sunder_timer")
 	
-	if sunder_timer: sunder_timer.free()	
+	if sunder_timer: sunder_timer.stop() # Just stop it, don't free
 	
-	armor *= (1 - curr_sunder)
-	curr_sunder = 0	
+	# Reset armor and current sunder amount
+	armor /= (1 - curr_sunder)
+	curr_sunder = 0
 	
 	#print("Sunder end // new armor is hence ", armor)
-	
+
+
 @rpc("any_peer", "call_local", "unreliable")
 func apply_shred(_amount, _duration):
 	if not is_multiplayer_authority(): return
@@ -1425,33 +1465,40 @@ func apply_shred(_amount, _duration):
 	if _amount >= curr_shred:
 		var shred_timer = get_node_or_null("shred_timer")
 		
-		if shred_timer: shred_timer.free() # remove old one
-			
-		var timer = Timer.new()
-		add_child(timer)
-		timer.name = "shred_timer"
-		timer.wait_time = _duration
-		timer.one_shot = true
-		timer.connect("timeout", on_shred_end)
-		timer.start()
+		if not shred_timer: # If timer doesn't exist, create it
+			shred_timer = Timer.new()
+			add_child(shred_timer)
+			shred_timer.name = "shred_timer"
+			shred_timer.one_shot = true
+			shred_timer.connect("timeout", on_shred_end)
+		else:
+			shred_timer.stop() # Stop the timer if it's already running
+		
+		# Set the timer duration and start it
+		shred_timer.wait_time = _duration
+		shred_timer.start()
 		
 		# Remove old shred effect by dividing by (1 - curr_shred)
 		if curr_shred != 0:
-			armor /= (1 - curr_shred)
+			mr /= (1 - curr_shred)
 			
 		# Store new shred amount
 		curr_shred = _amount
 		
 		# Apply new shred effect by multiplying by (1 - new_shred)
-		armor *= (1 - curr_shred)
+		mr *= (1 - curr_shred)
+		
+		# print("Shred applied // new mr is hence ", mr)
 
 func on_shred_end():
 	var shred_timer = get_node_or_null("shred_timer")
 	
-	if shred_timer: shred_timer.free()    
+	if shred_timer: shred_timer.stop() # Just stop it, don't free
 	
-	armor *= (1 - curr_shred)
+	mr /= (1 - curr_shred)
 	curr_shred = 0
+	
+	# print("Shred end // new mr is hence ", mr)
 
 @rpc("any_peer", "call_local", "unreliable")
 func take_dmg(raw_dmg, dmg_type, dodgeable, source: NodePath):

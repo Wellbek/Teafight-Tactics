@@ -62,6 +62,7 @@ attackrange = 2.0
 max_health = 1200.0
 attack_dmg = 90.0
 armor = 50.0
+mr = 25.0
 attack_timer = NodePath("AttackTimer")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]

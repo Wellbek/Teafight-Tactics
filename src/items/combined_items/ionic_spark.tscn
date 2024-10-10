@@ -38,7 +38,9 @@ tooltip = "+200 Health
 +15 Ability Power
 +25 Magic Resist
 
-30% Shred enemies within 2 hexes. When enemies cast an Ability, they are also zapped for magic damage equal to 160% of their maximum Mana."
+45% Shred enemies within 2 hexes. 
+
+Shred: Reduce Magic Resist"
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("BoxShape3D_b61h1")

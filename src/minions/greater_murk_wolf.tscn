@@ -60,6 +60,7 @@ attackrange = 2.0
 max_health = 960.0
 attack_dmg = 150.0
 armor = 25.0
+mr = 0.0
 attack_speed = 1.0
 attack_timer = NodePath("AttackTimer")
 
