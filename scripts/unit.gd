@@ -154,6 +154,9 @@ var nashor_as_bonus = 0.0
 var targeting_count = 0
 var gargoyle_count = 0
 const GARGOYLE_BUFF = 10
+# protectors vow
+var pv_count = 0
+var pv_passive_ready = false
 
 @export_category("Ability")
 @export_enum("Enhanced Auto", "Poison Bomb") var ability_id = 0
@@ -485,6 +488,9 @@ func change_mode(_mode: int):
 					nashor_as_bonus += NASHORS_AS_BUFF
 				"Gargoyle Stoneplate":
 					gargoyle_count += 1
+				"Protector's Vow":
+					pv_passive_ready = true
+					pv_count += 1
 				_: pass
 			item_index += 1
 		
@@ -716,6 +722,11 @@ func change_mode(_mode: int):
 					nashor_as_bonus -= NASHORS_AS_BUFF
 				"Gargoyle Stoneplate":
 					gargoyle_count -= 1
+				"Protector's Vow":
+					if not pv_passive_ready: # meaning it was used in combat
+						armor -= 20
+						mr -= 20
+					pv_count -= 1
 				_: pass
 		
 		# reset bastion trait
@@ -944,6 +955,12 @@ func _on_bt_passive_end():
 	refresh_shieldbar()
 	var bt_timer = get_node_or_null("bt_timer")
 	if bt_timer: bt_timer.queue_free()
+	
+func _on_pv_passive_end():
+	shield = max(0, shield-(0.25*pv_count*max_health))
+	refresh_shieldbar()
+	var pv_timer = get_node_or_null("pv_timer")
+	if pv_timer: pv_timer.queue_free()
 	
 func _on_crownguard():
 	ability_power += 35*crownguards
@@ -1499,6 +1516,20 @@ func take_dmg(raw_dmg, dmg_type, dodgeable, source: NodePath):
 			timer.wait_time = 5
 			timer.one_shot = true
 			timer.connect("timeout", _on_bt_passive_end)
+			timer.start()
+			
+		if pv_passive_ready and curr_health/max_health <= 0.4:
+			pv_passive_ready = false
+			mr += 20*pv_count
+			armor += 20*pv_count
+			var timer = Timer.new()
+			add_child(timer)
+			shield += 0.25*pv_count*max_health
+			refresh_shieldbar()
+			timer.name = "pv_timer"
+			timer.wait_time = 5
+			timer.one_shot = true
+			timer.connect("timeout", _on_pv_passive_end)
 			timer.start()
 			
 		if eon_passive_ready and curr_health/max_health <= 0.6:
