@@ -163,6 +163,10 @@ const SPARK_SHRED = 0.45
 const EVS_SUNDER = 0.3
 const EVS_START_BUFF = 25
 var evs_count = 0
+# redemption
+var redemption_heal = 0
+const REDEMPTION_HEAL_PERCENT = 0.15
+const REDEMPTION_HEAL_INTERVAL = 5.0
 
 @export_category("Ability")
 @export_enum("Enhanced Auto", "Poison Bomb") var ability_id = 0
@@ -505,6 +509,17 @@ func change_mode(_mode: int):
 						timer.one_shot = false
 						timer.connect("timeout", _on_evs)
 						timer.start()
+				"Redemption":
+					redemption_heal += REDEMPTION_HEAL_PERCENT
+					var redemption_timer = get_node_or_null("redemption_timer")
+					if not redemption_timer:
+						var timer = Timer.new()
+						add_child(timer)
+						timer.name = "redemption_timer"
+						timer.wait_time = REDEMPTION_HEAL_INTERVAL
+						timer.one_shot = false
+						timer.connect("timeout", _on_redemption)
+						timer.start()
 				"Spear of Shojin":
 					mana_per_attack += 5
 				"Steadfast Heart":
@@ -745,6 +760,9 @@ func change_mode(_mode: int):
 					if evs_timer: evs_timer.queue_free()
 					
 					_on_evs_start()
+				"Redemption":
+					var redemption_timer = get_node_or_null("redemption_timer")
+					if redemption_timer: redemption_timer.queue_free()
 				"Spear of Shojin":
 					mana_per_attack -= 5
 				"Steadfast Heart":
@@ -929,6 +947,34 @@ func _on_dragons_claw():
 		heal_popup.modulate = Color.LIME_GREEN
 		heal_popup.text = "+" + str(int(heal))
 		add_child(heal_popup)
+		heal_popup.global_transform.origin += Vector3(randf_range(-.5,.5), randf_range(0,1), 0.5)
+
+func _on_redemption():
+	for unit in get_parent().get_children():
+		if unit == self: continue
+		if unit.get_mode() != BATTLE: continue
+		
+		# Check if unit is within range
+		var distance = global_transform.origin.distance_to(unit.global_transform.origin)
+		var hex_distance = distance / 2.0  # each hex is 2 units wide
+		if hex_distance > 2.0: continue
+		
+		# Calculate and apply heal
+		var missing_health = unit.get_max_health() - unit.get_curr_health()
+		var ally_heal = missing_health * redemption_heal
+		
+		# print("Healing ", unit, " for ", ally_heal)
+		
+		if ally_heal <= 0: continue  # Skip if full file
+		
+		unit.curr_health += ally_heal
+		unit.refresh_hpbar()
+	
+		# Create healing popup
+		var heal_popup = preload("res://src/damage_popup.tscn").instantiate()
+		heal_popup.modulate = Color.LIME_GREEN
+		heal_popup.text = "+" + str(int(ally_heal))
+		unit.add_child(heal_popup)
 		heal_popup.global_transform.origin += Vector3(randf_range(-.5,.5), randf_range(0,1), 0.5)
 
 func _on_evs_start():

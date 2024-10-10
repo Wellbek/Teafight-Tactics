@@ -36,7 +36,7 @@ mana = 15
 tooltip = "+150 Health
 +15 Starting Mana
 
-Heal allies within 1 hex for 15% of their missing Health every 5 seconds. They also take 10% less damage for 5 seconds (damage reduction does not stack)."
+Heal allies within 1 hex for 15% of their missing Health every 5 seconds. "
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("BoxShape3D_b61h1")
