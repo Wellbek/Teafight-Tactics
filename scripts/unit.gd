@@ -159,6 +159,10 @@ var pv_count = 0
 var pv_passive_ready = false
 # ionic spark
 const SPARK_SHRED = 0.45
+# evenshroud
+const EVS_SUNDER = 0.3
+const EVS_START_BUFF = 25
+var evs_count = 0
 
 @export_category("Ability")
 @export_enum("Enhanced Auto", "Poison Bomb") var ability_id = 0
@@ -476,6 +480,31 @@ func change_mode(_mode: int):
 						timer.one_shot = false
 						timer.connect("timeout", _on_spark)
 						timer.start()
+				"Evenshroud":
+					evs_count += 1
+					armor += EVS_START_BUFF
+					mr += EVS_START_BUFF
+					var evs_start_timer = get_node_or_null("evs_start_timer")
+					if not evs_start_timer:
+						# Gain 25 Armor and Magic Resist for the first 10 seconds of combat
+						var timer = Timer.new()
+						add_child(timer)
+						timer.name = "evs_start_timer"
+						timer.wait_time = 10
+						timer.one_shot = true
+						timer.connect("timeout", _on_evs_start)
+						timer.start()
+					
+					var evs_timer = get_node_or_null("evs_timer")
+					if not evs_timer:
+						# Every second sunder enemies within 2 hexes for 1 second
+						var timer = Timer.new()
+						add_child(timer)
+						timer.name = "evs_timer"
+						timer.wait_time = 1
+						timer.one_shot = false
+						timer.connect("timeout", _on_evs)
+						timer.start()
 				"Spear of Shojin":
 					mana_per_attack += 5
 				"Steadfast Heart":
@@ -711,6 +740,11 @@ func change_mode(_mode: int):
 				"Ionic Spark":
 					var spark_timer = get_node_or_null("spark_timer")
 					if spark_timer: spark_timer.queue_free()
+				"Evenshroud":
+					var evs_timer = get_node_or_null("evs_timer")
+					if evs_timer: evs_timer.queue_free()
+					
+					_on_evs_start()
 				"Spear of Shojin":
 					mana_per_attack -= 5
 				"Steadfast Heart":
@@ -896,6 +930,32 @@ func _on_dragons_claw():
 		heal_popup.text = "+" + str(int(heal))
 		add_child(heal_popup)
 		heal_popup.global_transform.origin += Vector3(randf_range(-.5,.5), randf_range(0,1), 0.5)
+
+func _on_evs_start():
+	var evs_start_timer = get_node_or_null("evs_start_timer")
+	if evs_start_timer:
+		armor -= evs_count*EVS_START_BUFF
+		mr -= evs_count*EVS_START_BUFF
+		evs_start_timer.queue_free()
+	
+func _on_evs():
+	if not player.get_current_enemy(): # pve round
+		for pve_round in player.get_node("PVERounds").get_children():	
+			if pve_round.visible:
+				for minion in pve_round.get_children():
+					if not minion.is_targetable(): continue
+				
+					if global_transform.origin.distance_to(minion.global_transform.origin) < 4:
+						minion.apply_sunder(EVS_SUNDER, 1)
+		return
+	
+	var enemy_units = player.get_current_enemy().find_child("Units").get_children()
+	
+	for unit in enemy_units:	
+		if not unit.is_targetable() or unit.dead: continue
+	
+		if global_transform.origin.distance_to(unit.global_transform.origin) < 4:
+			unit.apply_sunder.rpc_id(unit.get_owner_id(), EVS_SUNDER, 1)
 	
 func _on_spark():
 	if not player.get_current_enemy(): # pve round

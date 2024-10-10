@@ -36,7 +36,9 @@ magic_resist = 20
 tooltip = "+150 Health
 +20 Magic Resist
 
-30% Sunder enemies within 2 hexes. Gain 25 Armor and Magic Resist for the first 10 seconds of combat."
+30% Sunder enemies within 2 hexes. Gain 25 Armor and Magic Resist for the first 10 seconds of combat.
+
+Sunder: Reduce Armor"
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("BoxShape3D_b61h1")
