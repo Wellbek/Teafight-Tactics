@@ -39,9 +39,10 @@ tooltip = "+15 Attack Damage
 +25% Attack Speed
 +20% Critical Strike Chance
 
-Any physical damage dealt 30% Sunders the target for 3 seconds. This effect does not stack.
+Auto attacks afflict 30% Sunder to the target for 3 seconds. This effect does not stack.
 
-[Unique - Only One Per Champion]"
+[Unique - Only One Per Champion]
+Sunder: reduce Armor"
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("BoxShape3D_b61h1")

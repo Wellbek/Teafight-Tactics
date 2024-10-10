@@ -133,6 +133,19 @@ var sg_passive_ready = false
 # runaans
 var runaans_count = 0
 const RUNAANS_DMG = 0.55
+# stattiks
+var statikks = false
+var statikk_attack_counter = 0
+var curr_shred = 0.0
+const STATIKK_MAGIC_DMG = 35
+const STATIKK_SHRED_AMOUNT = 0.30
+const STATIKK_SHRED_DURATION = 5.0
+const STATIKK_CHAIN_COUNT = 4
+# last whisper
+var last_whisper = false
+var curr_sunder = 0.0
+const LAST_WHISPER_SUNDER_AMOUNT = 0.3
+const LAST_WHISPER_DURATION = 3
 
 @export_category("Ability")
 @export_enum("Enhanced Auto", "Poison Bomb") var ability_id = 0
@@ -443,6 +456,8 @@ func change_mode(_mode: int):
 					sg_bonus_ad += 35
 					sg_bonus_health += 0.25
 					sg_passive_ready = true
+				"Statikk Shiv":
+					statikks = true
 				"Warmog's Armor":
 					max_health *= 1.08
 					curr_health = max_health
@@ -451,6 +466,8 @@ func change_mode(_mode: int):
 					rabadons_bonus_dmg += 0.2
 				"Runaan's Hurricane":
 					runaans_count += 1
+				"Last Whisper":
+					last_whisper = true
 				_: pass
 			item_index += 1
 		
@@ -667,6 +684,8 @@ func change_mode(_mode: int):
 						max_health /= (1+sg_bonus_health)
 						sg_bonus_health = 0
 					sg_passive_ready = false
+				"Statikk Shiv":
+					statikks = false
 				"Warmog's Armor":
 					max_health /= 1.08
 					if curr_health > max_health: curr_health = max_health
@@ -674,6 +693,8 @@ func change_mode(_mode: int):
 					rabadons_bonus_dmg += 0.2
 				"Runaan's Hurricane":
 					runaans_count = 0
+				"Last Whisper":
+					last_whisper = false
 				_: pass
 		
 		# reset bastion trait
@@ -753,6 +774,9 @@ func change_mode(_mode: int):
 		# reset shurima
 		var fruit_timer = get_node_or_null("fruit_trait")
 		if fruit_timer: fruit_timer.queue_free()
+		
+		# reset item
+		_on_sunder_end()
 	
 		set_collision_layer_value(5, false)
 		
@@ -1035,6 +1059,54 @@ func _on_attack_timer_timeout():
 		attack_timer.stop()
 	else: auto_attack(target, targeting_neutral)
 
+func apply_statikk_effect(_target, id):
+	statikk_attack_counter += 1
+	if statikk_attack_counter >= 3:
+		statikk_attack_counter = 0
+		
+		var potential_targets = []
+		
+		# Handle PVE rounds
+		if not player.get_current_enemy():
+			for pve_round in player.get_node("PVERounds").get_children():
+				if not pve_round.visible:
+					continue
+					
+				for minion in pve_round.get_children():
+					if not minion.is_targetable() or minion == _target:
+						continue
+					# Store distance to main target for sorting
+					var distance_to_target = minion.global_transform.origin.distance_to(_target.global_transform.origin)
+					potential_targets.append({"unit": minion, "distance": distance_to_target})
+		
+		# Handle PVP rounds
+		else:
+			var enemy_units = player.get_current_enemy().find_child("Units").get_children()
+			for unit in enemy_units:
+				if not unit.is_targetable() or unit.dead or unit == _target:
+					continue
+				# Store distance to main target for sorting
+				var distance_to_target = unit.global_transform.origin.distance_to(_target.global_transform.origin)
+				potential_targets.append({"unit": unit, "distance": distance_to_target})
+		
+		# Sort potential targets by distance to main target
+		potential_targets.sort_custom(func(a, b): return a.distance < b.distance)
+		
+		# Apply chain lightning to closest targets (up to STATIKK_CHAIN_COUNT)
+		for i in range(min(STATIKK_CHAIN_COUNT, potential_targets.size())):
+			var target_unit = potential_targets[i].unit
+			
+			# Apply magic damage and shred
+			target_unit.apply_shred.rpc_id(id, STATIKK_SHRED_AMOUNT, STATIKK_SHRED_DURATION)
+			target_unit.take_dmg.rpc_id(id, STATIKK_MAGIC_DMG, 0, false, get_path())  # Magic damage
+			
+			# Create damage popup for Statikk
+			var dmg_popup = preload("res://src/damage_popup.tscn").instantiate()
+			dmg_popup.modulate = Color.BLUE 
+			dmg_popup.text = str(STATIKK_MAGIC_DMG)
+			add_child(dmg_popup)
+			dmg_popup.global_transform.origin = target_unit.global_transform.origin + Vector3(randf_range(-.5, .5), randf_range(0, 1), 0.5)
+
 func auto_attack(_target, pve = false):
 	if _target == null or (not pve and _target.get_mode() != BATTLE) or _target.dead or dead: return
 	
@@ -1109,6 +1181,10 @@ func auto_attack(_target, pve = false):
 		# Attack the closest units (up to runaans_count)
 		for i in range(min(runaans_count, potential_targets.size())):
 			var target_unit = potential_targets[i].unit
+			
+			if last_whisper:
+				target_unit.apply_sunder.rpc_id(id, LAST_WHISPER_SUNDER_AMOUNT, LAST_WHISPER_DURATION)
+			
 			# Apply Runaan's damage
 			target_unit.take_dmg.rpc_id(id, damage * RUNAANS_DMG, 0, true, get_path())
 			
@@ -1119,9 +1195,12 @@ func auto_attack(_target, pve = false):
 				dmg_popup_rn.scale *= 1.5
 			dmg_popup_rn.text = str(int(damage * RUNAANS_DMG))
 			add_child(dmg_popup_rn)
-			dmg_popup_rn.global_transform.origin = target_unit.global_transform.origin + Vector3(randf_range(-.5,.5), randf_range(0,1), 0.5)
-		
-		_target.take_dmg.rpc_id(id, damage, 0, true, get_path())
+			dmg_popup_rn.global_transform.origin = target_unit.global_transform.origin + Vector3(randf_range(-.5,.5), randf_range(0,1), 0.5)	
+	
+	if statikks: apply_statikk_effect(_target, id)
+	
+	if last_whisper: target.apply_sunder.rpc_id(id, LAST_WHISPER_SUNDER_AMOUNT, LAST_WHISPER_DURATION)
+	_target.take_dmg.rpc_id(id, damage, 0, true, get_path())
 	
 	# guardbreaker
 	if _target.is_shielded() and guardbreaker_bonus_dmg > 0:
@@ -1226,6 +1305,82 @@ func change_attack_speed(val):
 	attack_speed = val
 	attack_timer.wait_time = 1/attack_speed
 	if attacking == true: attack_timer.start()
+	
+@rpc("any_peer", "call_local", "unreliable")
+func apply_sunder(_amount, _duration):
+	if not is_multiplayer_authority(): return
+	
+	# only overwrite current sunder if new effect is stronger or same
+	if _amount >= curr_sunder: 
+		var sunder_timer = get_node_or_null("sunder_timer")
+		
+		if sunder_timer: sunder_timer.free() # remove old one
+			
+		var timer = Timer.new()
+		add_child(timer)
+		timer.name = "sunder_timer"
+		timer.wait_time = _duration
+		timer.one_shot = true
+		timer.connect("timeout", _on_sunder_end)
+		timer.start()
+		
+		# Remove old sunder effect by dividing by (1 - curr_sunder)
+		if curr_sunder != 0:
+			armor /= (1 - curr_sunder)
+			
+		# Store new sunder amount
+		curr_sunder = _amount
+		
+		# Apply new sunder effect by multiplying by (1 - new_sunder)
+		armor *= (1 - curr_sunder)
+		
+		#print("Sundered now for ", curr_sunder, "// new armor is hence ", armor)
+		
+func _on_sunder_end():
+	var sunder_timer = get_node_or_null("sunder_timer")
+	
+	if sunder_timer: sunder_timer.free()	
+	
+	armor *= (1 - curr_sunder)
+	curr_sunder = 0	
+	
+	#print("Sunder end // new armor is hence ", armor)
+	
+@rpc("any_peer", "call_local", "unreliable")
+func apply_shred(_amount, _duration):
+	if not is_multiplayer_authority(): return
+	
+	# only overwrite current shred if new effect is stronger or same
+	if _amount >= curr_shred:
+		var shred_timer = get_node_or_null("shred_timer")
+		
+		if shred_timer: shred_timer.free() # remove old one
+			
+		var timer = Timer.new()
+		add_child(timer)
+		timer.name = "shred_timer"
+		timer.wait_time = _duration
+		timer.one_shot = true
+		timer.connect("timeout", on_shred_end)
+		timer.start()
+		
+		# Remove old shred effect by dividing by (1 - curr_shred)
+		if curr_shred != 0:
+			armor /= (1 - curr_shred)
+			
+		# Store new shred amount
+		curr_shred = _amount
+		
+		# Apply new shred effect by multiplying by (1 - new_shred)
+		armor *= (1 - curr_shred)
+
+func on_shred_end():
+	var shred_timer = get_node_or_null("shred_timer")
+	
+	if shred_timer: shred_timer.free()    
+	
+	armor *= (1 - curr_shred)
+	curr_shred = 0
 
 @rpc("any_peer", "call_local", "unreliable")
 func take_dmg(raw_dmg, dmg_type, dodgeable, source: NodePath):

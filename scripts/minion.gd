@@ -22,12 +22,16 @@ var dead = false
 @onready var curr_health = max_health
 @export var attack_dmg = 20.0
 @export var armor = 30.0
+@export var mr = 30.0
 @export var attack_speed = 0.8
 @export var attack_timer: Timer
 var shield = 0.0
 
 var wounded = false
 var wound = 0.0
+
+var curr_sunder = 0.0
+var curr_shred = 0.0
 
 const BAR_COLOR = Color(0.757, 0.231, 0.259)
 
@@ -147,6 +151,86 @@ func take_dmg(raw_dmg, dmg_type, dodgeable, source: NodePath):
 		death.rpc(get_path())
 		main.free_object.rpc(get_path())
 		
+@rpc("any_peer", "call_local", "unreliable")
+func apply_sunder(_amount, _duration):
+	if not is_multiplayer_authority(): return
+	
+	# only overwrite current sunder if new effect is stronger or same
+	if _amount >= curr_sunder: 
+		var sunder_timer = get_node_or_null("sunder_timer")
+		
+		if sunder_timer: sunder_timer.free() # remove old one
+			
+		var timer = Timer.new()
+		add_child(timer)
+		timer.name = "sunder_timer"
+		timer.wait_time = _duration
+		timer.one_shot = true
+		timer.connect("timeout", _on_sunder_end)
+		timer.start()
+		
+		# Remove old sunder effect by dividing by (1 - curr_sunder)
+		if curr_sunder != 0:
+			armor /= (1 - curr_sunder)
+			
+		# Store new sunder amount
+		curr_sunder = _amount
+		
+		# Apply new sunder effect by multiplying by (1 - new_sunder)
+		armor *= (1 - curr_sunder)
+		
+		#print("Sundered now for ", curr_sunder, "// new armor is hence ", armor)
+		
+func _on_sunder_end():
+	var sunder_timer = get_node_or_null("sunder_timer")
+	
+	if sunder_timer: sunder_timer.free()	
+	
+	armor *= (1 - curr_sunder)
+	curr_sunder = 0	
+	
+	#print("Sunder end // new armor is hence ", armor)
+
+@rpc("any_peer", "call_local", "unreliable")
+func apply_shred(_amount, _duration):
+	if not is_multiplayer_authority(): return
+	
+	# only overwrite current shred if new effect is stronger or same
+	if _amount >= curr_shred:
+		var shred_timer = get_node_or_null("shred_timer")
+		
+		if shred_timer: shred_timer.queue_free() # remove old one
+			
+		var timer = Timer.new()
+		add_child(timer)
+		timer.name = "shred_timer"
+		timer.wait_time = _duration
+		timer.one_shot = true
+		timer.connect("timeout", on_shred_end)
+		timer.start()
+		
+		# Remove old shred effect by dividing by (1 - curr_shred)
+		if curr_shred != 0:
+			armor /= (1 - curr_shred)
+			
+		# Store new shred amount
+		curr_shred = _amount
+		
+		# Apply new shred effect by multiplying by (1 - new_shred)
+		armor *= (1 - curr_shred)
+		
+		print("Shred end // new armor is hence ", armor)
+
+func on_shred_end():
+	var shred_timer = get_node_or_null("shred_timer")
+	
+	if shred_timer: shred_timer.queue_free()    
+	
+	mr *= (1 - curr_shred)
+	curr_shred = 0
+	
+	print("Shred end // new armor is hence ", armor)
+	
 @rpc("any_peer", "call_local", "unreliable")
 func _on_kill(_target_path):
 	var _target = get_node(_target_path)

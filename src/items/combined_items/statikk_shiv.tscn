@@ -34,11 +34,14 @@ item_name = "Statikk Shiv"
 attack_speed = 0.2
 ability_power = 15
 mana = 15
+unique = true
 tooltip = "+20% Attack Speed
 +15 Starting Mana
 +15 Ability Power
 
-Every 3rd attack unleashes chain lightning that bounces to 4 enemies, dealing 35 magic damage and 30% Shredding them for 5 seconds."
+Every 3rd attack unleashes chain lightning that bounces to 4 enemies, dealing 35 magic damage and 30% Shredding them for 5 seconds.
+
+[Unique - Only One Per Champion]"
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("BoxShape3D_b61h1")
