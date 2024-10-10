@@ -100,12 +100,14 @@ var deathblade_bonus_dmg = 0.0
 var steadfast_reduction = 0.0
 # rabadons
 var rabadons_bonus_dmg = 0.0
-# more and sunfire
+# more and sunfire # red buff
 var wounded = false
 var wound = 0.0
 var burned_enemies = {} # enemy: stacks | at 4 stacks remove
 var burn_timer = null
 var morello = false
+var redbuff = false
+const RB_BONUS_DMG = 0.06
 # bloodthirster 
 var bt_passive_ready = false
 var bt_shield = 0
@@ -119,7 +121,7 @@ var crownguards = 0
 var guardbreaker_bonus_dmg = 0.0
 var guardbreaker_bonus_active = false
 # blue buff
-const BB_BONUS_DMG = 0.7
+const BB_BONUS_DMG = 0.08
 var bb_active = false
 # edge of night
 var eon_target = null
@@ -128,6 +130,8 @@ var eon_passive_ready = false
 var sg_bonus_ad = 0
 var sg_bonus_health = 0
 var sg_passive_ready = false
+
+
 
 @export_category("Ability")
 @export_enum("Enhanced Auto", "Poison Bomb") var ability_id = 0
@@ -400,6 +404,16 @@ func change_mode(_mode: int):
 						timer.connect("timeout", _on_burn)
 						timer.start()
 					morello = true
+				"Red Buff":
+					if not burn_timer: 
+						var timer = Timer.new()
+						add_child(timer)
+						timer.name = "burn_timer"
+						timer.wait_time = 1
+						timer.one_shot = false
+						timer.connect("timeout", _on_burn)
+						timer.start()
+					redbuff = true
 				"Sunfire Cape":
 					var sunfire_timer = get_node_or_null("sunfire_timer")
 					if not sunfire_timer:
@@ -626,6 +640,10 @@ func change_mode(_mode: int):
 					heal_lowest_ally = false
 				"Morellonomicon":
 					morello = true
+					var burn_timer = get_node_or_null("burn_timer")
+					if burn_timer: burn_timer.queue_free()
+				"Red Buff":
+					redbuff = true
 					var burn_timer = get_node_or_null("burn_timer")
 					if burn_timer: burn_timer.queue_free()
 				"Sunfire Cape":
@@ -856,6 +874,7 @@ func _on_burn():
 		
 		var damage = e.get_max_health() * 0.01
 		if bb_active: damage *= 1+BB_BONUS_DMG
+		if redbuff: damage *= 1+RB_BONUS_DMG
 		
 		var dmg_popup = preload("res://src/damage_popup.tscn").instantiate()
 		dmg_popup.modulate = Color.WHITE
@@ -1034,9 +1053,14 @@ func auto_attack(_target, pve = false):
 	damage *= 1+rabadons_bonus_dmg
 	if guardbreaker_bonus_active: damage *= 1+guardbreaker_bonus_dmg
 	if bb_active: damage *= 1+BB_BONUS_DMG
+	if redbuff: damage *= 1+RB_BONUS_DMG
 	damage *= (1+(bonus_dmg*2)) if (_target.get_curr_health()/_target.get_max_health() < 0.66) and type == 1 else (1+bonus_dmg)
 	if _target.get_max_health() > 1750 and giant_slayer: 
 		damage*=1.25
+		
+	if morello or redbuff: 
+		_target.be_wounded.rpc_id(_target.get_multiplayer_authority())
+		burned_enemies[_target] = 4
 	
 	var dmg_popup = preload("res://src/damage_popup.tscn").instantiate()
 	dmg_popup.modulate = Color.CRIMSON
@@ -1227,6 +1251,7 @@ func take_dmg(raw_dmg, dmg_type, dodgeable, source: NodePath):
 			if bramble_ready:
 				var reflect_dmg = bramble_dmg
 				if bb_active: reflect_dmg *= 1+BB_BONUS_DMG
+				if redbuff: reflect_dmg *= 1+RB_BONUS_DMG
 				
 				if not player.get_current_enemy(): # pve round
 					for pve_round in player.get_node("PVERounds").get_children():	
@@ -1538,6 +1563,7 @@ func ability(_target, pve = false):
 			damage *= 1+deathblade_bonus_dmg
 			damage *= 1+rabadons_bonus_dmg
 			if bb_active: damage *= 1+BB_BONUS_DMG
+			if redbuff: damage *= 1+RB_BONUS_DMG
 			damage *= (1+(bonus_dmg*2)) if (_target.get_curr_health()/_target.get_max_health() < 0.66) and type == 1 else (1+bonus_dmg)
 			if _target.get_max_health() > 1750 and giant_slayer: damage*=1.25
 			
@@ -1550,7 +1576,7 @@ func ability(_target, pve = false):
 			add_child(dmg_popup)
 			dmg_popup.global_transform.origin = _target.global_transform.origin + Vector3(randf_range(-.5,.5), randf_range(0,1), 0.5)
 			
-			if morello: 
+			if morello or redbuff: 
 				_target.be_wounded.rpc_id(_target.get_multiplayer_authority())
 				burned_enemies[_target] = 4
 			_target.take_dmg.rpc_id(id, damage, ability_dmg_type, false, get_path()) # can't dodge attack
@@ -1628,6 +1654,7 @@ func _on_poison_bomb_timeout():
 			damage *= 1+deathblade_bonus_dmg
 			damage *= 1+rabadons_bonus_dmg
 			if bb_active: damage *= 1+BB_BONUS_DMG
+			if redbuff: damage *= 1+RB_BONUS_DMG
 			damage *= (1+(bonus_dmg*2)) if (_target.get_curr_health()/_target.get_max_health() < 0.66) and type == 1 else (1+bonus_dmg)
 			if _target.get_max_health() > 1750 and giant_slayer: damage*=1.25
 			

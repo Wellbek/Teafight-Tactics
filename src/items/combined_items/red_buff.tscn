@@ -32,6 +32,7 @@ script = ExtResource("1_q0pqo")
 item_texture = ExtResource("2_y11ce")
 item_name = "Red Buff"
 attack_speed = 0.4
+unique = true
 tooltip = "+40% Attack Speed
 
 Deal 6% bonus damage. Attacks and Abilities 2% Burn and 33% Wound enemies for 5 seconds."
