@@ -124,6 +124,10 @@ var bb_active = false
 # edge of night
 var eon_target = null
 var eon_passive_ready = false
+# steraks gage
+var sg_bonus_ad = 0
+var sg_bonus_health = 0
+var sg_passive_ready = false
 
 @export_category("Ability")
 @export_enum("Enhanced Auto", "Poison Bomb") var ability_id = 0
@@ -420,6 +424,10 @@ func change_mode(_mode: int):
 				"Steadfast Heart":
 					# Take 8% less damage. While above 50% Health, take 15% less damage, instead.
 					steadfast_reduction += 0.08
+				"Sterak's Gage":
+					sg_bonus_ad += 35
+					sg_bonus_health += 0.25
+					sg_passive_ready = true
 				"Warmog's Armor":
 					max_health *= 1.08
 					curr_health = max_health
@@ -630,6 +638,14 @@ func change_mode(_mode: int):
 					mana_per_attack -= 5
 				"Steadfast Heart":
 					steadfast_reduction -= 0.08
+				"Sterak's Gage":
+					if sg_bonus_ad > 0:
+						attack_dmg -= sg_bonus_ad
+						sg_bonus_ad = 0
+					if sg_bonus_health > 0:
+						max_health /= (1+sg_bonus_health)
+						sg_bonus_health = 0
+					sg_passive_ready = false
 				"Warmog's Armor":
 					max_health /= 1.08
 					if curr_health > max_health: curr_health = max_health
@@ -1177,26 +1193,34 @@ func take_dmg(raw_dmg, dmg_type, dodgeable, source: NodePath):
 		shield = max(0, shield-dmg)
 		dmg = dmg - tmp
 		refresh_shieldbar()
-		
-	if bt_passive_ready and curr_health/max_health <= 0.4:
-		bt_passive_ready = false
-		var timer = Timer.new()
-		add_child(timer)
-		shield += bt_shield*max_health
-		refresh_shieldbar()
-		timer.name = "bt_timer"
-		timer.wait_time = 5
-		timer.one_shot = true
-		timer.connect("timeout", _on_bt_passive_end)
-		timer.start()
-		
-	if eon_passive_ready and curr_health/max_health <= 0.6:
-		eon_passive_ready = false
-		_on_edge_of_night()
 	
 	if dmg > 0: 
 		curr_health = 0 if dmg >= curr_health else curr_health-dmg
 		refresh_hpbar()
+		
+		if sg_passive_ready and curr_health/max_health <= 0.6:
+			sg_passive_ready = false
+			attack_dmg += sg_bonus_ad
+			var old_max_health = max_health
+			max_health *= 1+sg_bonus_health
+			var health_increase = max_health - old_max_health
+			curr_health += health_increase
+			
+		if bt_passive_ready and curr_health/max_health <= 0.4:
+			bt_passive_ready = false
+			var timer = Timer.new()
+			add_child(timer)
+			shield += bt_shield*max_health
+			refresh_shieldbar()
+			timer.name = "bt_timer"
+			timer.wait_time = 5
+			timer.one_shot = true
+			timer.connect("timeout", _on_bt_passive_end)
+			timer.start()
+			
+		if eon_passive_ready and curr_health/max_health <= 0.6:
+			eon_passive_ready = false
+			_on_edge_of_night()
 		
 		if dmg_type == 0 and bramble:
 			# Bramble Vest: When struck by any attack, deal 100 magic damage to all adjacent enemies. (once every 2 seconds). 

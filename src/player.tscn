@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_mrq3l"]
 [ext_resource type="Script" path="res://scripts/gridmap/gridmap.gd" id="1_ust0k"]
 [ext_resource type="Script" path="res://scripts/camera.gd" id="2_sby6c"]
-[ext_resource type="PackedScene" uid="uid://drstfrk8bt2c7" path="res://src/items/combined_items/edge_of_night.tscn" id="4_ct6ol"]
+[ext_resource type="PackedScene" uid="uid://lbwjrj3q725v" path="res://src/items/combined_items/steraks_gage.tscn" id="4_eqxet"]
 [ext_resource type="PackedScene" uid="uid://bnrnjxoiaaiuo" path="res://src/minions/melee_minion.tscn" id="5_o4yok"]
 [ext_resource type="PackedScene" uid="uid://divt1x550fa5f" path="res://src/minions/ranged_minion.tscn" id="6_c78bq"]
 [ext_resource type="PackedScene" uid="uid://2e2xsfjwn1bu" path="res://src/minions/krug.tscn" id="7_aytho"]
@@ -303,9 +303,11 @@ shape = SubResource("BoxShape3D_62cms")
 [node name="Items" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.078, 0.8, 7.829)
 
-[node name="EdgeofNight" parent="Items" instance=ExtResource("4_ct6ol")]
+[node name="SteraksGage" parent="Items" instance=ExtResource("4_eqxet")]
 
-[node name="EdgeofNight2" parent="Items" instance=ExtResource("4_ct6ol")]
+[node name="SteraksGage2" parent="Items" instance=ExtResource("4_eqxet")]
+
+[node name="SteraksGage3" parent="Items" instance=ExtResource("4_eqxet")]
 
 [node name="PVERounds" type="Node3D" parent="."]
 
@@ -314,9 +316,11 @@ visible = false
 
 [node name="MeleeMinion" parent="PVERounds/1-2" instance=ExtResource("5_o4yok")]
 transform = Transform3D(-0.8, 0, -6.99382e-08, 0, 0.8, 0, 6.99382e-08, 0, -0.8, -2, 0.5, -2)
+attack_dmg = 150.0
 
 [node name="MeleeMinion2" parent="PVERounds/1-2" instance=ExtResource("5_o4yok")]
 transform = Transform3D(-0.8, 0, -6.99382e-08, 0, 0.8, 0, 6.99382e-08, 0, -0.8, 2, 0.5, -2)
+attack_dmg = 150.0
 
 [node name="1-3" type="Node3D" parent="PVERounds"]
 visible = false
