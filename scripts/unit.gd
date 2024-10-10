@@ -130,8 +130,9 @@ var eon_passive_ready = false
 var sg_bonus_ad = 0
 var sg_bonus_health = 0
 var sg_passive_ready = false
-
-
+# runaans
+var runaans_count = 0
+const RUNAANS_DMG = 0.55
 
 @export_category("Ability")
 @export_enum("Enhanced Auto", "Poison Bomb") var ability_id = 0
@@ -448,6 +449,8 @@ func change_mode(_mode: int):
 					refresh_hpbar()
 				"Rabadon's Deathcap":
 					rabadons_bonus_dmg += 0.2
+				"Runaan's Hurricane":
+					runaans_count += 1
 				_: pass
 			item_index += 1
 		
@@ -669,6 +672,8 @@ func change_mode(_mode: int):
 					if curr_health > max_health: curr_health = max_health
 				"Rabadon's Deathcap":
 					rabadons_bonus_dmg += 0.2
+				"Runaan's Hurricane":
+					runaans_count = 0
 				_: pass
 		
 		# reset bastion trait
@@ -1071,7 +1076,52 @@ func auto_attack(_target, pve = false):
 	add_child(dmg_popup)
 	dmg_popup.global_transform.origin = _target.global_transform.origin + Vector3(randf_range(-.5,.5), randf_range(0,1), 0.5)
 	
-	_target.take_dmg.rpc_id(id, damage, 0, true, get_path())
+	# runaans
+	if runaans_count > 0:
+		var potential_targets = []
+		
+	 # Handle PVE rounds
+		if not player.get_current_enemy():
+			for pve_round in player.get_node("PVERounds").get_children():
+				if not pve_round.visible:
+					continue
+					
+				for minion in pve_round.get_children():
+					if not minion.is_targetable() or minion == _target:
+						continue
+					# Store distance to main target for sorting
+					var distance_to_target = minion.global_transform.origin.distance_to(_target.global_transform.origin)
+					potential_targets.append({"unit": minion, "distance": distance_to_target})
+		
+		# Handle PVP rounds
+		else:
+			var enemy_units = player.get_current_enemy().find_child("Units").get_children()
+			for unit in enemy_units:
+				if not unit.is_targetable() or unit.dead or unit == _target:
+					continue
+				# Store distance to main target for sorting
+				var distance_to_target = unit.global_transform.origin.distance_to(_target.global_transform.origin)
+				potential_targets.append({"unit": unit, "distance": distance_to_target})
+		
+		# Sort potential targets by distance to main target
+		potential_targets.sort_custom(func(a, b): return a.distance < b.distance)
+		
+		# Attack the closest units (up to runaans_count)
+		for i in range(min(runaans_count, potential_targets.size())):
+			var target_unit = potential_targets[i].unit
+			# Apply Runaan's damage
+			target_unit.take_dmg.rpc_id(id, damage * RUNAANS_DMG, 0, true, get_path())
+			
+			var dmg_popup_rn = preload("res://src/damage_popup.tscn").instantiate()
+			dmg_popup_rn.modulate = Color.CRIMSON
+			if rng <= crit_chance: 
+				dmg_popup_rn.modulate = Color.RED
+				dmg_popup_rn.scale *= 1.5
+			dmg_popup_rn.text = str(int(damage * RUNAANS_DMG))
+			add_child(dmg_popup_rn)
+			dmg_popup_rn.global_transform.origin = target_unit.global_transform.origin + Vector3(randf_range(-.5,.5), randf_range(0,1), 0.5)
+		
+		_target.take_dmg.rpc_id(id, damage, 0, true, get_path())
 	
 	# guardbreaker
 	if _target.is_shielded() and guardbreaker_bonus_dmg > 0:
