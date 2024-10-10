@@ -96,12 +96,15 @@ func find_target():
 		if not unit.is_targetable() or unit.dead or unit == eon_target: continue
 		
 		if not target or global_transform.origin.distance_to(unit.global_transform.origin) < global_transform.origin.distance_to(target.global_transform.origin):
+			if target: target.decrease_targeting_count.rpc_id(target.get_owner_id())
 			target = unit
+			target.increase_targeting_count.rpc_id(target.get_owner_id())
 			eon_target = null
 			
 	# in case no other valid target was found but there is still the untargetable edge of night one
 	if not target and eon_target:
 		target = eon_target
+		target.increase_targeting_count.rpc_id(target.get_owner_id())
 		eon_target = null
 		
 func toggle_ui(value):
@@ -240,8 +243,12 @@ func _on_kill(_target_path):
 func death(_path):
 	var instance = get_tree().root.get_node(_path)
 	var parent = instance.get_parent()
+	
 	if instance != null and is_instance_valid(instance):
 		instance.dead = true	
+			
+		if target: target.decrease_targeting_count.rpc_id(target.get_owner_id())
+		
 		if multiplayer.is_server():
 			drop()
 			
@@ -350,3 +357,11 @@ func receive_eon_effect(eon_owner_path: NodePath):
 	if eon_owner == target:
 		eon_target = target
 		target = null
+
+@rpc("any_peer", "call_local", "unreliable")		
+func decrease_targeting_count():
+	pass
+
+@rpc("any_peer", "call_local", "unreliable")
+func increase_targeting_count():
+	pass

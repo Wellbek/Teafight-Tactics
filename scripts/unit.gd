@@ -150,6 +150,10 @@ const LAST_WHISPER_DURATION = 3
 const NASHORS_AS_BUFF = 0.4
 const NASHORS_DURATION = 5.0
 var nashor_as_bonus = 0.0
+# gargoyle
+var targeting_count = 0
+var gargoyle_count = 0
+const GARGOYLE_BUFF = 10
 
 @export_category("Ability")
 @export_enum("Enhanced Auto", "Poison Bomb") var ability_id = 0
@@ -304,6 +308,8 @@ func change_mode(_mode: int):
 	
 	# reset buff
 	_on_nashor_end()
+	for i in range(targeting_count):
+		decrease_targeting_count() # gargoyle
 	
 	if _mode == BATTLE:
 		
@@ -477,6 +483,8 @@ func change_mode(_mode: int):
 					last_whisper = true
 				"Nashor's Tooth":
 					nashor_as_bonus += NASHORS_AS_BUFF
+				"Gargoyle Stoneplate":
+					gargoyle_count += 1
 				_: pass
 			item_index += 1
 		
@@ -706,6 +714,8 @@ func change_mode(_mode: int):
 					last_whisper = false
 				"Nashor's Tooth":
 					nashor_as_bonus -= NASHORS_AS_BUFF
+				"Gargoyle Stoneplate":
+					gargoyle_count -= 1
 				_: pass
 		
 		# reset bastion trait
@@ -904,6 +914,7 @@ func receive_eon_effect(eon_owner_path: NodePath):
 	
 	if eon_owner == target:
 		eon_target = target
+		target.decrease_targeting_count.rpc_id(target.get_owner_id())
 		target = null
 
 func _on_burn():
@@ -971,13 +982,16 @@ func find_target():
 		#if multiplayer.is_server(): print(unit.name, ": ", global_transform.origin.distance_to(unit.global_transform.origin))
 		
 		if not target or global_transform.origin.distance_to(unit.global_transform.origin) < global_transform.origin.distance_to(target.global_transform.origin):
+			if target: target.decrease_targeting_count.rpc_id(target.get_owner_id())
 			target = unit
+			target.increase_targeting_count.rpc_id(target.get_owner_id())
 			eon_target = null
 			targeting_neutral = false
 			
 	# in case no other valid target was found but there is still the untargetable edge of night one
 	if not target and eon_target:
 		target = eon_target
+		target.increase_targeting_count.rpc_id(target.get_owner_id())
 		eon_target = null
 
 func change_color(mesh, color):
@@ -1346,7 +1360,6 @@ func _on_nashor_end():
 
 	# print("Nashor's Tooth ended, AS bonus reset")
 	
-	
 @rpc("any_peer", "call_local", "unreliable")
 func apply_sunder(_amount, _duration):
 	if not is_multiplayer_authority(): return
@@ -1579,6 +1592,8 @@ func death():
 	dead = true
 	change_mode(PREP)
 	visible = false
+	
+	if target: target.decrease_targeting_count.rpc_id(target.get_owner_id())
 	
 	if multiplayer.is_server():
 		var fighter_count = 0
@@ -1996,3 +2011,22 @@ func remove_particle(_name):
 	
 func is_shielded():
 	return shield > 0
+	
+@rpc("any_peer", "call_local", "unreliable")
+func increase_targeting_count():
+	if not is_multiplayer_authority(): return
+	
+	targeting_count += 1
+	
+	armor += gargoyle_count * GARGOYLE_BUFF
+	mr += gargoyle_count * GARGOYLE_BUFF
+	
+@rpc("any_peer", "call_local", "unreliable")
+func decrease_targeting_count():
+	if not is_multiplayer_authority(): return
+	
+	if gargoyle_count > 0 and targeting_count > 0: 
+		armor -= gargoyle_count * GARGOYLE_BUFF
+		mr -= gargoyle_count * GARGOYLE_BUFF
+	
+	targeting_count = max(0, targeting_count-1)
