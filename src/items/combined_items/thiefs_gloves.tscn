@@ -33,10 +33,13 @@ item_texture = ExtResource("2_vp3gq")
 item_name = "Thief's Gloves"
 health = 150
 crit_chance = 0.2
+unique = true
 tooltip = "+20% Critical Strike Chance
 +150 Health
 
-Each round: Equip 2 random items. Consumes 3 item slots."
+Each round: boost 2 random stats
+
+[Unique - Only One Per Champion]"
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("BoxShape3D_b61h1")

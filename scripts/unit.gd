@@ -167,6 +167,8 @@ var evs_count = 0
 var redemption_heal = 0
 const REDEMPTION_HEAL_PERCENT = 0.15
 const REDEMPTION_HEAL_INTERVAL = 5.0
+# thiefs gloves 
+var rand = [0,1]
 
 @export_category("Ability")
 @export_enum("Enhanced Auto", "Poison Bomb") var ability_id = 0
@@ -548,6 +550,23 @@ func change_mode(_mode: int):
 				"Protector's Vow":
 					pv_passive_ready = true
 					pv_count += 1
+				"Thief's Gloves":
+					# Generate two random numbers for stat selection
+					rand = [randi() % 8, (randi() % 7 + 1) % 8]  # Ensure the second random stat is different
+					# Apply a 50% boost to a selected stat based on the random number
+					for rng in rand:
+						match rng:
+							0: move_speed *= 1.5
+							1: attackrange *= 1.5
+							2: 
+								max_health *= 1.5
+								curr_health = max_health
+							3: attack_dmg *= 1.5
+							4: ability_power *= 1.5
+							5: armor *= 1.5
+							6: mr *= 1.5
+							7: 
+								change_attack_speed(attack_speed * 1.5)
 				_: pass
 			item_index += 1
 		
@@ -795,6 +814,20 @@ func change_mode(_mode: int):
 						armor -= 20
 						mr -= 20
 					pv_count -= 1
+				"Thief's Gloves":
+					for rng in rand:
+						match rng:
+							0: move_speed /= 1.5
+							1: attackrange /= 1.5
+							2: 
+								max_health /= 1.5
+								curr_health = min(max_health, curr_health)
+							3: attack_dmg /= 1.5
+							4: ability_power /= 1.5
+							5: armor /= 1.5
+							6: mr /= 1.5
+							7: 
+								change_attack_speed(attack_speed / 1.5)
 				_: pass
 		
 		# reset bastion trait
