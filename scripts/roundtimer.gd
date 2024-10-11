@@ -6,8 +6,8 @@ var current_round = 0 # this is what is visible: [CURRENT_STAGE]-[CURRENT_ROUND]
 var total_round = 0 # this is the overall round counting to infinity
 var current_stage = 1
 const START_GAME_DURATION = 5
-const FIRST_ROUND_DURATION = 15
-const PREPARATION_DURATION = 30 #30
+const FIRST_ROUND_DURATION = 10 #15
+const PREPARATION_DURATION = 10 #30
 const COMBAT_DURATION = 45 #45
 const TRANSITION_TIME = 5
 

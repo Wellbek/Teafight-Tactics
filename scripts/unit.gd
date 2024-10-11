@@ -123,6 +123,7 @@ var guardbreaker_bonus_active = false
 # blue buff
 const BB_BONUS_DMG = 0.08
 var bb_active = false
+var bluebuff = false
 # edge of night
 var eon_target = null
 var eon_passive_ready = false
@@ -361,6 +362,8 @@ func change_mode(_mode: int):
 					timer.one_shot = false
 					timer.connect("timeout", _on_archangels_staff)
 					timer.start()	
+				"Blue Buff":
+					bluebuff = true
 				"Bloodthirster":
 					# Once per combat at 40% Health, gain a 25% maximum Health shield that lasts up to 5 seconds.
 					if curr_health/max_health >= 0.4: 
@@ -704,6 +707,8 @@ func change_mode(_mode: int):
 					bt_shield -= 0.25
 					var bt_timer = get_node_or_null("bt_timer")
 					if bt_timer: bt_timer.queue_free()
+				"Blue Buff":
+					bluebuff = false
 				"Edge of Night":
 					if not eon_passive_ready:
 						change_attack_speed(attack_speed / 1.15)
@@ -1175,6 +1180,7 @@ func find_target():
 		if not target or global_transform.origin.distance_to(unit.global_transform.origin) < global_transform.origin.distance_to(target.global_transform.origin):
 			if target: target.decrease_targeting_count.rpc_id(target.get_owner_id())
 			target = unit
+			print(self, " targetting ", target)
 			target.increase_targeting_count.rpc_id(target.get_owner_id())
 			eon_target = null
 			targeting_neutral = false
@@ -1773,17 +1779,18 @@ func _on_kill(_target_path):
 	var _target = get_node(_target_path)
 	#print(name, " killed ", _target.name)
 	
-	# Blue Buff: When the holder gets a takedown, they deal 7% more damage for 8 seconds.
-	bb_active = true
-	var timer = get_node_or_null("blue_buff")
-	if not timer:
-		timer = Timer.new()
-		add_child(timer)
-		timer.name = "blue_buff"
-	timer.wait_time = 8.0
-	timer.one_shot = true
-	timer.connect("timeout", _on_blue_buff_timeout)
-	timer.start()
+	if bluebuff:
+		# Blue Buff: When the holder gets a takedown, they deal 7% more damage for 8 seconds.
+		bb_active = true
+		var timer = get_node_or_null("blue_buff")
+		if not timer:
+			timer = Timer.new()
+			add_child(timer)
+			timer.name = "blue_buff"
+		timer.wait_time = 8.0
+		timer.one_shot = true
+		timer.connect("timeout", _on_blue_buff_timeout)
+		timer.start()
 	
 func _on_blue_buff_timeout():
 	var timer = get_node_or_null("blue_buff")

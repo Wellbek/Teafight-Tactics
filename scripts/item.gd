@@ -130,26 +130,32 @@ func place_item():
 
 # this is executed on each client as equip_item is calling this
 func upgrade(other_component):
+	if not is_multiplayer_authority():  # If we're a client
+		# Only request the server to do the combine
+		request_combine.rpc_id(1, other_component.get_path())
+		return
+		
+	# Server-only code from here
 	var new_item_name = RECIPES[item_name][other_component.get_item_name()]
 	var item_instance_name = new_item_name.to_lower().replacen(" ", "_").replacen("'", "")
+	var instance = load("res://src/items/combined_items//" + item_instance_name + ".tscn").instantiate()
+	get_parent().add_child(instance, true)
 	
-	var folder = "res://src/items/combined_items"
-	var dir = DirAccess.open(folder)
-	
-	var instance_path = folder + "//" + item_instance_name + ".tscn"
-	
-	var instance = load(instance_path).instantiate()
-
-	get_parent().call("add_child", instance, true)
-
-	#if is_multiplayer_authority():
-	#	instance.position += Vector3(randf_range(-1, 1), 0, randf_range(-1, 1))
-	
-	if is_multiplayer_authority():
+	if holder:
 		holder.equip_item.rpc(instance.get_path())
-		
+	
+	# Cleanup old items
 	other_component.queue_free()
 	queue_free()
+
+@rpc("any_peer", "reliable")
+func request_combine(other_component_path: NodePath):
+	if not multiplayer.is_server():
+		return
+	var other_component = get_node(other_component_path)
+	if other_component:
+		upgrade(other_component)
+
 
 func get_item_name():
 	return item_name
