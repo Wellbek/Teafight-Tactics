@@ -26,6 +26,10 @@ Please note that because the game is not registered on Steam (and I'm not planni
 - **Unit Traits**: There are seven types. If a certain number of units of the same type are played on the board, they receive special effects.
 - **Unit Abilities**: Currently there is only two different type of abilites.
 
+## Gameplay Showcase
+
+[![Teafight Tactics Gameplay](https://img.youtube.com/vi/K8N9CvNhPJw/hqdefault.jpg)](https://youtu.be/K8N9CvNhPJw)
+
 ## Installation & Usage
 
 To view and change the source-code, follow these steps:
