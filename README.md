@@ -25,6 +25,7 @@ Please note that because the game is not registered on Steam (and I'm not planni
 - **Round-based Combat**: Using the round-robin-tournament algorithm, each player is assigned a new enemy each battle phase. If the number of players is odd, one player gets a free round.
 - **Unit Traits**: There are seven types. If a certain number of units of the same type are played on the board, they receive special effects.
 - **Unit Abilities**: Currently there is only two different type of abilites.
+- **Unit Pool Mechanism**: The game features a unit pool system akin to TFT, where the more a unit is purchased, the lower the likelihood of that unit reappearing in the shop. This adds a strategic layer to unit acquisition, encouraging players to adapt their strategies based on the available options and the competition.
 
 ## Gameplay Showcase
 
